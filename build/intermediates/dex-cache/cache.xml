@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\libs\picasso-2.5.2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="7446d06ec8d4f7ffcc53f1da37c95f200dcb9387">
+        <dex dex="C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\build\intermediates\transforms\dex\debug\folders\1000\2\picasso-2.5.2_296532759f3d6ae3d2b66d4819d87c7525e3b683\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\libs\volley.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="fe4b50d0b8af44fce7a238fe146c7a3957074aa5">
+        <dex dex="C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\build\intermediates\transforms\dex\debug\folders\1000\2\volley_69f8306f149d6f33897a23a2d33217e96f53316b\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\libs\universal-image-loader-1.9.5.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="442dbfb517b9ab5cb5c6da7ebf8cc28ec5bd0375">
+        <dex dex="C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\build\intermediates\transforms\dex\debug\folders\1000\2\universal-image-loader-1.9.5_9270e035a73384b5192d846f26272980fac4e0b6\classes.dex" />
+    </item>
+
+</items>

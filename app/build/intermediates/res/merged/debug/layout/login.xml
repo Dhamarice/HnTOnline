@@ -1,0 +1,773 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.hammerandtongues.online.hntonline.UserActivity"
+    android:id="@+id/outerparent">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/idcontainer">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/logo"/>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/input_container"
+                android:paddingTop="@dimen/activity_horizontal_margin"
+                android:paddingLeft="@dimen/defaultpadding20"
+                android:paddingRight="@dimen/defaultpadding20"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/imageView"
+                android:layout_centerHorizontal="true">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/username"
+                    android:hint="username"
+                    android:padding="15dp"
+                    android:background="@drawable/roundcorner"
+                    android:layout_gravity="center_horizontal"/>
+
+
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/password"
+                    android:inputType="textPassword"
+                    android:hint="password"
+                    android:paddingTop="@dimen/defaultpadding20"
+                    android:padding="15dp"
+                    android:background="@drawable/roundcorner"
+                    android:layout_gravity="center_horizontal"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/btnwrap">
+                    <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="LOGIN"
+                    android:textColor="#ecf0f1"
+                    android:background="@drawable/default_rounded"
+                    android:padding="15dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/btnlogin"
+                    android:layout_weight="1"/>
+
+
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="forgot password"
+                        android:textSize="12dp"
+                        android:background="@drawable/offwhite"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:padding="15dp"
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/btnforgot"
+                        android:layout_weight="1"/>
+
+
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Register"
+                        android:textColor="#ecf0f1"
+                        android:background="@drawable/default_rounded"
+                        android:padding="15dp"
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/btnSignUp"
+                        android:visibility="gone"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="70dp"
+                android:paddingLeft="@dimen/defaultpadding20"
+                android:paddingRight="@dimen/defaultpadding20"
+                android:orientation="vertical"
+                android:id="@+id/forgotform"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Enter your email"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:padding="15dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/txtuser"
+                    android:layout_weight="1"/>
+
+
+
+
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/nameoremailll"
+                    android:hint="email"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:padding="15dp"
+                    android:background="@drawable/roundcorner"
+                    android:layout_gravity="center_horizontal"/>
+
+
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Reset Password"
+                    android:textColor="#ecf0f1"
+                    android:background="@drawable/default_rounded"
+                    android:padding="15dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/btnresend"
+                    android:layout_weight="1"/>
+
+
+            </LinearLayout>
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="70dp"
+                android:paddingLeft="@dimen/defaultpadding20"
+                android:paddingRight="@dimen/defaultpadding20"
+                android:orientation="vertical"
+                android:id="@+id/notifyform"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="An sms and an email with your new password has been sent. Please login and change this password as desired."
+                    android:textColor="@color/colorPrimaryDark"
+                    android:padding="15dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/txtnotify"
+                    android:layout_weight="1"/>
+
+
+
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Go to login >>"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:background="@drawable/offwhite"
+                    android:padding="15dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/btnnotify"
+                    android:layout_weight="1"/>
+
+
+            </LinearLayout>
+
+
+
+
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="100dp"
+                android:id="@+id/inside"
+                android:visibility="gone">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/pusernamelabel"
+                        android:layout_marginTop="10dp"
+                        android:text="Username:"
+                        android:textSize="14dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/pusername"
+                    android:textSize="16dp"/>
+
+                    <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/pemaillabel"
+                    android:layout_marginTop="15dp"
+                    android:text="Email:"
+                    android:textSize="14dp"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/pemail"
+                        android:textSize="16dp"/>
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:id="@+id/membershiplabel"
+                        android:text="Membership level:"
+                        android:textSize="14dp"/>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:id="@+id/coin"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/membershiplevel"
+                        android:textSize="16dp"/>
+
+</LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/pointslabel"
+                        android:layout_marginTop="15dp"
+                        android:text="Loyalty points:"
+                        android:textSize="14dp"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/loyalty_points"
+                        android:textSize="16dp"/>
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:id="@+id/paddresslabel"
+                        android:text="Address:"
+                        android:textSize="14dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/addwarning"
+                        android:textSize="16dp"/>
+                    <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Edit address"
+                        android:textColor="#ecf0f1"
+                        android:background="@drawable/default_rounded"
+                        android:id="@+id/add_add"
+                        android:layout_weight="1"/>
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Edit Profile"
+                        android:textColor="#ecf0f1"
+                        android:background="@drawable/default_rounded"
+                        android:id="@+id/basicInfo"/>
+                </LinearLayout>
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="My Finances"
+                            android:textColor="#ecf0f1"
+                            android:background="@drawable/default_rounded"
+                            android:id="@+id/finances"
+                            android:layout_weight="1"/>
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Go To Shopping"
+                            android:textColor="#ecf0f1"
+                            android:background="@drawable/default_rounded"
+                            android:id="@+id/shopping"
+                            android:layout_weight="1"/>
+                    </LinearLayout>
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginTop="10dp"
+                        android:text="LOGOUT"
+                        android:textColor="#ecf0f1"
+                        android:background="@drawable/default_rounded"
+                        android:id="@+id/logout"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
+            <ImageView
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:layout_below="@+id/input_container"
+                android:layout_centerHorizontal="true"
+
+                />
+
+
+        </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/tione"
+        android:visibility="gone">
+
+
+        <LinearLayout
+            android:id="@+id/BasicForm"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/uName"
+                android:hint="username"
+                android:inputType="none"
+                android:padding="15dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/roundcorner"
+                android:layout_gravity="center_horizontal"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/fName"
+                android:hint="firstname"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:padding="15dp"
+                android:background="@drawable/roundcorner"
+                android:layout_gravity="center_horizontal"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/sName"
+                android:hint="surname"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:padding="15dp"
+                android:background="@drawable/roundcorner"
+                android:layout_gravity="center_horizontal"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/eEmail"
+                android:hint="email"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:padding="15dp"
+                android:background="@drawable/roundcorner"
+                android:layout_gravity="center_horizontal"/>
+
+            <Button
+                android:id="@+id/updat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/default_rounded"
+                android:padding="15dp"
+                android:text="Update"
+                android:textColor="#ecf0f1"/>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_marginTop="15dp"
+                android:layout_height="2dp"
+                android:background="@color/colorAmber"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Reset password"
+                android:textSize="18dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/pword_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/roundcorner"
+                    android:hint="password"
+                    android:inputType="textPassword"
+                    android:padding="15dp"
+                    android:paddingTop="@dimen/defaultpadding20" />
+
+                <EditText
+                    android:id="@+id/pword_confrim"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/roundcorner"
+                    android:hint="confirm"
+                    android:inputType="textPassword"
+                    android:padding="15dp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <Button
+                    android:id="@+id/bac"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/default_rounded"
+                    android:padding="15dp"
+                    android:text="Back"
+                    android:textColor="#ecf0f1"/>
+                <Button
+                    android:id="@+id/reset"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/default_rounded"
+                    android:padding="15dp"
+                    android:text="Reset"
+                    android:textColor="#ecf0f1"/>
+
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+
+        <LinearLayout
+            android:id="@+id/add_details"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Please add your address details"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18dp"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/addressLn1"
+                android:hint="Address Line 1"
+                android:padding="15dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/roundcorner"
+                android:layout_gravity="center_horizontal"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/addressLn2"
+                android:hint="Address Line 2"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:padding="15dp"
+                android:background="@drawable/roundcorner"
+                android:layout_gravity="center_horizontal"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/surbub"
+                android:hint="Suburb"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:padding="15dp"
+                android:background="@drawable/roundcorner"
+                android:layout_gravity="center_horizontal"/>
+
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/city"
+                android:hint="City"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:padding="15dp"
+                android:background="@drawable/roundcorner"
+                android:layout_gravity="center_horizontal"/>
+
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/regionstate"
+                android:hint="Province"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:padding="15dp"
+                android:background="@drawable/roundcorner"
+                android:layout_gravity="center_horizontal"/>
+
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/country"
+                android:hint="Country"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:padding="15dp"
+                android:background="@drawable/roundcorner"
+                android:layout_gravity="center_horizontal"/>
+
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/idno"
+                android:hint="Id number"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:padding="15dp"
+                android:background="@drawable/roundcorner"
+                android:layout_gravity="center_horizontal"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <Button
+                    android:id="@+id/back"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/default_rounded"
+                    android:padding="15dp"
+                    android:text="Back"
+                    android:textColor="#ecf0f1"/>
+                <Button
+                    android:id="@+id/update"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/default_rounded"
+                    android:padding="15dp"
+                    android:text="Save"
+                    android:textColor="#ecf0f1"/>
+
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/my_finances"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:id="@+id/txt_myfinaces"
+            android:text="My Finances"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18dp"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:id="@+id/pwalletlabel"
+            android:text="E-Wallet Balance:"
+            android:textSize="14dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ewall"
+            android:textSize="16dp"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Deposit Money"
+        android:textColor="#ecf0f1"
+        android:background="@drawable/default_rounded"
+        android:id="@+id/deposit_money"
+        android:layout_weight="1"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Withdraw"
+        android:textColor="#ecf0f1"
+        android:background="@drawable/default_rounded"
+        android:id="@+id/withdraw"/>
+</LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Redeem Points"
+                android:textColor="#ecf0f1"
+                android:background="@drawable/default_rounded"
+                android:id="@+id/redeem_points"
+                android:layout_weight="1"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Transfer Credits"
+                android:textColor="#ecf0f1"
+                android:background="@drawable/default_rounded"
+                android:id="@+id/transfer_credits"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="60dp"
+            android:layout_marginLeft="60dp"
+            android:text="Back"
+            android:textColor="#ecf0f1"
+            android:background="@drawable/default_rounded"
+            android:id="@+id/back_to_profile"/>
+    </LinearLayout>
+
+
+    </RelativeLayout>
+</LinearLayout>
+</android.support.v4.widget.NestedScrollView>
+
+    </RelativeLayout>
+
