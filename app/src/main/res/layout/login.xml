@@ -462,6 +462,20 @@
                 android:text="Reset password"
                 android:textSize="18dp"/>
 
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/oldpassword"
+                android:hint="Old Password"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="03dp"
+                android:layout_marginRight="10dp"
+                android:padding="15dp"
+                android:background="@drawable/roundcorner"
+                android:layout_gravity="center_horizontal"/>
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
