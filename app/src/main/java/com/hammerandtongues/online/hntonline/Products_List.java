@@ -516,7 +516,15 @@ public class Products_List extends AppCompatActivity {
                     msg ="No Additional Products to Display";
                 }
                 noresult.setText(msg);
-                Toast.makeText(this, msg , Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, msg , Toast.LENGTH_LONG).show();
+
+
+                Toast ToastMessage = Toast.makeText(this,msg,Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
+
+
                 noresult.setVisibility(View.VISIBLE);
             }
             noresult.setVisibility(View.GONE);
@@ -532,7 +540,13 @@ public class Products_List extends AppCompatActivity {
                 msg ="No Additional Products to Display";
             }
             noresult.setText(msg);
-            Toast.makeText(this, msg , Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, msg , Toast.LENGTH_LONG).show();
+
+            Toast ToastMessage = Toast.makeText(this,msg,Toast.LENGTH_LONG);
+            View toastView = ToastMessage.getView();
+            toastView.setBackgroundResource(R.drawable.toast_background);
+            ToastMessage.show();
+
             noresult.setVisibility(View.VISIBLE);
         }
     }
@@ -556,9 +570,12 @@ public class Products_List extends AppCompatActivity {
         db.addFavoriteItem(ctm);
         Log.e("Notifications", "Finished saving an item" + id );
 
-        Toast.makeText(Products_List.this , "Item added to Favourites!", Toast.LENGTH_LONG).show();
+        //Toast.makeText(Products_List.this , "Item added to Favourites!", Toast.LENGTH_LONG).show();
 
-
+        Toast ToastMessage = Toast.makeText(this,"Item added to Favourites!",Toast.LENGTH_LONG);
+        View toastView = ToastMessage.getView();
+        toastView.setBackgroundResource(R.drawable.toast_background);
+        ToastMessage.show();
 
 
 
@@ -800,7 +817,12 @@ public class Products_List extends AppCompatActivity {
                 setuielements();
                 SetBanner();
             } else {
-                Toast.makeText(Products_List.this, posts, Toast.LENGTH_LONG).show();
+                //Toast.makeText(Products_List.this, posts, Toast.LENGTH_LONG).show();
+
+                Toast ToastMessage = Toast.makeText(Products_List.this,posts,Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
             }
 
         }
@@ -884,11 +906,22 @@ public class Products_List extends AppCompatActivity {
                              //addProduct(main, pid);
                          }
                         else {
-                             Toast.makeText(Products_List.this, "Product Out Of Stock", Toast.LENGTH_LONG).show();
+                             //Toast.makeText(Products_List.this, "Product Out Of Stock", Toast.LENGTH_LONG).show();
+
+                             Toast ToastMessage = Toast.makeText(Products_List.this,"Product Out Of Stock",Toast.LENGTH_LONG);
+                             View toastView = ToastMessage.getView();
+                             toastView.setBackgroundResource(R.drawable.toast_background);
+                             ToastMessage.show();
+
                              return;
                          }
                     } else {
-                        Toast.makeText(Products_List.this, "Product Out Of Stock", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(Products_List.this, "Product Out Of Stock", Toast.LENGTH_LONG).show();
+
+                        Toast ToastMessage = Toast.makeText(Products_List.this,"Product Out Of Stock",Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
                         return;
                     }
                 }

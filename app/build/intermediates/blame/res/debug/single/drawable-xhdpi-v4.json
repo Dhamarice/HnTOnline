@@ -304,12 +304,12 @@
         "source": "C:\\Users\\Ruvimbo\\.android\\build-cache\\508c4f0dc0bbbccd611f07202f009ad7d1abc4a7\\output\\res\\drawable-xhdpi-v4\\abc_popup_background_mtrl_mult.9.png"
     },
     {
-        "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\common_plus_signin_btn_icon_light_disabled.9.png",
-        "source": "C:\\Users\\Ruvimbo\\.android\\build-cache\\f50517bbb6a0f5de0fdaa6462dc5ab1c86c7dc63\\output\\res\\drawable-xhdpi-v4\\common_plus_signin_btn_icon_light_disabled.9.png"
-    },
-    {
         "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\cast_ic_notification_0.png",
         "source": "C:\\Users\\Ruvimbo\\.android\\build-cache\\437d325005a7af7529a7b3634f24c9cfe16585de\\output\\res\\drawable-xhdpi-v4\\cast_ic_notification_0.png"
+    },
+    {
+        "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\common_plus_signin_btn_icon_light_disabled.9.png",
+        "source": "C:\\Users\\Ruvimbo\\.android\\build-cache\\f50517bbb6a0f5de0fdaa6462dc5ab1c86c7dc63\\output\\res\\drawable-xhdpi-v4\\common_plus_signin_btn_icon_light_disabled.9.png"
     },
     {
         "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\common_google_signin_btn_text_dark_focused.9.png",
@@ -356,12 +356,12 @@
         "source": "C:\\Users\\Ruvimbo\\.android\\build-cache\\508c4f0dc0bbbccd611f07202f009ad7d1abc4a7\\output\\res\\drawable-xhdpi-v4\\abc_ic_search_api_mtrl_alpha.png"
     },
     {
-        "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\common_google_signin_btn_text_dark_normal.9.png",
-        "source": "C:\\Users\\Ruvimbo\\.android\\build-cache\\f50517bbb6a0f5de0fdaa6462dc5ab1c86c7dc63\\output\\res\\drawable-xhdpi-v4\\common_google_signin_btn_text_dark_normal.9.png"
-    },
-    {
         "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\cast_ic_notification_on.png",
         "source": "C:\\Users\\Ruvimbo\\.android\\build-cache\\437d325005a7af7529a7b3634f24c9cfe16585de\\output\\res\\drawable-xhdpi-v4\\cast_ic_notification_on.png"
+    },
+    {
+        "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\common_google_signin_btn_text_dark_normal.9.png",
+        "source": "C:\\Users\\Ruvimbo\\.android\\build-cache\\f50517bbb6a0f5de0fdaa6462dc5ab1c86c7dc63\\output\\res\\drawable-xhdpi-v4\\common_google_signin_btn_text_dark_normal.9.png"
     },
     {
         "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\common_google_signin_btn_icon_dark_focused.9.png",

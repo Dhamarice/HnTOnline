@@ -421,7 +421,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public void updatecart(String qtnty, String ProId){
+    public void updatecart(int qtnty, int ProId){
 
         String UPDATE_TABLE_CART = "UPDATE tbl_CartValues SET quantity =" + qtnty + " WHERE product_id =" + ProId;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -449,6 +449,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
+    public Cursor getcartproduct(int Product_id) {
+        //String query = "Select * FROM " + TABLE_PRODUCTS + " WHERE " + COLUMN_STATUS + " =  \"" + statusid + "\"";
+        String mod_query = "select * from tbl_CartValues where product_id =" + Product_id ;
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(mod_query, null);
+
+        if (cursor.moveToFirst()) {
+//            cursor.moveToFirst();
+
+            return cursor;
+        } else {
+            //db.close();
+            return null;
+        }
+
+    }
 
 
     public Cursor getCategories() {

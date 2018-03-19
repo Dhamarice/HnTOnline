@@ -125,7 +125,7 @@ request_type = (shared.getString("request_type", ""));
 
             Pdialog = new ProgressDialog(Finances_Webview.this);
             Pdialog.setTitle("REDIRECTING");
-            Pdialog.setMessage("Request redirecting to site...");
+            Pdialog.setMessage("Please wait...");
             Pdialog.show();
         }
 

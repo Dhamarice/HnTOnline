@@ -200,12 +200,12 @@
         "source": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\src\\main\\res\\drawable\\side_nav_bar.xml"
     },
     {
-        "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\ic_error.png",
-        "source": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\src\\main\\res\\drawable\\ic_error.png"
-    },
-    {
         "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\product.png",
         "source": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\src\\main\\res\\drawable\\product.png"
+    },
+    {
+        "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\ic_error.png",
+        "source": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\src\\main\\res\\drawable\\ic_error.png"
     },
     {
         "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\offwhite.png",
@@ -350,6 +350,10 @@
     {
         "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\real_estate.png",
         "source": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\src\\main\\res\\drawable\\real_estate.png"
+    },
+    {
+        "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\toast_background.xml",
+        "source": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\src\\main\\res\\drawable\\toast_background.xml"
     },
     {
         "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\seedco.png",

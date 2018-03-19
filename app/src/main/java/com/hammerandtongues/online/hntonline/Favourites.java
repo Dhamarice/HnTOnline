@@ -1,6 +1,7 @@
 package com.hammerandtongues.online.hntonline;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -12,7 +13,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -438,14 +441,35 @@ public class Favourites extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 // do stuff
-                                String id1 = Integer.toString(view.getId());
-                                SharedPreferences.Editor editor = shared.edit();
-                                editor.putString(Product, id1);
-                                editor.commit();
-                                productID = (shared.getString(Product, ""));
-                                RemoveFav(id1);
-                                Intent i = new Intent(Favourites.this, Favourites.class);
-                                startActivity(i);
+
+                                final String id1 = Integer.toString(view.getId());
+
+
+                                new AlertDialog.Builder(Favourites.this)
+                                        .setTitle("Remove Product")
+                                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+
+
+                                                SharedPreferences.Editor editor = shared.edit();
+                                                editor.putString(Product, id1);
+                                                editor.commit();
+                                                productID = (shared.getString(Product, ""));
+                                                RemoveFav(id1);
+                                                Intent i = new Intent(Favourites.this, Favourites.class);
+                                                startActivity(i);
+
+
+
+                                            }
+                                        })
+                                        .setNegativeButton("No", null)
+                                        .setMessage(Html.fromHtml("Remove " + PName + " from Favourites?" ))
+                                        .show();
+
+
 
 
                             }
@@ -631,7 +655,13 @@ public class Favourites extends AppCompatActivity {
 
         int idl = Integer.parseInt(id.toString());
         dbHandler.RemoveFavs(idl);
-        Toast.makeText(Favourites.this , "Item removed from Favourites!", Toast.LENGTH_LONG).show();
+        //Toast.makeText(Favourites.this , "Item removed from Favourites!", Toast.LENGTH_LONG).show();
+
+        Toast ToastMessage = Toast.makeText(this,"Item removed from Favourites!",Toast.LENGTH_LONG);
+        View toastView = ToastMessage.getView();
+        toastView.setBackgroundResource(R.drawable.toast_background);
+        ToastMessage.show();
+
         Log.e("Deleting", "removing from favs");
 
     }

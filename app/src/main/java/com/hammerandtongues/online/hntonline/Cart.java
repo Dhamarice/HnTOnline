@@ -660,18 +660,33 @@ final int pID =  Integer.parseInt(productID.toString());
                 btnDel.setTransformationMethod(null) ;
                 btnDel.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View arg0) {
-                        RemoveItem(pID);
-                        Intent intent = getIntent();
-                        finish();
-                        startActivity(intent);
+
+                        new AlertDialog.Builder(Cart.this)
+                                .setTitle("Remove Product")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+
+                                        RemoveItem(pID);
+                                        Intent intent = getIntent();
+                                        finish();
+                                        startActivity(intent);
+
+                                        Snackbar snackbar = Snackbar
+                                                .make(cartview, PName + " Removed from Cart! ", Snackbar.LENGTH_LONG);
+
+                                        snackbar.setActionTextColor(Color.YELLOW);
+                                        snackbar.show();
 
 
 
-                        Snackbar snackbar = Snackbar
-                                .make(cartview, PName + "Removed from Cart ", Snackbar.LENGTH_LONG);
+                                    }
+                                })
+                                .setNegativeButton("No", null)
+                                .setMessage(Html.fromHtml("Remove " + PName + " from Cart?" ))
+                                .show();
 
-                        snackbar.setActionTextColor(Color.YELLOW);
-                        snackbar.show();
                     }
                 });
 
@@ -763,7 +778,12 @@ final int pID =  Integer.parseInt(productID.toString());
         myDBHandler myDBHandler = new myDBHandler(getApplicationContext(), null, null, 0);
         myDBHandler.clearCartItems();
 
-        Toast.makeText(this, "Cart is currently empty! ", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Cart is currently empty! ", Toast.LENGTH_LONG).show();
+
+        Toast ToastMessage = Toast.makeText(this,"Cart is currently empty!",Toast.LENGTH_LONG);
+        View toastView = ToastMessage.getView();
+        toastView.setBackgroundResource(R.drawable.toast_background);
+        ToastMessage.show();
 
     }
 

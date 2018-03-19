@@ -11,6 +11,12 @@
     <string name="shortcutLongLabel">HnTOnline Shopping</string>
     <string name="spin">Select City</string>
     <string name="spin_variation">Select Product Variation</string>
+    <string name="menu_settings">Settings</string>
+    <string name="hello_world">Invite your contacts to start using HnTOnline Shopping App</string>
+    <string name="permission_rationale">You have not granted permission to acces your contacts. </string>
+
+
+    <string name="findContact">find person&#8230;</string>
 
     <string name="termsandconditons">
     </string>
@@ -248,6 +254,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_chat__webview">Chat_Webview</string>
+    <string name="title_activity_invite_friends">Invite_friends</string>
 </resources>
 
 

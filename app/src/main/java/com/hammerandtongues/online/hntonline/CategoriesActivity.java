@@ -344,7 +344,13 @@ catch (OutOfMemoryError  ex)
             imgurl = "";
 
         } else {
-            Toast.makeText(this, "No Network", Toast.LENGTH_LONG);
+            //Toast.makeText(this, "No Network", Toast.LENGTH_LONG);
+
+            Toast ToastMessage = Toast.makeText(this,"No Network Connection!",Toast.LENGTH_LONG);
+            View toastView = ToastMessage.getView();
+            toastView.setBackgroundResource(R.drawable.toast_background);
+            ToastMessage.show();
+
             //return;
         }
         DisplayImageOptions options = new DisplayImageOptions.Builder()
@@ -697,7 +703,13 @@ catch (OutOfMemoryError  ex)
         db.addFavoriteItem(ctm);
         Log.e("Notifications", "Finished saving an item" + id);
 
-        Toast.makeText(CategoriesActivity.this, "Item added to Favourites!", Toast.LENGTH_LONG).show();
+       // Toast.makeText(CategoriesActivity.this, "Item added to Favourites!", Toast.LENGTH_LONG).show();
+
+        Toast ToastMessage = Toast.makeText(this,"Item added to Favourites!",Toast.LENGTH_LONG);
+        View toastView = ToastMessage.getView();
+        toastView.setBackgroundResource(R.drawable.toast_background);
+        ToastMessage.show();
+
         Locale locale = new Locale("en", "US");
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
 
@@ -705,7 +717,14 @@ catch (OutOfMemoryError  ex)
         if (crtItms != null) {
             Intent i = new Intent(CategoriesActivity.this, Products_List.class);
             startActivity(i);
-            Toast.makeText(CategoriesActivity.this, "Network is Currently Unavailable", Toast.LENGTH_LONG).show();
+            //Toast.makeText(CategoriesActivity.this, "Network is Currently Unavailable", Toast.LENGTH_LONG).show();
+
+
+            Toast ToastMessage1 = Toast.makeText(this,"Network is Currently Unavailable!",Toast.LENGTH_LONG);
+            View toastView1 = ToastMessage1.getView();
+            toastView1.setBackgroundResource(R.drawable.toast_background);
+            ToastMessage1.show();
+
             //idCartItems.setText("Items in cart: " + String.valueOf((crtItms.get_Cart_Items_Count())));
         } else {
             //idCartItems.setText("Items in cart: 0");

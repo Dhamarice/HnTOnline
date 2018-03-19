@@ -1,6 +1,7 @@
 package com.hammerandtongues.online.hntonline;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -8,7 +9,9 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -106,7 +109,12 @@ public class TransactionHistory  extends AppCompatActivity {
 
         }
         else {
-            Toast.makeText(this,"You Are Not Logged In",Toast.LENGTH_LONG).show();
+            //Toast.makeText(this,"You Are Not Logged In",Toast.LENGTH_LONG).show();
+
+            Toast ToastMessage = Toast.makeText(this,"You Are Not Logged In!",Toast.LENGTH_LONG);
+            View toastView = ToastMessage.getView();
+            toastView.setBackgroundResource(R.drawable.toast_background);
+            ToastMessage.show();
             ProgressBar pg1 = (ProgressBar) findViewById(R.id.progressBar1);
             pg1.setVisibility(View.GONE);
         }
@@ -142,9 +150,18 @@ public class TransactionHistory  extends AppCompatActivity {
     public void setuielements() {
         final SharedPreferences shared = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
         LinearLayout layout = (LinearLayout) findViewById(R.id.cartlayout);
-        Log.e("Set UI Elements", strOrders);
-        ProgressBar pgr = (ProgressBar) findViewById(R.id.progressBar1);
-        pgr.setVisibility(View.GONE);
+        //Log.e("Set UI Elements", strOrders);
+        final ProgressBar pgr = (ProgressBar) findViewById(R.id.progressBar1);
+
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                pgr.setVisibility(View.GONE);
+
+            }
+        });
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 // default
@@ -248,17 +265,64 @@ public class TransactionHistory  extends AppCompatActivity {
 
         public void seterror(){
             LinearLayout layout = (LinearLayout) findViewById(R.id.cartlayout);
-            ProgressBar pgr = (ProgressBar) findViewById(R.id.progressBar1);
-            pgr.setVisibility(View.GONE);
+            final ProgressBar pgr = (ProgressBar) findViewById(R.id.progressBar1);
+
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    pgr.setVisibility(View.GONE);
+
+                }
+            });
 
             LinearLayout itmcontr = new LinearLayout(this);
             itmcontr.setBackgroundColor(Color.WHITE);
             TextView NetError = new TextView(this);
             NetError.setText("You are currenly offline, Please check your network connection... ");
+            NetError.setTextSize(15);
+            NetError.setTextColor(Color.RED);
             itmcontr.addView(NetError);
 itmcontr.setVisibility(View.VISIBLE);
             layout.addView(itmcontr);
         }
+
+
+    public void setnohistory(){
+       final LinearLayout layout = (LinearLayout) findViewById(R.id.cartlayout);
+        final ProgressBar pgr = (ProgressBar) findViewById(R.id.progressBar1);
+
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                pgr.setVisibility(View.GONE);
+
+            }
+        });
+
+       final LinearLayout itmcontr1 = new LinearLayout(this);
+        itmcontr1.setBackgroundColor(Color.WHITE);
+        TextView NetError = new TextView(this);
+        NetError.setText("You have no history to display at the moment!... ");
+        NetError.setTextSize(15);
+        NetError.setTextColor(Color.RED);
+        itmcontr1.addView(NetError);
+        itmcontr1.setVisibility(View.VISIBLE);
+
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                layout.addView(itmcontr1);
+
+            }
+        });
+
+    }
 
 
 
@@ -308,9 +372,15 @@ itmcontr.setVisibility(View.VISIBLE);
                     if (success == 1) {
                         Log.e("Get Cart Success", json1.getString(TAG_PRODUCTDETAILS));
                         strOrders = json1.getString(TAG_PRODUCTDETAILS);
+
+                        setuielements();
                         return json1.getString(TAG_PRODUCTDETAILS);
 
+
+
                     } else {
+
+                        setnohistory();
                         return json1.getString(TAG_MESSAGE);
                     }
                 } }
@@ -329,7 +399,7 @@ itmcontr.setVisibility(View.VISIBLE);
             // dismiss the dialog once product deleted
             //pDialog.dismiss();
             if (posts != null) {
-                setuielements();
+                //setuielements();
                 Log.e("JSONing", posts);
             }
 
@@ -444,7 +514,20 @@ itmcontr.setVisibility(View.VISIBLE);
                             Intent intent = new Intent(TransactionHistory.this, TransactionHistory.class);
                             startActivity(intent);
 
-                            Toast.makeText(TransactionHistory.this, " Payment successfull", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(TransactionHistory.this, " Payment successfull", Toast.LENGTH_LONG).show();
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+
+                                    Toast ToastMessage = Toast.makeText(TransactionHistory.this,"Payment successfull!",Toast.LENGTH_LONG);
+                                    View toastView = ToastMessage.getView();
+                                    toastView.setBackgroundResource(R.drawable.toast_background);
+                                    ToastMessage.show();
+                                }
+
+                            });
 
                             return json.getString(TAG_MESSAGE);
 
@@ -460,6 +543,21 @@ itmcontr.setVisibility(View.VISIBLE);
                             Log.e("Order cleared!", json.getString(TAG_MESSAGE));
 
                             Toast.makeText(TransactionHistory.this, "Payment validation failed, Please Try again later!", Toast.LENGTH_LONG).show();
+
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+
+                                    Toast ToastMessage = Toast.makeText(TransactionHistory.this,"Payment validation failed, Please Try again later!",Toast.LENGTH_LONG);
+                                    View toastView = ToastMessage.getView();
+                                    toastView.setBackgroundResource(R.drawable.toast_background);
+                                    ToastMessage.show();
+                                }
+
+                            });
+
                             return json.getString(TAG_MESSAGE);
 
                         }
@@ -483,14 +581,46 @@ itmcontr.setVisibility(View.VISIBLE);
         /**
          * After completing background task Dismiss the progress dialog
          * **/
-        protected void onPostExecute(String posts) {
+        protected void onPostExecute(final String posts) {
             // dismiss the dialog once product deleted
 
 
 
             pDialog.dismiss();
             if (posts != null){
-                Toast.makeText(TransactionHistory.this, posts, Toast.LENGTH_LONG).show();
+                //Toast.makeText(TransactionHistory.this, posts, Toast.LENGTH_LONG).show();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                        /*
+                        Toast ToastMessage = Toast.makeText(TransactionHistory.this,posts,Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
+*/
+
+
+
+                                new AlertDialog.Builder(TransactionHistory.this)
+                                        .setTitle("Info")
+                                        .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        })
+                                        .setNegativeButton("", null)
+                                        .setMessage(Html.fromHtml(posts))
+                                        .show();
+
+
+
+                    }
+
+                });
             }
         }
 

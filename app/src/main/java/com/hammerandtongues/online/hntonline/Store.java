@@ -315,7 +315,12 @@ public class Store extends AppCompatActivity {
                     msg = "This store is curently closed and opens every " + day;
 
                     noresult.setText(msg);
-                    Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+
+                    Toast ToastMessage = Toast.makeText(this,msg,Toast.LENGTH_LONG);
+                    View toastView = ToastMessage.getView();
+                    toastView.setBackgroundResource(R.drawable.toast_background);
+                    ToastMessage.show();
 
                     noresult.setVisibility(View.VISIBLE);
 
@@ -327,7 +332,12 @@ public class Store extends AppCompatActivity {
                     msg = "This store is curently closed and opens at " + openhrs;
 
                     noresult.setText(msg);
-                    Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+
+                    Toast ToastMessage = Toast.makeText(this,msg,Toast.LENGTH_LONG);
+                    View toastView = ToastMessage.getView();
+                    toastView.setBackgroundResource(R.drawable.toast_background);
+                    ToastMessage.show();
 
                     noresult.setVisibility(View.VISIBLE);
 
@@ -518,7 +528,12 @@ else {
                     msg = "No Additional Products to Display";
                 }
                 noresult.setText(msg);
-                Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+
+                Toast ToastMessage = Toast.makeText(this,msg,Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
                 noresult.setVisibility(View.VISIBLE);
             }
             noresult.setVisibility(View.GONE);
@@ -531,7 +546,12 @@ else {
                 msg = "No Additional Products to Display";
             }
             noresult.setText(msg);
-            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+
+            Toast ToastMessage = Toast.makeText(this,msg,Toast.LENGTH_LONG);
+            View toastView = ToastMessage.getView();
+            toastView.setBackgroundResource(R.drawable.toast_background);
+            ToastMessage.show();
             noresult.setVisibility(View.VISIBLE);
         }
     }
@@ -601,7 +621,13 @@ else {
         db.addFavoriteItem(ctm);
         Log.e("Notifications", "Finished saving an item" + id);
 
-        Toast.makeText(Store.this, "Item added to Favourites!", Toast.LENGTH_LONG).show();
+       // Toast.makeText(Store.this, "Item added to Favourites!", Toast.LENGTH_LONG).show();
+
+        Toast ToastMessage = Toast.makeText(this,"Item added to Favourites!",Toast.LENGTH_LONG);
+        View toastView = ToastMessage.getView();
+        toastView.setBackgroundResource(R.drawable.toast_background);
+        ToastMessage.show();
+
         Locale locale = new Locale("en", "US");
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
 
@@ -757,6 +783,11 @@ else {
                 else
                 {
                     Toast.makeText(Store.this, posts, Toast.LENGTH_LONG).show();
+
+                    Toast ToastMessage = Toast.makeText(Store.this,posts,Toast.LENGTH_LONG);
+                    View toastView = ToastMessage.getView();
+                    toastView.setBackgroundResource(R.drawable.toast_background);
+                    ToastMessage.show();
                 }
 
             }

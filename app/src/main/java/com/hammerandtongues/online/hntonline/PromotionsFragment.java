@@ -317,14 +317,25 @@ Log.e("Day of week", "from java" + dayofweek);
                 noresult.setVisibility(View.GONE);
             }else {
                 noresult.setText("No Promotional Stores to Display At The Moment");
-                Toast.makeText(this, "No Promotional Stores to Display At The Moment", Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, "No Promotional Stores to Display At The Moment", Toast.LENGTH_LONG).show();
+
+
+                Toast ToastMessage = Toast.makeText(this,"No Promotional Stores to Display At The Moment",Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
                 noresult.setVisibility(View.VISIBLE);
             }
 
             noresult.setVisibility(View.GONE);
         }else {
             noresult.setText("No Promotional Stores to Display At The Moment");
-            Toast.makeText(this,"No Promotional Stores to Display At The Moment",Toast.LENGTH_LONG).show();
+            //Toast.makeText(this,"No Promotional Stores to Display At The Moment",Toast.LENGTH_LONG).show();
+
+            Toast ToastMessage = Toast.makeText(this,"No Promotional Stores to Display At The Moment",Toast.LENGTH_LONG);
+            View toastView = ToastMessage.getView();
+            toastView.setBackgroundResource(R.drawable.toast_background);
+            ToastMessage.show();
             noresult.setVisibility(View.VISIBLE);
         }
 

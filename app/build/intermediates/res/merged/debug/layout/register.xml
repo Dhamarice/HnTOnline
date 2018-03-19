@@ -26,6 +26,15 @@
                     android:paddingTop="@dimen/activity_horizontal_margin">
 
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/imageView"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@drawable/logo"/>
+
+
 
                     <LinearLayout
                         android:layout_marginBottom="10dp"
@@ -33,6 +42,7 @@
                         android:id="@+id/addressdetails"
                         android:paddingTop="@dimen/activity_horizontal_margin"
                         android:layout_width="match_parent"
+                        android:layout_below="@+id/imageView"
                         android:layout_height="match_parent"
                         android:layout_centerHorizontal="true"
                         >
@@ -41,7 +51,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Please enter your mobile number including your country code."
+                            android:text="Please enter your mobile number including your country code. An sms will be sent to you to verify your number."
                             />
                         <LinearLayout
                             android:layout_marginBottom="10dp"
@@ -82,25 +92,16 @@
                         android:paddingTop="@dimen/activity_horizontal_margin"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_below="@+id/imageView"
                         android:layout_centerHorizontal="true"
                         android:visibility="gone">
 
-                        <Button
-                            android:id="@+id/editnum"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="2dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/default_rounded"
-                            android:padding="15dp"
-                            android:text="EDIT NUMBER"
-                            android:textColor="#ecf0f1" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Enter the code sent to you in the box below"
+                            android:textColor="@color/colorAmber"
                             />
                         <EditText
                             android:id="@+id/code"
@@ -121,6 +122,7 @@
                         android:layout_height="match_parent"
                         android:layout_centerHorizontal="true"
                         android:orientation="vertical"
+                        android:layout_below="@+id/imageView"
                         android:paddingTop="@dimen/activity_horizontal_margin"
                         android:visibility="gone"
                         >
@@ -144,10 +146,6 @@
                             android:hint="email"
                             android:padding="15dp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp">
 
                             <EditText
                                 android:id="@+id/first_name"
@@ -155,6 +153,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginRight="5dp"
+                                android:layout_marginTop="10dp"
                                 android:layout_weight="1"
                                 android:background="@drawable/roundcorner"
                                 android:hint="First name"
@@ -166,12 +165,12 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginLeft="5dp"
+                                android:layout_marginTop="10dp"
                                 android:layout_weight="1"
                                 android:background="@drawable/roundcorner"
                                 android:hint="Last name"
                                 android:padding="15dp" />
 
-                        </LinearLayout>
 
 
                         <LinearLayout
@@ -212,10 +211,7 @@
 
 
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+
 
                         <Button
                             android:id="@+id/register"
@@ -229,8 +225,41 @@
                             android:text="VERIFY NUMBER"
                             android:textColor="#ecf0f1" />
 
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/colorAmber"
+                            android:id="@+id/txtnocode"
+                            android:text="Didn't get your code?"
+                            android:visibility="gone"/>
 
-                    </LinearLayout>
+
+                        <Button
+                            android:id="@+id/resendcode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="2dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/default_rounded"
+                            android:padding="15dp"
+                            android:text="RESEND CODE"
+                            android:textColor="#ecf0f1"
+                            android:visibility="gone"/>
+
+
+                        <Button
+                            android:id="@+id/editnum"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="2dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/default_rounded"
+                            android:padding="15dp"
+                            android:text="CHANGE MY NUMBER"
+                            android:visibility="gone"
+                            android:textColor="#ecf0f1" />
 
 
                 </LinearLayout>

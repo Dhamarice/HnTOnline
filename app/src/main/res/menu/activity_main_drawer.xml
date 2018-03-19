@@ -68,6 +68,11 @@
                 android:id="@+id/faqs"
                 android:icon="@drawable/faq"
                 android:title="(F.A.Qs) Frequently Asked Questions" />
+
+            <item
+                android:id="@+id/invite"
+                android:icon="@drawable/faq"
+                android:title="Invite Friends" />
         </menu>
     </item>
 </menu>

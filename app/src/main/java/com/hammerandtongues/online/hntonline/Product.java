@@ -2,6 +2,7 @@ package com.hammerandtongues.online.hntonline;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -13,6 +14,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
@@ -193,7 +195,14 @@ public class Product extends AppCompatActivity {
                             if (!qnty.isEmpty() && qnty != "0") {
                                 addProduct(arg0);
                             } else if (qnty == "0") {
-                                Toast.makeText(Product.this, "Sorry, This Product is Out of Stock", Toast.LENGTH_LONG).show();
+
+                                //Toast.makeText(Product.this, "Sorry, This Product is Out of Stock", Toast.LENGTH_LONG).show();
+
+                                Toast ToastMessage = Toast.makeText(Product.this,"Sorry, This Product is Out of Stock!",Toast.LENGTH_LONG);
+                                View toastView = ToastMessage.getView();
+                                toastView.setBackgroundResource(R.drawable.toast_background);
+                                ToastMessage.show();
+
                             } else {
                                 addProduct(arg0);
                             }
@@ -434,66 +443,120 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
 
             cartid = currcart;
 
-        DatabaseHelper db = new DatabaseHelper(this);
-        int qty = Integer.parseInt(txtquantity.getText().toString());
-        int id = Integer.parseInt(productID);
+       final DatabaseHelper db = new DatabaseHelper(this);
+       final int qty = Integer.parseInt(txtquantity.getText().toString());
+        final int id = Integer.parseInt(productID);
         double itmprice = Double.parseDouble(price);
         double subtot = qty * Double.parseDouble(price);
+        //int newqty; = qty + dbqty;
         //if (sharedpreferences.getString("seller", "") != null && sharedpreferences.getString("seller", "") != "") {
 
-            int seller = Integer.parseInt(sharedpreferences.getString("seller", ""));
-
-            Log.e("Notifications", "Picking up variables for saving" + String.valueOf((qty)) + " <= Quantity; " + String.valueOf(cartid) + "<=This is the current cart ID");
-
-            CartManagement ctm = new CartManagement(cartid, name, qty, id, imgurl, subtot, itmprice, seller);
-            Log.d("Notifications", "Saving the product to cart with a cart id");
-            db.addCartItem(ctm);
-            Log.d("Notifications", "Finished saving an item");
-            Locale locale = new Locale("en", "US");
-            NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
-
-            CartManagement crtItms = db.getCartItemsCount(cartid);
-            if (crtItms != null) {
 
 
+       if (db.getcartproduct(id) != null) {
 
-                //DatabaseHelper db = new DatabaseHelper(this);
-                //CartManagement crtItms = db.getCartItemsCount(1);
-                cnt_cart = (crtItms.get_Cart_Items_Count());
+           Cursor cursor = db.getcartproduct(id);
 
-                cnt_cart = cnt_cart;
+           Log.e("Cursor Returns", "Current Cart=" + currcart + " , Cursor = " + DatabaseUtils.dumpCursorToString(cursor) );
+
+           if (cursor != null &&  cursor.moveToFirst()) {
+
+               String dbqtyst = cursor.getString(3);
+
+               int dbqty = Integer.parseInt(dbqtyst);
+
+               final int newqty = qty + dbqty;
+
+               new AlertDialog.Builder(this)
+                       .setTitle("Product already in Cart")
+                       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialog, int which) {
+                               db.updatecart(newqty, id);
+                           }
+                       })
+                       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialog, int which) {
+
+                               db.updatecart(qty, id);
+                           }
+                           })
+
+                       .setMessage(Html.fromHtml("Select Yes to add quantity to exisiting quantity or No to save new quantity"))
+                       .show();
 
 
-                txtcartitems.setText(String.valueOf(cnt_cart));
+               Locale locale = new Locale("en", "US");
+               NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
 
-
-                Snackbar snackbar = Snackbar
-                        .make(produtc, name + "Added to Cart with : " + String.valueOf((crtItms.get_Cart_Items_Count())) + " items Total amount so far: " + currencyFormatter.format(Double.parseDouble(String.valueOf(crtItms.get_Cart_Items_Value()))), Snackbar.LENGTH_LONG);
-
-                snackbar.setActionTextColor(Color.YELLOW);
-                snackbar.show();
+               CartManagement crtItms = db.getCartItemsCount(cartid);
+               if (crtItms != null) {
 
 
 
+                   //DatabaseHelper db = new DatabaseHelper(this);
+                   //CartManagement crtItms = db.getCartItemsCount(1);
+                   cnt_cart = (crtItms.get_Cart_Items_Count());
+
+                   cnt_cart = cnt_cart;
+
+
+                   txtcartitems.setText(String.valueOf(cnt_cart));
+
+
+                   Snackbar snackbar = Snackbar
+                           .make(produtc, name + "Added to Cart with : " + String.valueOf((crtItms.get_Cart_Items_Count())) + " items Total amount so far: " + currencyFormatter.format(Double.parseDouble(String.valueOf(crtItms.get_Cart_Items_Value()))), Snackbar.LENGTH_LONG);
+
+                   snackbar.setActionTextColor(Color.YELLOW);
+                   snackbar.show();
+
+
+               }
+           }
+       }
+
+          else {
+           int seller = Integer.parseInt(sharedpreferences.getString("seller", ""));
+
+           Log.e("Notifications", "Picking up variables for saving" + String.valueOf((qty)) + " <= Quantity; " + String.valueOf(cartid) + "<=This is the current cart ID");
+
+           CartManagement ctm = new CartManagement(cartid, name, qty, id, imgurl, subtot, itmprice, seller);
+           Log.d("Notifications", "Saving the product to cart with a cart id");
+           db.addCartItem(ctm);
+           Log.d("Notifications", "Finished saving an item");
 
 
 
-                //Toast.makeText(this, "Product Added to Cart with : " + String.valueOf((crtItms.get_Cart_Items_Count())) + " items Total amount so far: " + currencyFormatter.format(Double.parseDouble(String.valueOf(crtItms.get_Cart_Items_Value()))), Toast.LENGTH_LONG).show();
-                //idCartItems.setText("Items in cart: " + String.valueOf((crtItms.get_Cart_Items_Count())));
+           Locale locale = new Locale("en", "US");
+           NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
 
-                //DatabaseHelper db = new DatabaseHelper(this);
-                //CartManagement crtItms = db.getCartItemsCount(1);
-                //cnt_cart = (crtItms.get_Cart_Items_Count());
+           CartManagement crtItms = db.getCartItemsCount(cartid);
+           if (crtItms != null) {
 
-                //cnt_cart = cnt_cart + 1;
 
-                //SharedPreferences shared = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
-                //SharedPreferences.Editor editor = shared.edit();
-                //editor.putString("CartNO", String.valueOf(cnt_cart));
-                //editor.commit();
-                //editor.apply();
 
-            }
+               //DatabaseHelper db = new DatabaseHelper(this);
+               //CartManagement crtItms = db.getCartItemsCount(1);
+               cnt_cart = (crtItms.get_Cart_Items_Count());
+
+               cnt_cart = cnt_cart;
+
+
+               txtcartitems.setText(String.valueOf(cnt_cart));
+
+
+               Snackbar snackbar = Snackbar
+                       .make(produtc, name + "Added to Cart with : " + String.valueOf((crtItms.get_Cart_Items_Count())) + " items Total amount so far: " + currencyFormatter.format(Double.parseDouble(String.valueOf(crtItms.get_Cart_Items_Value()))), Snackbar.LENGTH_LONG);
+
+               snackbar.setActionTextColor(Color.YELLOW);
+               snackbar.show();
+
+
+           }
+
+       }
+
 
 
         }
@@ -733,7 +796,13 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
 
 
                     } else {
-                        Toast.makeText(Product.this, posts, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(Product.this, posts, Toast.LENGTH_LONG).show();
+
+                        Toast ToastMessage = Toast.makeText(Product.this,posts,Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
+
                     }
                 } else if (GET_TYPE == "variation") {
                     // you can use this array to find the school ID based on name
@@ -822,7 +891,13 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
 //                layout.addView(noresult);
 
 
-                Toast.makeText( Product.this ,"Network is Currently Unavailable",Toast.LENGTH_LONG).show();
+                //Toast.makeText( Product.this ,"Network is Currently Unavailable",Toast.LENGTH_LONG).show();
+
+                Toast ToastMessage = Toast.makeText(Product.this,"Network is Currently Unavailable!",Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
+
             }
         }
     }
@@ -1025,7 +1100,15 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
                         if (!qnty.isEmpty() && qnty != "0") {
                             addProduct(arg0);
                         } else if (qnty == "0") {
-                            Toast.makeText(Product.this, "Sorry, This Product is Out of Stock", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(Product.this, "Sorry, This Product is Out of Stock", Toast.LENGTH_LONG).show();
+
+
+                            Toast ToastMessage = Toast.makeText(Product.this,"Sorry, This Product is Out of Stock!",Toast.LENGTH_LONG);
+                            View toastView = ToastMessage.getView();
+                            toastView.setBackgroundResource(R.drawable.toast_background);
+                            ToastMessage.show();
+
+
                         } else {
                             addProduct(arg0);
                         }
@@ -1132,7 +1215,14 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
 
             Log.e("addbtn: ", "values: " + shopthename + "theseller is" + theseller  );
 
-            Toast.makeText(getBaseContext(), "A quantity of one only allowed!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getBaseContext(), "A quantity of one only allowed!", Toast.LENGTH_LONG).show();
+
+
+
+            Toast ToastMessage = Toast.makeText(Product.this,"A quantity of one only allowed!",Toast.LENGTH_LONG);
+            View toastView = ToastMessage.getView();
+            toastView.setBackgroundResource(R.drawable.toast_background);
+            ToastMessage.show();
 
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString("storedquantity", Integer.toString(CurrQnty));

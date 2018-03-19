@@ -100,6 +100,10 @@
         "source": "C:\\Users\\Ruvimbo\\.android\\build-cache\\508c4f0dc0bbbccd611f07202f009ad7d1abc4a7\\output\\res\\layout\\abc_screen_content_include.xml"
     },
     {
+        "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_invite_friends.xml",
+        "source": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\src\\main\\res\\layout\\activity_invite_friends.xml"
+    },
+    {
         "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\layout\\nav_header_main.xml",
         "source": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\src\\main\\res\\layout\\nav_header_main.xml"
     },
@@ -322,6 +326,10 @@
     {
         "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\layout\\design_layout_snackbar_include.xml",
         "source": "C:\\Users\\Ruvimbo\\.android\\build-cache\\a61c9e2d7d85707856c7fdfb5974c0ac71141b61\\output\\res\\layout\\design_layout_snackbar_include.xml"
+    },
+    {
+        "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\layout\\content_invite_friends.xml",
+        "source": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\src\\main\\res\\layout\\content_invite_friends.xml"
     },
     {
         "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\layout\\splashscreen.xml",

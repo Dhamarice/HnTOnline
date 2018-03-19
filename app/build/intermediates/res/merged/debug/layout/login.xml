@@ -178,7 +178,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="An sms and an email with your new password has been sent. Please login and change this password as desired."
+                    android:text="An sms with your new password has been sent. Please login and change this password as desired."
                     android:textColor="@color/colorPrimaryDark"
                     android:padding="15dp"
                     android:layout_marginTop="10dp"
@@ -548,6 +548,7 @@
                 android:layout_height="wrap_content"
                 android:text="Please add your address details"
                 android:textColor="@color/colorPrimaryDark"
+                android:id="@+id/pladdress"
                 android:textSize="18dp"/>
 
             <EditText
@@ -556,7 +557,7 @@
                 android:id="@+id/addressLn1"
                 android:hint="Address Line 1"
                 android:padding="15dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="03dp"
                 android:background="@drawable/roundcorner"
                 android:layout_gravity="center_horizontal"/>
 
@@ -566,57 +567,99 @@
                 android:id="@+id/addressLn2"
                 android:hint="Address Line 2"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="03dp"
                 android:padding="15dp"
                 android:background="@drawable/roundcorner"
                 android:layout_gravity="center_horizontal"/>
 
-            <EditText
+
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/surbub"
-                android:hint="Suburb"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:padding="15dp"
-                android:background="@drawable/roundcorner"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Country:"
+                    android:textSize="17dp"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/colorPrimaryDark"/>
+
+                <Spinner
+                    android:id="@+id/country"
+                    android:layout_width="wrap_content"
+                    android:layout_height="41dp"
+                    android:dropDownWidth="200dp"/>
+            </LinearLayout>
 
 
-            <EditText
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/city"
-                android:hint="City"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:padding="15dp"
-                android:background="@drawable/roundcorner"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Region:"
+                    android:textSize="17dp"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/colorPrimaryDark"/>
+
+                <AutoCompleteTextView
+                    android:id="@+id/regionstate"
+                    android:layout_width="match_parent"
+                    android:layout_height="41dp"
+                    android:dropDownWidth="200dp"/>
+            </LinearLayout>
 
 
-            <EditText
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/regionstate"
-                android:hint="Province"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:padding="15dp"
-                android:background="@drawable/roundcorner"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="City:"
+                    android:textSize="17dp"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/colorPrimaryDark"/>
+
+                <AutoCompleteTextView
+                    android:id="@+id/city"
+                    android:layout_width="match_parent"
+                    android:layout_height="41dp"
+                    android:dropDownWidth="200dp"/>
+            </LinearLayout>
 
 
-            <EditText
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/country"
-                android:hint="Country"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:padding="15dp"
-                android:background="@drawable/roundcorner"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Surbub:"
+                    android:textSize="17dp"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/colorPrimaryDark"/>
+
+                <AutoCompleteTextView
+                    android:id="@+id/surbub"
+                    android:layout_width="match_parent"
+                    android:layout_height="41dp"
+                    android:dropDownWidth="200dp"/>
+            </LinearLayout>
+
 
 
             <EditText
@@ -625,7 +668,7 @@
                 android:id="@+id/idno"
                 android:hint="Id number"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="03dp"
                 android:layout_marginRight="10dp"
                 android:padding="15dp"
                 android:background="@drawable/roundcorner"

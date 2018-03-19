@@ -3,6 +3,7 @@ package com.hammerandtongues.online.hntonline;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -12,6 +13,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +30,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
@@ -35,7 +44,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import preferences.MyPrefAddress;
 
@@ -96,7 +107,7 @@ public class UserDetails extends Fragment implements View.OnClickListener{
         spsurburb = (Spinner) view.findViewById(R.id.spin_surburbs);
         txtaddress = (TextView) view.findViewById(R.id.address);
         txtaddline1 = (EditText) view.findViewById(R.id.addressLn1);
-        txtaddline1 = (EditText) view.findViewById(R.id.addressLn2);
+        txtaddline2 = (EditText) view.findViewById(R.id.addressLn2);
         txterr = (TextView) view.findViewById(R.id.txtinfo);
         txtno = (TextView) view.findViewById(R.id.txtNo);
         main = (LinearLayout) view.findViewById(R.id.editables);
@@ -104,6 +115,7 @@ public class UserDetails extends Fragment implements View.OnClickListener{
 
 
         rdg = new RadioGroup(getContext());
+        rdg.setOrientation(LinearLayout.VERTICAL);
         rdNormal = new RadioButton(getContext());
         rdExpress = new RadioButton(getContext());
         rdExtended = new RadioButton(getContext());
@@ -173,7 +185,12 @@ public class UserDetails extends Fragment implements View.OnClickListener{
                     if (isNetworkAvailable() == true) {
                         new getCities().execute();
                     } else {
-                        Toast.makeText(getContext(), "Please Check Your Network Connectivity", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getContext(), "Please Check Your Network Connectivity", Toast.LENGTH_LONG).show();
+
+                        Toast ToastMessage = Toast.makeText(getActivity(),"Please Check Your Network Connectivity",Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
 //                        pDialog.dismiss();
                     }
                     spin.setVisibility(View.VISIBLE);
@@ -194,28 +211,32 @@ public class UserDetails extends Fragment implements View.OnClickListener{
                         //rdg.removeAllViews();
                         spin.setVisibility(View.GONE);
                         //txtaddress.setText(Address);
-                        txtaddress.setVisibility(View.VISIBLE);
-                        txtaddress.setText(Address);
-                        rdExpress.setVisibility(View.VISIBLE);
-                        rdExtended.setVisibility(View.VISIBLE);
-                        rdNormal.setVisibility(View.VISIBLE);
-                        txtno.setVisibility(View.GONE);
-                        rdNormal.setText("Normal ($5)");
-                        rdExpress.setText("Express ($10)");
-                        rdExtended.setText("Extended ($3)");
+                        ll01.setVisibility(View.GONE);
+
+                        ll02.setVisibility(View.VISIBLE);
+
+/*
+                        type = "DlvryChrg";
+                        value = Surbub;
+
+
+                        getDropDownValues(type, value);
+                        */
                         if (Address.toUpperCase().contains("HARARE") || Address.toUpperCase().contains("BULAWAYO")) {
-                            rdg.removeAllViews();
-                            rdg.addView(rdNormal);
-                            rdg.addView(rdExpress);
-                            rdg.addView(rdExtended);
-                            txtno.setVisibility(View.GONE);
-                            rdNormal.setText("Normal ($5)");
-                            rdExpress.setText("Express ($10)");
-                            rdExtended.setText("Extended ($3)");
-                            rdg.setOrientation(LinearLayout.VERTICAL);
-                            rdg.setVisibility(View.VISIBLE);
+
+
+                            ll01.setVisibility(View.GONE);
+
+                            ll02.setVisibility(View.VISIBLE);
+
+
+                            type = "DlvryChrg";
+                            value = Surbub;
+
+
+                            getDropDownValues(type, value);
                         } else {
-                            txterr.setText("No Delivery Service Available for Location of Registered Address");
+
                         }
                     } catch (Exception ex) {
                         Log.e("Error:", ex.toString());
@@ -236,14 +257,14 @@ public class UserDetails extends Fragment implements View.OnClickListener{
                     //Get Regions Zimbabwe
                     if (spcountry.getSelectedItemPosition() == 1) {
                         type = "Province";
-                        if (isNetworkAvailable() == true) {
-                            new getDropDownValues().execute();
-                        } else {
-                            Toast.makeText(getContext(), "Please Check Your Network Connectivity", Toast.LENGTH_LONG).show();
-                        }
+                        value = "Zimbabwe";
+                        getDropDownValues(type, value);
 
                     } else {
                         txterr.setText("No Delivery Option available for the Selected Country");
+
+
+
                     }
                 }
             });
@@ -263,12 +284,22 @@ public class UserDetails extends Fragment implements View.OnClickListener{
                 public void onClick(View view) {
 
                     if (!rddlvry.isChecked() && !rdpckup.isChecked()) {
-                        Toast.makeText(getActivity(), "Please Select either Delivery or Pickup Options", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getActivity(), "Please Select either Delivery or Pickup Options", Toast.LENGTH_LONG).show();
+
+                        Toast ToastMessage = Toast.makeText(getActivity(),"Please Select either Delivery or Pickup Options",Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
                         return;
                     }
                     if (rddlvry.isChecked()) {
                         if (!rdregadd.isChecked() && !rdaltadd.isChecked()) {
-                            Toast.makeText(getActivity(), "Please Select either Registered Add or Alternative", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getActivity(), "Please Select either Registered Add or Alternative", Toast.LENGTH_LONG).show();
+
+                            Toast ToastMessage = Toast.makeText(getActivity(),"Please Select either Registered Add or Alternative",Toast.LENGTH_LONG);
+                            View toastView = ToastMessage.getView();
+                            toastView.setBackgroundResource(R.drawable.toast_background);
+                            ToastMessage.show();
                             return;
                         } else if (rdregadd.isChecked() && !rdaltadd.isChecked()) {
 
@@ -299,7 +330,12 @@ public class UserDetails extends Fragment implements View.OnClickListener{
 
 
                             if (txtaddress.getText().toString().isEmpty()) {
-                                Toast.makeText(getActivity(), "No Valid Registered Delivery Address Detected", Toast.LENGTH_LONG).show();
+                                //Toast.makeText(getActivity(), "No Valid Registered Delivery Address Detected", Toast.LENGTH_LONG).show();
+
+                                Toast ToastMessage = Toast.makeText(getActivity(),"No Valid Registered Delivery Address Detected",Toast.LENGTH_LONG);
+                                View toastView = ToastMessage.getView();
+                                toastView.setBackgroundResource(R.drawable.toast_background);
+                                ToastMessage.show();
                                 return;
                             }
 
@@ -311,15 +347,48 @@ public class UserDetails extends Fragment implements View.OnClickListener{
 
                                 txtno.setVisibility(View.VISIBLE);
                                 txtno.setText("No Delivery Option available for the registered Country, Please select another option.");
-                                return;
-                            }
-                            else if(!Region.toUpperCase().contentEquals("HARARE") || !Region.toUpperCase().contentEquals("HARARE")){
 
-                                Log.e("Getting saved adress", " Wrong Province " );
+
+                                new AlertDialog.Builder(getActivity())
+                                        .setTitle("Info")
+                                        .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+
+                                            }
+                                        })
+                                        .setNegativeButton("", null)
+                                        .setMessage(Html.fromHtml("No Delivery Option available for the registered Country, Please select another option." ))
+                                        .show();
+
+
+                                return;
+
+
+                            }
+                            else if(!Region.contains("Harare") && !Region.contains("Bulawayo")){
+
+                                Log.e("Getting saved adress", " Wrong Province " + Region);
                                 Log.e("Getting saved adress", "Adress: " + Address1 + " " + Address2 + " " + Region + " " + Surbub + " " + city + " " + Country);
 
                                 txtno.setVisibility(View.VISIBLE);
                                 txtno.setText("No Delivery Option available for the registered Province, Please select another option.");
+
+
+                                new AlertDialog.Builder(getActivity())
+                                        .setTitle("Info")
+                                        .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+
+                                            }
+                                        })
+                                        .setNegativeButton("", null)
+                                        .setMessage(Html.fromHtml("No Delivery Option available for the registered Province, Please select another option." ))
+                                        .show();
+
                                 return;
                             }
 
@@ -330,17 +399,16 @@ public class UserDetails extends Fragment implements View.OnClickListener{
 
 
 
-                                rdg.removeAllViews();
-                                ll02.removeAllViews();
-                                rdg.addView(rdNormal);
-                                rdg.addView(rdExpress);
-                                rdg.addView(rdExtended);
-                                rdNormal.setText("Normal ($5)");
-                                rdExpress.setText("Express ($10)");
-                                rdExtended.setText("Extended ($3)");
-                                rdg.setOrientation(LinearLayout.VERTICAL);
-                                rdg.setVisibility(View.VISIBLE);
-                                ll02.addView(rdg);
+                                ll01.setVisibility(View.GONE);
+
+                                ll02.setVisibility(View.VISIBLE);
+
+
+                                type = "DlvryChrg";
+                                value = Surbub;
+
+
+                                getDropDownValues(type, value);
 
 
                                 if (rdg.getCheckedRadioButtonId() > -1) {
@@ -365,63 +433,96 @@ public class UserDetails extends Fragment implements View.OnClickListener{
                                         editor.putString("DlvryAdd", DlvryAdd);
                                         editor.putString("DlvryType", chrg);
                                         editor.commit();
-                                        Toast.makeText(getContext(), "Your Delivery Charge is: $" + id1, Toast.LENGTH_LONG).show();
+                                        //Toast.makeText(getContext(), "Your Delivery Charge is: $" + id1, Toast.LENGTH_LONG).show();
 
 
-
+                                    Toast ToastMessage = Toast.makeText(getActivity(),"Your Delivery Charge is: $" + id1,Toast.LENGTH_LONG);
+                                    View toastView = ToastMessage.getView();
+                                    toastView.setBackgroundResource(R.drawable.toast_background);
+                                    ToastMessage.show();
 
 
 
                                         nexttab();
 
                                 } else {
-                                    Toast.makeText(getActivity(), "Please Select a Delivery Service (Normal / Express / Extended)", Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(getActivity(), "Please Select a Delivery Service (Normal / Express / Extended)", Toast.LENGTH_LONG).show();
+
+                                    Toast ToastMessage = Toast.makeText(getActivity(),"Please Select a Delivery Service (Normal / Express / Extended)",Toast.LENGTH_LONG);
+                                    View toastView = ToastMessage.getView();
+                                    toastView.setBackgroundResource(R.drawable.toast_background);
+                                    ToastMessage.show();
+
                                     return;
                                 }
                             }
                         } else if (!rdregadd.isChecked() && rdaltadd.isChecked()) {
+
                             if (txtaddline1.getText().toString().isEmpty()) {
-                                Toast.makeText(getActivity(), "Invalid Delivery Address Detected", Toast.LENGTH_LONG).show();
+                                //Toast.makeText(getActivity(), "Invalid Delivery Address Detected", Toast.LENGTH_LONG).show();
+
+                                Toast ToastMessage = Toast.makeText(getActivity(),"Invalid Delivery Address Detected",Toast.LENGTH_LONG);
+                                View toastView = ToastMessage.getView();
+                                toastView.setBackgroundResource(R.drawable.toast_background);
+                                ToastMessage.show();
                                 return;
-                            }
-
-                            if (rdg.getCheckedRadioButtonId() > -1) {
-                                int selectedId = rdg.getCheckedRadioButtonId();
-// find the radiobutton by returned id
-                                RadioButton rd = (RadioButton) getActivity().findViewById(selectedId);
-                                String chrg = rd.getText().toString();
-
-                                int startIndex = chrg.indexOf("(");
-                                int endIndex = chrg.indexOf(")");
-                                String id1 = chrg.substring(startIndex + 2, endIndex);
-
-                                String DlvryAdd;
-                                DlvryAdd = Address1 + "," + Address2 +
-                                        "," + Country + "," +
-                                        Region + "," +
-                                        Surbub;
-
-                                SharedPreferences.Editor editor = shared.edit();
-                                editor.putString("DlvryChrg", id1);
-                                editor.putString("DlvryAdd", DlvryAdd);
-                                editor.putString("DlvryType", chrg);
-                                editor.commit();
-                                Toast.makeText(getContext(), "Your Delivery Charge is: $" + id1, Toast.LENGTH_LONG).show();
-                                nexttab();
                             } else {
-                                Toast.makeText(getActivity(), "Invalid Delivery Address / Delivery Option Selected", Toast.LENGTH_LONG).show();
-                                return;
+                                //nexttab();
+                                ll01.setVisibility(View.GONE);
+
+                                ll02.setVisibility(View.VISIBLE);
+
+
+                                type = "DlvryChrg";
+                               // value = "Parkview";
+
+
+                                getDropDownValues(type, value);
+
+
+
+
+                                if (rdg.getCheckedRadioButtonId() > -1) {
+                                    int selectedId = rdg.getCheckedRadioButtonId();
+// find the radiobutton by returned id
+                                    RadioButton rd = (RadioButton) getActivity().findViewById(selectedId);
+                                    String chrg = rd.getText().toString();
+
+                                    int startIndex = chrg.indexOf("(");
+                                    int endIndex = chrg.indexOf(")");
+                                    String id1 = chrg.substring(startIndex + 2, endIndex);
+
+                                    String DlvryAdd;
+                                    DlvryAdd = txtaddline1.getText().toString() + "," + txtaddline2.getText().toString() +
+                                            "," + Country + "," +
+                                            Region + "," +
+                                            Surbub;
+
+                                    SharedPreferences.Editor editor = shared.edit();
+                                    editor.putString("DlvryChrg", id1);
+                                    editor.putString("DlvryAdd", DlvryAdd);
+                                    editor.putString("DlvryType", chrg);
+                                    editor.commit();
+                                    Toast.makeText(getContext(), "Your Delivery Charge is: $" + id1, Toast.LENGTH_LONG).show();
+                                    nexttab();
+                                } else {
+                                    Toast.makeText(getContext(), "Select dilivery charge!", Toast.LENGTH_LONG).show();
+                                    return;
+                                }
+
+
                             }
-
-
-                        } else {
-                            nexttab();
                         }
                     }
 
                     if (rdpckup.isChecked()) {
                         if (spin.getSelectedItem().toString().isEmpty() || spin.getSelectedItem().toString().contains("Select")) {
-                            Toast.makeText(getActivity(), "Please Select a City/Town", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getActivity(), "Please Select a City/Town", Toast.LENGTH_LONG).show();
+
+                            Toast ToastMessage = Toast.makeText(getActivity(),"Please Select a City/Town",Toast.LENGTH_LONG);
+                            View toastView = ToastMessage.getView();
+                            toastView.setBackgroundResource(R.drawable.toast_background);
+                            ToastMessage.show();
                             return;
                         }
                         //if (!rdg.isSelected()) {
@@ -443,7 +544,12 @@ public class UserDetails extends Fragment implements View.OnClickListener{
                                 nexttab();
                             }
                         } else {
-                            Toast.makeText(getActivity(), "No Pickup Locations in Selected City" + spin.getSelectedItem().toString(), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getActivity(), "No Pickup Locations in Selected City" + spin.getSelectedItem().toString(), Toast.LENGTH_LONG).show();
+
+                            Toast ToastMessage = Toast.makeText(getActivity(),"No Pickup Locations in Selected City",Toast.LENGTH_LONG);
+                            View toastView = ToastMessage.getView();
+                            toastView.setBackgroundResource(R.drawable.toast_background);
+                            ToastMessage.show();
                             return;
                         }
                         //}
@@ -465,6 +571,11 @@ public class UserDetails extends Fragment implements View.OnClickListener{
                         new getPickUpLocations().execute();
                     } else {
                         Toast.makeText(getContext(), "Please Check Your Network Connectivity", Toast.LENGTH_LONG).show();
+
+                        Toast ToastMessage = Toast.makeText(getActivity(),"Please Check Your Network Connectivity",Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
                     }
 
                 }
@@ -507,9 +618,14 @@ public class UserDetails extends Fragment implements View.OnClickListener{
                         value = "Zimbabwe";
 
                         if (isNetworkAvailable() == true) {
-                            new getDropDownValues().execute();
+                            getDropDownValues(type, value);
                         } else {
-                            Toast.makeText(getContext(), "Please Check Your Network Connectivity", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getContext(), "Please Check Your Network Connectivity", Toast.LENGTH_LONG).show();
+
+                            Toast ToastMessage = Toast.makeText(getActivity(),"Please Check Your Network Connectivity",Toast.LENGTH_LONG);
+                            View toastView = ToastMessage.getView();
+                            toastView.setBackgroundResource(R.drawable.toast_background);
+                            ToastMessage.show();
                             //pDialog.dismiss();
                         }
                         txterr.setText("");
@@ -520,6 +636,19 @@ public class UserDetails extends Fragment implements View.OnClickListener{
                         spprovince.setAdapter(null);
                         spcity.setAdapter(null);
                         spsurburb.setAdapter(null);
+
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle("Info")
+                                .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+
+                                    }
+                                })
+                                .setNegativeButton("", null)
+                                .setMessage(Html.fromHtml("No Delivery Option available for the Selected Country." ))
+                                .show();
 
                     }
 
@@ -541,11 +670,17 @@ public class UserDetails extends Fragment implements View.OnClickListener{
                     if (spprovince.getSelectedItemPosition() < 2) {
                         type = "City";
                         value = newValue;
+                        Region = newValue;
 
                         if (isNetworkAvailable() == true) {
-                            new getDropDownValues().execute();
+                            getDropDownValues(type, value);
                         } else {
-                            Toast.makeText(getContext(), "Please Check Your Network Connectivity", Toast.LENGTH_LONG).show();
+                           // Toast.makeText(getContext(), "Please Check Your Network Connectivity", Toast.LENGTH_LONG).show();
+
+                            Toast ToastMessage = Toast.makeText(getActivity(),"Please Check Your Network Connectivity",Toast.LENGTH_LONG);
+                            View toastView = ToastMessage.getView();
+                            toastView.setBackgroundResource(R.drawable.toast_background);
+                            ToastMessage.show();
                         }
                         txterr.setText("");
                         txterr.setVisibility(View.GONE);
@@ -554,6 +689,19 @@ public class UserDetails extends Fragment implements View.OnClickListener{
                         txterr.setVisibility(View.VISIBLE);
                         spcity.setAdapter(null);
                         spsurburb.setAdapter(null);
+
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle("Info")
+                                .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+
+                                    }
+                                })
+                                .setNegativeButton("", null)
+                                .setMessage(Html.fromHtml("No Delivery Option available for the Selected Province." ))
+                                .show();
                     }
 
                 }
@@ -572,11 +720,17 @@ public class UserDetails extends Fragment implements View.OnClickListener{
                     //Toast.makeText(getContext(),"city selected" +newValue,Toast.LENGTH_LONG).show();
                     type = "Surburb";
                     value = newValue;
+                    city = newValue;
 
                     if (isNetworkAvailable() == true) {
-                        new getDropDownValues().execute();
+                        getDropDownValues(type, value);
                     } else {
-                        Toast.makeText(getContext(), "Please Check Your Network Connectivity", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getContext(), "Please Check Your Network Connectivity", Toast.LENGTH_LONG).show();
+
+                        Toast ToastMessage = Toast.makeText(getActivity(),"Please Check Your Network Connectivity",Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
                     }
                     txterr.setText("");
                     txterr.setVisibility(View.GONE);
@@ -590,7 +744,10 @@ public class UserDetails extends Fragment implements View.OnClickListener{
 
             });
 
+
             spsurburb.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+
                 @Override
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                     // your code here
@@ -598,12 +755,18 @@ public class UserDetails extends Fragment implements View.OnClickListener{
                     //Toast.makeText(getContext(),"city selected" +newValue,Toast.LENGTH_LONG).show();
                     type = "DlvryChrg";
                     value = newValue;
+                    Surbub = newValue;
 
+                   /*
                     if (isNetworkAvailable() == true) {
                         new getDropDownValues().execute();
                     } else {
                         Toast.makeText(getContext(), "Please Check Your Network Connectivity", Toast.LENGTH_LONG).show();
                     }
+                    */
+
+
+
                     txterr.setText("");
                     txterr.setVisibility(View.GONE);
 
@@ -615,7 +778,9 @@ public class UserDetails extends Fragment implements View.OnClickListener{
                 }
 
             });
+
         }
+
             return view;
         }
 
@@ -824,7 +989,12 @@ public class UserDetails extends Fragment implements View.OnClickListener{
                             txtaddress.setTextColor(getResources().getColor(R.color.colorOrange));
                             //spin.setSelection(0);
                             txtaddress.setVisibility(View.VISIBLE);
-                            Toast.makeText(getContext(), "No Pick Up Points Available in Your City/Town: " + city, Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getContext(), "No Pick Up Points Available in Your City/Town: " + city, Toast.LENGTH_LONG).show();
+
+                            Toast ToastMessage = Toast.makeText(getActivity(),"No Pick Up Points Available in Your City/Town: ",Toast.LENGTH_LONG);
+                            View toastView = ToastMessage.getView();
+                            toastView.setBackgroundResource(R.drawable.toast_background);
+                            ToastMessage.show();
                             Log.d("Spinner Value ", city);
                         }
                     }
@@ -940,152 +1110,200 @@ public class UserDetails extends Fragment implements View.OnClickListener{
     }
 
 
-    class getDropDownValues extends AsyncTask<String, String, String> {
+    private void getDropDownValues(final String type, final String value){
+        com.android.volley.RequestQueue requestQueue= Volley.newRequestQueue(getContext());
+        pDialog = new ProgressDialog(getActivity());
+        pDialog.setMessage("Getting " + type +"...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(true);
+        pDialog.show();
+        StringRequest stringRequest=new StringRequest(Request.Method.POST, GETSURBURBS_URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                pDialog.dismiss();
 
-        /**
-         * Before starting background thread Show Progress Dialog
-         */
-        boolean failure = false;
+                Log.e("Type",""+s);
+                Log.e("Type..>>>>>>", ">>>" +  type);
+                Log.e("Value>>>>>", ">>>>>" +  value);
+                //{"success":1,"message":"Username Successfully Added!"}
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Getting " + type +"...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... args) {
-            // TODO Auto-generated method stub
-            // Check for success tag
-            int success;
-
-            try {
-                // Building Parameters
-                List<NameValuePair> params = new ArrayList<NameValuePair>();
-                params.add(new BasicNameValuePair("type", type));
-                params.add(new BasicNameValuePair("value", value));
-                // getting product details by making HTTP request
-                JSONObject json1 = jsonParser.makeHttpRequest(
-                        GETSURBURBS_URL, "POST", params);
-                Log.d("GET CITIES", GETSURBURBS_URL);
-                // check your log for json response
-
-                // json success tag
-                success = json1.getInt(TAG_SUCCESS);
-                if (success == 1) {
-                    return json1.getString(TAG_PRODUCTDETAILS);
-                } else {
-                    return json1.getString(TAG_MESSAGE);
-                }
-            } catch (JSONException e) {
-                Toast.makeText(getContext(), "Check your internet connection", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-
-                //pDialog.dismiss();
-            }
-
-            return null;
-
-        }
-
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
-        protected void onPostExecute(String posts) {
-            // dismiss the dialog once product deleted
-            pDialog.dismiss();
-            if (posts != null) {
-                JSONArray jsonarray02 = null;
                 try {
-                    jsonarray02 = new JSONArray(posts);
-                } catch (JSONException e) {
-                }
-                List<String> spinnerArray =  new ArrayList<String>();
+                    JSONObject jsonobject = new JSONObject(s);
+                    int success = jsonobject.getInt("success");
+                    if (success == 1) {
 
-                if (jsonarray02 != null) {
-                    try {
-                        Log.e("JSONing", jsonarray02.toString());
+                        JSONArray array = jsonobject.getJSONArray("posts");
 
-                        for (int i =0; i< jsonarray02.length(); i++) {
-                            String name="";
-                            JSONObject jsonobject = jsonarray02.getJSONObject(i);
-                            name = Html.fromHtml(jsonobject.optString("name")).toString();
-                            spinnerArray.add(name);
+
+                        List<String> spinnerArray = new ArrayList<String>();
+
+                        if (array != null) {
+                            try {
+
+
+                                for (int i = 0; i < array.length(); i++) {
+
+
+                                    JSONObject object = array.getJSONObject(i);
+
+                                    String name = object.optString("name");
+
+
+                                    spinnerArray.add(name);
+                                }
+                            } catch (JSONException e) {
+                                Log.e("Cities JSON Error: ", e.toString());
+                                e.printStackTrace();
+                            }
+
+
+                            if (type != "DlvryChrg") {
+                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                                        getContext(), android.R.layout.simple_spinner_item, spinnerArray);
+
+                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                Spinner sItems;
+                                if (type == "Province")
+                                    sItems = spprovince;
+                                else if (type == "City")
+                                    sItems = spcity;
+                                else if (type == "Surburb")
+                                    sItems = spsurburb;
+                                else
+                                    sItems = null;
+                                if (sItems != null)
+                                    sItems.setAdapter(adapter);
+                            } else {
+
+                                String Normal, Express, Extended = "";
+                                try {
+                                    rdg.removeAllViews();
+                                    Normal = String.valueOf(array.getJSONObject(0).getJSONObject("dlvrychrges").getJSONObject("normal").getString("Large"));
+                                    rdNormal.setText("Normal ($" + Normal + ")");
+
+                                    Express = String.valueOf(array.getJSONObject(0).getJSONObject("dlvrychrges").getJSONObject("express").getString("Large"));
+                                    rdExpress.setText("Express ($" + Express + ")");
+
+                                    Extended = String.valueOf(array.getJSONObject(0).getJSONObject("dlvrychrges").getJSONObject("extended").getString("Large"));
+                                    rdExtended.setText("Extended ($" + Extended + ")");
+
+                                    rdg.removeAllViews();
+                                    //main.removeAllViews();
+                                    ll02.removeAllViews();
+                                    rdg.addView(rdNormal);
+                                    rdg.addView(rdExpress);
+                                    rdg.addView(rdExtended);
+                                    rdg.setOrientation(LinearLayout.VERTICAL);
+                                    rdg.setVisibility(View.VISIBLE);
+                                    ll02.addView(rdg);
+
+
+                                    //rdg.removeAllViews();
+                                    //ll02.removeAllViews();
+                                    //rdg.addView(rdNormal);
+                                    //rdg.addView(rdExpress);
+                                    //rdg.addView(rdExtended);
+                                    //rdNormal.setText("Normal ($5)");
+                                    //rdExpress.setText("Express ($10)");
+                                    //rdExtended.setText("Extended ($3)");
+                                    //rdg.setOrientation(LinearLayout.HORIZONTAL);
+                                    //rdg.setVisibility(View.VISIBLE);
+                                    //ll02.addView(rdg);
+
+                                } catch (JSONException e) {
+                                    Log.e("Cities JSON Error: ", e.toString());
+                                    e.printStackTrace();
+                                }
+
+
+                            }
+
+                        }else{
+                                //Toast.makeText(getContext(), ("An error occured please try again..."), Toast.LENGTH_SHORT).show();
+
+                            Toast ToastMessage = Toast.makeText(getActivity(),"An error occured please try again...",Toast.LENGTH_LONG);
+                            View toastView = ToastMessage.getView();
+                            toastView.setBackgroundResource(R.drawable.toast_background);
+                            ToastMessage.show();
+                            }
+
+
                         }
-                    } catch (JSONException e) {
-                        Log.e("Cities JSON Error: ", e.toString());
-                        e.printStackTrace();
+
+                        else {
+
+                        if (type == "DlvryChrg"){
+
+
+                           // Toast.makeText(getContext(), ("Select another surbub..."), Toast.LENGTH_SHORT).show();
+
+                            //txterr.setVisibility(View.VISIBLE);
+                            //txterr.setText("Please kindly second another surbub as this one is out of our zone.");
+
+                            Log.e("Suceecc",">>>>>>>>>>>"+s);
+
+                            new AlertDialog.Builder(getActivity())
+                                    .setTitle("Info")
+                            .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+
+                                        }
+                                    })
+                                    .setNegativeButton("", null)
+                                    .setMessage(Html.fromHtml("Please select another surbub or choose another option as this one is out of our zone." ))
+                                    .show();
+
+                        }
+
+
+
                     }
-                    if (type != "DlvryChrg") {
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                                getContext(), android.R.layout.simple_spinner_item, spinnerArray);
-
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        Spinner sItems;
-                        if (type == "Province")
-                            sItems = spprovince;
-                        else if (type == "City")
-                            sItems = spcity;
-                        else if (type == "Surburb")
-                            sItems = spsurburb;
-                        else
-                            sItems = null;
-                        if (sItems != null)
-                            sItems.setAdapter(adapter);
-                    }
-                    else
-                    {
-
-                        String Normal, Express, Extended="";
-                        try {
-                            rdg.removeAllViews();
-                            Normal =String.valueOf(jsonarray02.getJSONObject(0).getJSONObject("dlvrychrges").getJSONObject("normal").getString("Large"));
-                            rdNormal.setText("Normal ($" +Normal + ")");
-
-                            Express = String.valueOf(jsonarray02.getJSONObject(0).getJSONObject("dlvrychrges").getJSONObject("express").getString("Large"));
-                            rdExpress.setText("Express ($" +Express+ ")");
-
-                            Extended = String.valueOf(jsonarray02.getJSONObject(0).getJSONObject("dlvrychrges").getJSONObject("extended").getString("Large"));
-                            rdExtended.setText("Extended ($" +Extended+ ")");
-
-                            rdg.removeAllViews();
-                            //main.removeAllViews();
-                            ll02.removeAllViews();
-                            rdg.addView(rdNormal);
-                            rdg.addView(rdExpress);
-                            rdg.addView(rdExtended);
-                            rdg.setOrientation(LinearLayout.HORIZONTAL);
-                            rdg.setVisibility(View.VISIBLE);
-                            ll02.addView(rdg);
 
 
-                            //rdg.removeAllViews();
-                            //ll02.removeAllViews();
-                            //rdg.addView(rdNormal);
-                            //rdg.addView(rdExpress);
-                            //rdg.addView(rdExtended);
-                            //rdNormal.setText("Normal ($5)");
-                            //rdExpress.setText("Express ($10)");
-                            //rdExtended.setText("Extended ($3)");
-                            //rdg.setOrientation(LinearLayout.HORIZONTAL);
-                            //rdg.setVisibility(View.VISIBLE);
-                            //ll02.addView(rdg);
-
-                        }catch (JSONException e) {
-                            Log.e("Cities JSON Error: ", e.toString());
+                }catch (JSONException e) {
                             e.printStackTrace();
                         }
+
                     }
-                }
-                //Toast.makeText(getActivity(), posts, Toast.LENGTH_LONG).show();
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        pDialog.dismiss();
+                        volleyError.printStackTrace();
+                        Log.e("RUEERROR",""+volleyError);
+
+
+
+                    }
+                }){
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String,String> values=new HashMap();
+                        values.put("type",type);
+                        values.put("value",value);
+
+
+
+                        return values;
+                    }
+
+
+                };
+                requestQueue.add(stringRequest);
+
+
+
+
             }
+
+
+
 
         }
 
-    }
 
-}
+
+
+

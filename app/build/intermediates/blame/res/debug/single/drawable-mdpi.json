@@ -76,12 +76,12 @@
         "source": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\generated\\res\\pngs\\debug\\drawable-mdpi\\ic_menu_share.png"
     },
     {
-        "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi\\ic_media_route_on_0_mono_dark.png",
-        "source": "C:\\Users\\Ruvimbo\\.android\\build-cache\\cb3406751825e6f5455612edb5233deafbcee39e\\output\\res\\drawable-mdpi\\ic_media_route_on_0_mono_dark.png"
-    },
-    {
         "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi\\ic_menu_manage.png",
         "source": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\generated\\res\\pngs\\debug\\drawable-mdpi\\ic_menu_manage.png"
+    },
+    {
+        "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi\\ic_media_route_on_0_mono_dark.png",
+        "source": "C:\\Users\\Ruvimbo\\.android\\build-cache\\cb3406751825e6f5455612edb5233deafbcee39e\\output\\res\\drawable-mdpi\\ic_media_route_on_0_mono_dark.png"
     },
     {
         "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi\\ic_media_route_on_1_mono_dark.png",

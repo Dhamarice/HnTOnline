@@ -3,6 +3,7 @@ package com.hammerandtongues.online.hntonline;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -13,21 +14,26 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,8 +45,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,8 +53,10 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import preferences.MyPref;
@@ -78,6 +84,8 @@ public class Login  extends Fragment {
     private static final String UPDATE_URL = "https://devshop.hammerandtongues.com/webservice/updatedetails.php";
     private static final String RESET_URL = "https://devshop.hammerandtongues.com/webservice/ResetPass.php";
 
+    private static final String FIELDS_URL = "https://devshop.hammerandtongues.com/webservice/getsurburbs.php";
+
     private static final String GETPUSER_URL = "https://devshop.hammerandtongues.com/webservice/getuserdetail.php";
     private static final String GETCITIES_URL = "https://devshop.hammerandtongues.com/webservice/getcities.php";
     private static final String GETSURBURBS_URL = "https://devshop.hammerandtongues.com/webservice/getsurburbs.php";
@@ -91,7 +99,7 @@ public class Login  extends Fragment {
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MESSAGE = "message";
     private static final String TAG_CATEGORIES = "posts";
-    TextView ewallet, pemail, address,welcum, ewall, addwarning,membership, points;
+    TextView ewallet, pemail, address,welcum, ewall, addwarning,membership, points, addresslbl, plsaddlbl;
     int success=0;
 
     EditText username, password, nameoremail;
@@ -103,8 +111,10 @@ public class Login  extends Fragment {
     ImageView symbolcoin;
     LinearLayout add_details, forgotform, input_container, inside,BasicForm, notifyform, my_finances;
     Button update, logout, basic, shopping, addadd, back,bac,updat, reset,btnnotify, deposit_money, withdraw,my_transactions,transfer_credits,redeem_points,back_to_profile, finances;
-    EditText txtadd1, txtadd2, txtsurbub, txtcity, txtregion, txtidno, txtcountry, uEName, fName, sName, email, pword_login, pword_confrim;
+    EditText txtadd1, txtadd2, txtidno, uEName, fName, sName, email, pword_login, pword_confrim;
     String   idno, add1,add2, suburb, city, region, country;
+    AutoCompleteTextView  txtsurbub, txtcity, txtregion;
+    Spinner txtcountry;
 
     boolean isClicked = true;
     PopupWindow popUpWindow;
@@ -125,9 +135,10 @@ public class Login  extends Fragment {
             pDialog = new ProgressDialog(getContext());
             pDialog.setMessage("Loading...");
             pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
+            pDialog.setCancelable(true);
             shared = getActivity(). getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
             System.gc();
+
 
 
             input_container = (LinearLayout) view.findViewById(R.id.input_container);
@@ -163,13 +174,15 @@ public class Login  extends Fragment {
             addwarning = (TextView) view.findViewById(R.id.addwarning);
             membership = (TextView) view.findViewById(R.id.membershiplevel);
             points = (TextView) view.findViewById(R.id.loyalty_points);
+            addresslbl = (TextView) view.findViewById(R.id.paddresslabel);
+            plsaddlbl = (TextView) view.findViewById(R.id.pladdress);
             nameoremail = (EditText) view.findViewById(R.id.nameoremailll);
             txtadd1 = (EditText) view.findViewById(R.id.addressLn1);
             txtadd2 = (EditText) view.findViewById(R.id.addressLn2);
-            txtsurbub = (EditText) view.findViewById(R.id.surbub);
-            txtcity = (EditText) view.findViewById(R.id.city);
-            txtregion = (EditText) view.findViewById(R.id.regionstate);
-            txtcountry = (EditText) view.findViewById(R.id.country);
+            txtsurbub = (AutoCompleteTextView) view.findViewById(R.id.surbub);
+            txtcity = (AutoCompleteTextView) view.findViewById(R.id.city);
+            txtregion = (AutoCompleteTextView) view.findViewById(R.id.regionstate);
+            txtcountry = (Spinner) view.findViewById(R.id.country);
             txtidno = (EditText) view.findViewById(R.id.idno);
             uEName =(EditText) view.findViewById(R.id.uName);
             fName = (EditText) view.findViewById(R.id.fName);
@@ -355,41 +368,6 @@ public class Login  extends Fragment {
 
 
 
-            update.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View view) {
-
-
-                    //else if (next.getText().toString().trim().toUpperCase().contentEquals("SAVE")){
-
-                    if (txtadd1.getText().toString().contentEquals("") || txtadd2.getText().toString().contentEquals("") || txtsurbub.getText().toString().contentEquals("") ||
-                            txtcity.getText().toString().contentEquals("") || txtregion.getText().toString().contentEquals("") || txtidno.getText().toString().contentEquals("") ||
-                            txtcountry.getText().toString().contentEquals("")) {
-                        Toast.makeText(getContext(), "All fields are mandatory", Toast.LENGTH_LONG).show();
-                    } else {
-
-                        // Log.e("Submit Button Text", save.getText().toString());
-                        idno = txtidno.getText().toString();
-                        add1 = txtadd1.getText().toString();
-                        add2 = txtadd2.getText().toString();
-
-                        suburb = txtsurbub.getText().toString();
-                        city = txtcity.getText().toString();
-                        region = txtregion.getText().toString();
-
-                        country = txtcountry.getText().toString();
-
-                        SaveDetails(add1, add2, country, region, city, suburb, idno);
-                        SharedPreferences.Editor editor = shared.edit();
-                        editor.putString("address", add1 + add2);
-                        editor.commit();
-
-                        MyPrefAddress.saveAllAddress(getContext(), add1, add2, suburb, city, region, country);
-
-                    }
-                }
-            });
 
             basic.setOnClickListener(new View.OnClickListener() {
 
@@ -409,10 +387,8 @@ public class Login  extends Fragment {
 
                 @Override
                 public void onClick(View view) {
-                    //idcontainer.setVisibility(View.GONE);
-                    inside.setVisibility(View.VISIBLE);
-                    tione.setVisibility(View.GONE);
-                    add_details.setVisibility(View.GONE);
+                    Intent intent = new Intent(getContext(), UserActivity.class);
+                    startActivity(intent);
 
                 }
             });
@@ -421,9 +397,8 @@ public class Login  extends Fragment {
 
                 @Override
                 public void onClick(View view) {
-                    tione.setVisibility(View.GONE);
-                    BasicForm.setVisibility(View.GONE);
-                    inside.setVisibility(View.VISIBLE);
+                    Intent intent = new Intent(getContext(), UserActivity.class);
+                    startActivity(intent);
 
 
                 }
@@ -436,7 +411,14 @@ public class Login  extends Fragment {
 
                     if (uEName.getText().toString().contentEquals("") || fName.getText().toString().contentEquals("") || sName.getText().toString().contentEquals("") ||
                             email.getText().toString().contentEquals("") ) {
-                        Toast.makeText(getContext(), "Fields cannot be empty!", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getContext(), "Fields cannot be empty!", Toast.LENGTH_LONG).show();
+
+
+                        Toast ToastMessage = Toast.makeText(getContext(),"Fields cannot be empty!!",Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
+
                     } else {
 
                         uEname = uEName.getText().toString();
@@ -464,7 +446,12 @@ public class Login  extends Fragment {
 
                     if (pword_login.getText().toString().contentEquals("") || pword_confrim.getText().toString().contentEquals("")){
 
-                        Toast.makeText(getContext(), "Password fields can not be empty for reset!", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getContext(), "Password fields can not be empty for reset!", Toast.LENGTH_LONG).show();
+
+                        Toast ToastMessage = Toast.makeText(getContext(),"Password fields can not be empty for reset!",Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
 
 
                     }
@@ -478,12 +465,14 @@ public class Login  extends Fragment {
 
                     else{
 
-                        Toast.makeText(getContext(), "Passwords do not match!", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getContext(), "Passwords do not match!", Toast.LENGTH_LONG).show();
+
+                        Toast ToastMessage = Toast.makeText(getContext(),"Passwords do not match!",Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
                     }
 
-                    SharedPreferences.Editor editor = shared.edit();
-                    editor.putString("address", add1 + add2);
-                    editor.commit();
 
                 }
             });
@@ -513,7 +502,12 @@ public class Login  extends Fragment {
 
                     if (nameoremail.getText().toString().contentEquals("")){
 
-                        Toast.makeText(getContext(), "Please enter your username or Email", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getContext(), "Please enter your username or Email", Toast.LENGTH_LONG).show();
+
+                        Toast ToastMessage = Toast.makeText(getContext(),"Please enter your username or Email!",Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
 
 
                     }
@@ -539,6 +533,155 @@ else {
                 }
             });
 
+
+// MY SPINNERS
+
+            //DISPLAYING COUNTRIES
+
+
+            Locale[] locales = Locale.getAvailableLocales();
+            ArrayList<String> countries = new ArrayList<String>();
+            for (Locale locale : locales) {
+                String country = locale.getDisplayCountry();
+                if (country.trim().length() > 0 && !countries.contains(country)) {
+                    countries.add(country);
+                }
+            }
+            Collections.sort(countries);
+            for (String country : countries) {
+                System.out.println(country);
+            }
+
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_spinner_item, countries);
+            // set the view for the Drop down list
+            dataAdapter
+                    .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            // set the ArrayAdapter to the spinner
+            txtcountry.setAdapter(dataAdapter);
+            txtcountry.setSelection(245);
+
+            System.out.println("# countries found: " + countries.size());
+
+            txtcountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                    // your code here
+                    final String newValue = (String) txtcountry.getItemAtPosition(position);
+
+                    country = newValue;
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parentView) {
+                    // your code here
+                }
+
+            });
+
+
+
+
+
+
+            getspinnerfields(txtregion, "Province", "not applicable");
+
+            txtregion.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    // TODO Auto-generated method stub
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+
+                     region = txtregion.getText().toString();
+
+                    Log.e("On text changed", "afterTextChanged: region" + region );
+                    getspinnerfields(txtcity, "City", region);
+
+                    // TODO Auto-generated method stub
+                }
+            });
+
+
+
+
+
+            txtcity.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+                    Log.e("On text changed", "onTextChanged: region" + region );
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    // TODO Auto-generated method stub
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+
+                  city = txtcity.getText().toString();
+
+                    Log.e("On text changed", "afterTextChanged: region" + city );
+                    getspinnerfields(txtsurbub, "Surburb", city);
+
+                    // TODO Auto-generated method stub
+                }
+            });
+
+
+
+
+
+
+
+
+            update.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+
+
+                    //else if (next.getText().toString().trim().toUpperCase().contentEquals("SAVE")){
+
+                    if (txtadd1.getText().toString().contentEquals("") || txtadd2.getText().toString().contentEquals("") || txtsurbub.getText().toString().contentEquals("") ||
+                            txtcity.getText().toString().contentEquals("") ||txtregion.getText().toString().contentEquals("") || txtidno.getText().toString().contentEquals("")) {
+                        //Toast.makeText(getContext(), "All fields are mandatory", Toast.LENGTH_LONG).show();
+
+                        Toast ToastMessage = Toast.makeText(getContext(),"All fields are mandatory!",Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
+
+
+                    } else {
+
+                        // Log.e("Submit Button Text", save.getText().toString());
+                        idno = txtidno.getText().toString();
+                        add1 = txtadd1.getText().toString();
+                        add2 = txtadd2.getText().toString();
+                        suburb = txtsurbub.getText().toString();
+
+
+                        SaveDetails(add1, add2, country, region, city, suburb, idno);
+
+                    }
+                }
+            });
 
 
 
@@ -568,10 +711,21 @@ else {
                 pemail.setText(Html.fromHtml( "<b>" + Email + "</b>"));
 
 
-                if (Address !=null && Address !="" && Address !="null" && !Address.contentEquals("null")){
+                if (Address !=null && Address !="" && Address !="null null null" && !Address.contentEquals("null null null")){
+
+                    plsaddlbl.setText("Edit address details!");
 
 
                     addwarning.setText(Html.fromHtml( "<b>" + Address + "</b>"));
+
+
+                    txtidno.setText(shared.getString("idno", ""));
+                    txtadd1.setText(MyPrefAddress.getAddress1(getContext()));
+                    txtadd2.setText(MyPrefAddress.getAddress2(getContext()));
+                    txtsurbub.setText(MyPrefAddress.getSurbub(getContext()));
+                    txtcity.setText(MyPrefAddress.getCity(getContext()));
+                    txtregion.setText(MyPrefAddress.getRegion(getContext()));
+
 
 
                     inside.setVisibility(View.VISIBLE);
@@ -581,11 +735,18 @@ else {
 
                     addwarning.setTextColor(Color.BLACK);
                     addwarning.setText("Please register your address details, for a better shopping experience!!!");
+                    addresslbl.setText(" ");
+
 
                     inside.setVisibility(View.GONE);
                     BasicForm.setVisibility(View.GONE);
                     tione.setVisibility(View.VISIBLE);
                     add_details.setVisibility(View.VISIBLE);
+
+
+                    sName.setText(shared.getString("sname", ""));
+                    fName.setText(shared.getString("Fname", ""));
+
 
                 }
 
@@ -605,7 +766,7 @@ else {
                 ewall.setText("$" + Balance);
 
 
-                if (membership_level == null || membership_level.contentEquals("") ) {
+                if (membership_level == null || membership_level.contentEquals("") || membership_level.contentEquals("null") ) {
                 membership_level = "Bronze";
                 }
             membership.setText(Html.fromHtml( "<b>" + membership_level + "</b>"));
@@ -630,7 +791,7 @@ else {
                     symbolcoin.setImageResource(R.drawable.bronzealltypes);
                 }
 
-                if (loyalty_points == null || loyalty_points.contentEquals("") ) {
+                if (loyalty_points == null || loyalty_points.contentEquals("") || loyalty_points.contentEquals("null") ) {
                     loyalty_points = "0";
                 }
                 points.setText(Html.fromHtml( "<b>" + loyalty_points + " points </b>"));
@@ -668,6 +829,9 @@ else {
 
             });
 
+
+            pDialog.dismiss();
+
             return view;
         }
         catch (Exception ex)
@@ -676,7 +840,15 @@ else {
             System.gc();
             return null;
         }
+
+
+
+
     }
+
+
+
+
 
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
@@ -742,22 +914,28 @@ else {
 
 
                         String post_id = object.optString("id");
-                        String address = object.optString("add");
+                        String address1 = object.optString("add1");
+                        String address2 = object.optString("add2");
+                        String mycity = object.optString("city");
+                        String mysurbub= object.optString("surbub");
                         String province = object.optString("province");
                         String country = object.optString("country");
                         String uname = object.optString("uname");
-                        String Fname = object.optString("Fname");
-                        String sname = object.optString("sname");
+                        String Fname = object.optString("firstname");
+                        String sname = object.optString("lastname");
                         String umail = object.optString("umail");
                         String balance = object.optString("balance");
                         String number = object.optString("mobile_number");
                         String membership = object.optString("level");
                         String points = object.optString("loyalty_points");
+                        String idno = object.optString("idno");
+                        String telno = object.optString("cellno");
                         SharedPreferences.Editor editor = shared.edit();
                         editor.putString("userid", post_id);
-                            editor.putString("address", address);
+                            editor.putString("address", address1 + " " + address2 + " " + mysurbub);
 
-                       MyPrefAddress.saveAllAddress(getContext(), address, address, uname, province, province, country);
+                       MyPrefAddress.saveAllAddress(getContext(), address1, address2, mycity, province, mysurbub, country);
+                        MyPref.savePhoneNumber(getContext(),telno);
 
                         editor.putString("uname", uname);
                         editor.putString("Fname", Fname);
@@ -766,6 +944,7 @@ else {
                         editor.putString("balance", balance);
                         editor.putString("telno", number);
                         editor.putString("membership", membership);
+                        editor.putString("idno", idno);
                         editor.putString("points", points);
                         editor.putString("options", "checkout");
                         editor.commit();
@@ -795,10 +974,24 @@ else {
                             startActivity(intent);
                         }
 
-                        Toast.makeText(getContext(), (message), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), (message), Toast.LENGTH_SHORT).show();
+
+                        Toast ToastMessage = Toast.makeText(getContext(),message,Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
+
 
                     }else{
-                        Toast.makeText(getContext(), (message), Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(getContext(), (message), Toast.LENGTH_SHORT).show();
+
+
+
+                        Toast ToastMessage = Toast.makeText(getContext(),message,Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
+
                     }
 
 
@@ -814,7 +1007,15 @@ else {
                 pDialog.dismiss();
                 volleyError.printStackTrace();
                 Log.e("RUEERROR",""+volleyError);
-                Toast.makeText(getContext(), "Please check your Intenet and try again!", Toast.LENGTH_LONG).show();
+
+                //Toast.makeText(getContext(), "Please check your Intenet and try again!", Toast.LENGTH_LONG).show();
+
+
+                Toast ToastMessage = Toast.makeText(getContext(),"Please check your Intenet and try again!",Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
+
             }
         }){
             @Override
@@ -828,14 +1029,6 @@ else {
             }
 
 
-//            @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//
-//                Map<String,String> headers=new HashMap();
-//                headers.put("Accept","application/json");
-//                headers.put("Content-Type","application/json");
-//                return headers;
-//            }
         };
 
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(100000,0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
@@ -868,19 +1061,43 @@ else {
                     int success=jsonobject.getInt("success");
                     if(success==1){
 
-                        Toast.makeText(getContext(), ("Update Successfull!"), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), ("Update Successfull!"), Toast.LENGTH_SHORT).show();
+
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle("Info")
+                                .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+
+                                    }
+                                })
+                                .setNegativeButton("", null)
+                                .setMessage(Html.fromHtml("Adress details successfull updated!" ))
+                                .show();
+
+                        SharedPreferences.Editor editor = shared.edit();
+                        editor.putString("address", address1 + " " + address2 + " " + surbub);
+                        editor.putString("idno", idno);
+                        editor.commit();
+
+                        MyPrefAddress.saveAllAddress(getContext(), address1, address2, city, regionstate, surbub,  country);
 
 
 
 
-
-                        inside.setVisibility(View.VISIBLE);
-                        tione.setVisibility(View.GONE);
-                        add_details.setVisibility(View.GONE);
+                        //Intent intent = new Intent(getContext(), UserActivity.class);
+                        //startActivity(intent);
 
 
                     }else{
-                        Toast.makeText(getContext(), ("An error occured please try again..."), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), ("An error occured please try again..."), Toast.LENGTH_SHORT).show();
+
+                        Toast ToastMessage = Toast.makeText(getContext(),"An error occured please try again...!",Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
+
                     }
 
 
@@ -896,6 +1113,14 @@ else {
                 pDialog.dismiss();
                 volleyError.printStackTrace();
                 Log.e("RUEERROR",""+volleyError);
+
+                //Log.e("Values from method"," By order is "+address1 + " " + address2 + " " + country + " " + regionstate + " " + city + " " + surbub + " " + Idno);
+
+                Toast ToastMessage = Toast.makeText(getContext(),"Please check your Intenet and try again!",Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
+
             }
         }){
             @Override
@@ -910,19 +1135,13 @@ else {
                 values.put("surbub", surbub);
                 values.put("Idno", Idno);
                 values.put("telno", MyPref.getPhone(getContext()));
+                //values.put("telno","+263776844024");
+
 
                 return values;
             }
 
 
-//            @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//
-//                Map<String,String> headers=new HashMap();
-//                headers.put("Accept","application/json");
-//                headers.put("Content-Type","application/json");
-//                return headers;
-//            }
         };
         requestQueue.add(stringRequest);
 
@@ -938,245 +1157,9 @@ else {
 
 
 
-    class AttemptLogin extends AsyncTask<Void, Void, String> {
-        /**
-         * Before starting background thread Show Progress Dialog
-         * */
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-
-//            pDialog.show();
-
-        }
-
-        @Override
-        protected String doInBackground(Void... args) {
-            // TODO Auto-generated method stub
-            // Check for success tag
-            success=0;
-            // Building Parameters
-            JSONObject json = new JSONObject();
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("username", uname));
-            params.add(new BasicNameValuePair("password", pword));
-            json = jsonParser.makeHttpRequest(
-                    LOGIN_URL, "POST", params);
-//            Log.d("request!", "ending Get Products" + json.toString());
-
-
-            if (json != null)    // check your log for json response
-            {
-                Log.d("Login attempt", json.toString());
-
-                // json success tag
-                success = Integer.parseInt(json.optString (TAG_SUCCESS));
-                if (success == 1) {
-                    Log.d("GET Successful!", json.optString(TAG_CATEGORIES));
-                    return json.optString(TAG_CATEGORIES);
-                } else {
-                    Log.d("Login Failure!", json.optString(TAG_MESSAGE));
-                    return json.optString(TAG_CATEGORIES);
-                }
-            }
-            return "No Data";
-
-        }
-
-        /**
-         * After completing background task Dismiss the progress dialog
-         * **/
-        protected void onPostExecute(String posts) {
-            //dismiss the dialog once asynctask  complete
-            //    pDialog.dismiss();
-            if (posts != null) {
-                if (success==1)
-                {
-                    Log.e("JSON Output: ", posts);
-                    // Toast.makeText(getActivity(),"Welcome - Happy Shopping",Toast.LENGTH_LONG).show();
-                    JSONArray jsonarray02 = null;
-                    try {
-                        jsonarray02 = new JSONArray(posts);
-
-                    } catch (JSONException e) {
-                        Log.e("JSON Error: ", e.toString());
-                        Log.e("Detail of Error", posts);
-                        e.printStackTrace();
-                    }
-                    if (jsonarray02 != null) {
-                        try {
-                            JSONObject jsonobject = jsonarray02.getJSONObject(0);
-                            String post_id = jsonobject.optString("id");
-                            String address = jsonobject.optString("add");
-                            String uname = jsonobject.optString("uname");
-                            String umail = jsonobject.optString("umail");
-                            String balance = jsonobject.optString("balance");
-                            SharedPreferences.Editor editor = shared.edit();
-                            editor.putString("userid", post_id);
-
-                            if (address != null && address != "") {
-                                editor.putString("address", address);
-                            }
-
-                            else {editor.putString("address", "");}
-
-                            editor.putString("uname", uname);
-                            editor.putString("umail", umail);
-                            editor.putString("balance", balance);
-                            editor.putString("options", "checkout");
-                            editor.commit();
-
-
-                            Log.e("User ID", post_id);
-                            Log.e("User Address",address);
-                        } catch (JSONException e) {
-                            Log.e("JSON Error: ", e.toString());
-                            e.printStackTrace();
-                        }
-
-
-                    }
-                    else
-                    {
-                        Toast.makeText(getActivity(), posts, Toast.LENGTH_LONG).show();
-                    }
-                    TabLayout tabLayout=(TabLayout) getActivity().findViewById(R.id.tabs02);
-                    final ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.viewpager02);
-                    final PagerAdapter adapter = new PagerAdapter02 (getFragmentManager(), tabLayout.getTabCount());
-                    viewPager.setAdapter(adapter);
-                    viewPager.setCurrentItem(1);
-
-                }
-                else
-                {
-                    Toast.makeText(getActivity(),"Invalid Credentials",Toast.LENGTH_LONG).show();
-                }
-            }
-
-        }
 
 
 
-
-    }
-
-
-    class GetEWalletBalance extends AsyncTask<Void, Void, String> {
-        /**
-         * Before starting background thread Show Progress Dialog
-         * */
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            pDialog = new ProgressDialog(getContext());
-            pDialog.setMessage("Loading, Please Wait...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
-
-        }
-
-        @Override
-        protected String doInBackground(Void... args) {
-            // TODO Auto-generated method stub
-            // Check for success tag
-            success=0;
-            // Building Parameters
-            JSONObject json = new JSONObject();
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("uid", shared.getString("userid", "")));
-            json = jsonParser.makeHttpRequest(
-                    EWALL_URL, "POST", params);
-            Log.d("request!", "ending Get Products"+ json.toString());
-
-
-            if (json != null)    // check your log for json response
-            {
-                Log.d("Login attempt", json.toString());
-
-                // json success tag
-                success = Integer.parseInt(json.optString (TAG_SUCCESS));
-                if (success == 1) {
-                    Log.d("GET Successful!", json.optString(TAG_CATEGORIES));
-                    return json.optString(TAG_CATEGORIES);
-                } else {
-                    Log.d("Login Failure!", json.optString(TAG_MESSAGE));
-                    return json.optString(TAG_CATEGORIES);
-                }
-            }
-            return "No Data";
-
-        }
-
-        /**
-         * After completing background task Dismiss the progress dialog
-         * **/
-        protected void onPostExecute(String posts) {
-            //dismiss the dialog once asynctask  complete
-            pDialog.dismiss();
-            if (posts != null) {
-                if (success==1)
-                {
-                    try {
-                        Log.e("JSON Output: ", posts);
-                        //Toast.makeText(getActivity(),"Welcome - Happy Shopping",Toast.LENGTH_LONG).show();
-                        JSONArray jsonarray02 = null;
-                        try {
-                            jsonarray02 = new JSONArray(posts);
-
-                        } catch (JSONException e) {
-                            Log.e("JSON Error: ", e.toString());
-                            Log.e("Detail of Error", posts);
-                            e.printStackTrace();
-                        }
-                        if (jsonarray02 != null) {
-                            try {
-                                JSONObject jsonobject = jsonarray02.getJSONObject(0);
-                                String balance = jsonobject.optString("balance");
-                                SharedPreferences.Editor editor = shared.edit();
-                                editor.putString("balance", balance);
-                                editor.putString("options", "checkout");
-                                editor.commit();
-
-                                if (balance != null){
-                                    ewallet.setText("E-Wallet Balance: " + balance);
-                                }
-
-                                else {
-                                    ewallet.setText("E-Wallet Balance: " + 0.00);
-                                }
-                                Log.e("Balance", balance);
-
-                            } catch (JSONException e) {
-                                Log.e("JSON Error: ", e.toString());
-                                e.printStackTrace();
-                            }
-
-
-                        }
-                        else
-                        {
-                            Toast.makeText(getActivity(), posts, Toast.LENGTH_LONG).show();
-                        }
-
-                    } catch (Exception e) {
-                        Log.e("Error: ", e.toString());
-
-                    }
-                }
-                else
-                {
-                    Toast.makeText(getActivity(),"Invalid Credentials",Toast.LENGTH_LONG).show();
-                }
-            }
-
-        }
-
-    }
 
 
     class GetConnectionStatus extends AsyncTask<String, Void, Boolean> {
@@ -1229,7 +1212,13 @@ else {
                 } else
 
                 {
-                    Toast.makeText(getContext(), "Network is Currently Unavailable", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getContext(), "Network is Currently Unavailable", Toast.LENGTH_LONG).show();
+
+                    Toast ToastMessage = Toast.makeText(getContext(),"Network is Currently Unavailable!",Toast.LENGTH_LONG);
+                    View toastView = ToastMessage.getView();
+                    toastView.setBackgroundResource(R.drawable.toast_background);
+                    ToastMessage.show();
+
                 }
             }
             catch (Exception ex) {
@@ -1261,22 +1250,30 @@ else {
                     String message = jsonObject.getString("message");
                     if(success==1){
 
-                        Intent intent = new Intent(getActivity(), UserActivity.class);
-                        startActivity(intent);
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle("Info")
+                                .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
 
 
-                        //  mChangeAdapter.callbackToZero(0);
-                        Toast.makeText(getContext(), "Your account was created successful", Toast.LENGTH_SHORT).show();
-                        Fragment fragment = new Register();
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.idcontainer, fragment);
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
+                                    }
+                                })
+                                .setNegativeButton("", null)
+                                .setMessage(Html.fromHtml("Your Details have been updated successfully." ))
+                                .show();
 
 
                     }else{
-                        Toast.makeText(getContext(), (s), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), (s), Toast.LENGTH_SHORT).show();
+
+
+
+                        Toast ToastMessage = Toast.makeText(getContext(),message,Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
+
                     }
 
 
@@ -1292,6 +1289,11 @@ else {
                 pDialog.dismiss();
 
                 Log.e("RUEERROR",""+volleyError);
+
+                Toast ToastMessage = Toast.makeText(getContext(),"Please check your Intenet and try again!",Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
             }
         }){
             @Override
@@ -1300,11 +1302,11 @@ else {
                 values.put("update", "update");
                 values.put("username",username);
                 values.put("surname", surname);
-
                 values.put("email", email);
-                values.put("telno", MyPref.getPhone(getContext()));
-
                 values.put("firstname", firstname);
+
+                    values.put("telno", MyPref.getPhone(getContext()));
+
 
                 return values;
             }
@@ -1343,12 +1345,19 @@ else {
 
                     if(success==1){
 
-                        Intent intent = new Intent(getActivity(), UserActivity.class);
-                        startActivity(intent);
+
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle("Info")
+                                .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
 
 
-                        //  mChangeAdapter.callbackToZero(0);
-                        Toast.makeText(getContext(), "Your password was reset successful Password to " + Pass, Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .setNegativeButton("", null)
+                                .setMessage(Html.fromHtml("Your password was reset successful Password to " + Pass ))
+                                .show();
 
 
 
@@ -1358,7 +1367,13 @@ else {
 
 
 
-                        Toast.makeText(getContext(), "An sms and an email has been sent to you ", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), "An sms and an email has been sent to you ", Toast.LENGTH_SHORT).show();
+
+
+                        Toast ToastMessage = Toast.makeText(getContext(),"An sms has been sent to you ",Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
 
 
                         notifyform.setVisibility(View.VISIBLE);
@@ -1369,7 +1384,12 @@ else {
 
 
                     else{
-                        Toast.makeText(getContext(), (message), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), (message), Toast.LENGTH_SHORT).show();
+
+                        Toast ToastMessage = Toast.makeText(getContext(),message,Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
                     }
 
 
@@ -1377,7 +1397,12 @@ else {
                 } catch (JSONException e) {
                     e.printStackTrace();
 
-                    Toast.makeText(getContext(), "An error occurred", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), "An error occurred", Toast.LENGTH_SHORT).show();
+
+                    Toast ToastMessage = Toast.makeText(getContext(),"An error occurred",Toast.LENGTH_LONG);
+                    View toastView = ToastMessage.getView();
+                    toastView.setBackgroundResource(R.drawable.toast_background);
+                    ToastMessage.show();
 
                 }
 
@@ -1389,7 +1414,14 @@ else {
 
                 Log.e("RUEERROR",""+volleyError);
 
-                Toast.makeText(getContext(), "No Intenet connection!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "No Intenet connection!", Toast.LENGTH_SHORT).show();
+
+                Toast ToastMessage = Toast.makeText(getContext(),"No Intenet connection!",Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
+
+
             }
         }){
             @Override
@@ -1406,6 +1438,130 @@ else {
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS,0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         requestQueue.add(stringRequest);
+
+
+
+
+    }
+
+
+
+    //Method to get all levels
+    public void getspinnerfields(final AutoCompleteTextView autotxt, final String type, final String value){
+
+
+        com.android.volley.RequestQueue requestQueue= Volley.newRequestQueue(getActivity());
+
+        StringRequest stringRequest=new StringRequest(Request.Method.POST, FIELDS_URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+
+
+                Log.e("Success",""+s);
+
+                //{"success":1,"message":"Username Successfully Added!"}
+
+                try {
+                    JSONObject jsonobject = new JSONObject(s);
+                    int success = jsonobject.getInt("success");
+                    if (success == 1) {
+
+
+                        JSONArray array = jsonobject.getJSONArray("posts");
+
+
+                        List<String> spinnerArray = new ArrayList<String>();
+
+                        if (array != null) {
+                            try {
+
+
+                                for (int i = 0; i < array.length(); i++) {
+
+
+                                    JSONObject object = array.getJSONObject(i);
+
+                                    String level = object.optString("name");
+
+
+                                    spinnerArray.add(level);
+                                }
+                            } catch (JSONException e) {
+                                Log.e("Cities JSON Error: ", e.toString());
+                                e.printStackTrace();
+                            }
+
+
+
+                            //Creating the instance of ArrayAdapter containing list of language names
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                                    (getActivity(),android.R.layout.select_dialog_item,spinnerArray);
+                            //Getting the instance of AutoCompleteTextView
+                            //AutoCompleteTextView actv= (AutoCompleteTextView)findViewById(R.id.autoCompleteTextView1);
+                            autotxt.setThreshold(0);//will start working from first character
+                            autotxt.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
+                            autotxt.setTextColor(Color.RED);
+
+                            pDialog.dismiss();
+
+
+
+
+/*
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                                    getActivity(), android.R.layout.simple_spinner_item, spinnerArray);
+
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                            spinner.setAdapter(adapter);
+                            spinner.setSelection(2);
+*/
+                        } else {
+                           // Toast.makeText(getActivity(), ("Connection error..."), Toast.LENGTH_SHORT).show();
+
+                            Toast ToastMessage = Toast.makeText(getContext(),"Connection error...!",Toast.LENGTH_LONG);
+                            View toastView = ToastMessage.getView();
+                            toastView.setBackgroundResource(R.drawable.toast_background);
+                            ToastMessage.show();
+                        }
+
+                    }
+
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                pDialog.dismiss();
+                volleyError.printStackTrace();
+                Log.e("RUEERROR",""+volleyError);
+                //Toast.makeText(getActivity(), "Please check your Intenet and try again!", Toast.LENGTH_LONG).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> values=new HashMap();
+
+                values.put("type",type);
+                values.put("value",value);
+
+
+
+
+                return values;
+            }
+
+
+        };
+
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(100000,0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(stringRequest);
+        //requestQueue.add(stringRequest);
+
 
 
 

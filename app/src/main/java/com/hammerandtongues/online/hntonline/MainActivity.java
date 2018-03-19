@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity
     public static final String Category = "idcateg";
     SharedPreferences sharedpreferences;
 
+
+
     private SliderLayout mDemoSlider;
     private ProgressDialog pDialog ;
     private DatabaseHelper dbHandler;
@@ -74,6 +76,7 @@ public class MainActivity extends AppCompatActivity
     int hourofday = calendar.get(Calendar.HOUR_OF_DAY);
     int dayofyear = calendar.get(Calendar.DAY_OF_YEAR);
     public String hourText, minuteText, timeofday, dayofyeartext, dayofyearstored;
+    private static final int REQUEST_INVITE = 2;
     private ProgressDialog progressDialog;
 
 
@@ -526,7 +529,15 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     mDemoSlider.setPresetTransformer(((TextView) view).getText().toString());
-                    Toast.makeText(MainActivity.this, ((TextView) view).getText().toString(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainActivity.this, ((TextView) view).getText().toString(), Toast.LENGTH_SHORT).show();
+
+
+                    Toast ToastMessage = Toast.makeText(MainActivity.this,((TextView) view).getText().toString(),Toast.LENGTH_LONG);
+                    View toastView = ToastMessage.getView();
+                    toastView.setBackgroundResource(R.drawable.toast_background);
+                    ToastMessage.show();
+
+
                 }
             });
 
@@ -666,6 +677,13 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, Faqs.class);
             startActivity(intent);
         }
+        else if (id == R.id.invite) {
+            Intent intent = new Intent(MainActivity.this, Invite_friends.class);
+            startActivity(intent);
+
+
+
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -733,7 +751,14 @@ public class MainActivity extends AppCompatActivity
         editor.commit();
         Intent intent = new Intent(MainActivity.this, Store.class);
         startActivity(intent);
-        Toast.makeText(this, slider.getBundle().get("extra") + "", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, slider.getBundle().get("extra") + "", Toast.LENGTH_SHORT).show();
+
+        Toast ToastMessage = Toast.makeText(MainActivity.this,slider.getBundle().get("extra") + "",Toast.LENGTH_LONG);
+        View toastView = ToastMessage.getView();
+        toastView.setBackgroundResource(R.drawable.toast_background);
+        ToastMessage.show();
+
+
     }
 
     @Override
@@ -887,7 +912,14 @@ public class MainActivity extends AppCompatActivity
                 break;
                 */
             default:
-                Toast.makeText(this,v.toString() + "Clicked (Invalid Object Call", Toast.LENGTH_LONG).show();
+                //Toast.makeText(this,v.toString() + "Clicked (Invalid Object Call", Toast.LENGTH_LONG).show();
+
+                Toast ToastMessage = Toast.makeText(MainActivity.this,"Clicked (Invalid Object Call",Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
+
+
                 break;
         }
     }
@@ -1012,7 +1044,15 @@ public class MainActivity extends AppCompatActivity
 
                 {
 
-                    Toast.makeText(MainActivity.this , "Network is Currently Unavailable", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(MainActivity.this , "Network is Currently Unavailable", Toast.LENGTH_LONG).show();
+
+
+                    Toast ToastMessage = Toast.makeText(MainActivity.this,"Network is Currently Unavailable!",Toast.LENGTH_LONG);
+                    View toastView = ToastMessage.getView();
+                    toastView.setBackgroundResource(R.drawable.toast_background);
+                    ToastMessage.show();
+
+
                     pDialog.dismiss();
                 }
             }

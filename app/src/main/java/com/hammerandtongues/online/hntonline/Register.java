@@ -3,14 +3,14 @@ package com.hammerandtongues.online.hntonline;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -76,7 +77,8 @@ public class Register extends Fragment {
     public static final String Name = "nameKey";
     SharedPreferences sharedpreferences;
     LinearLayout pdetails, adetails, cdetails;
-    Button submit,signin, editnum;
+    Button submit,signin, editnum, resendcode;
+TextView textnocode;
     EditText txtusername, txtemail, txtpassword, txtfname, txtsname, txtpasswordcon, txttelno;
     EditText txtcode;
     String username, email, password, fname, sname, idno, telno, add1,add2,suburb, city, region, userid, code, mobilenum, selectcode, Pconfirm;
@@ -89,7 +91,7 @@ public class Register extends Fragment {
             super.onCreate(savedInstanceState);
             jsonParser = new JSONParser();
             System.gc();
-            SharedPreferences sharedpreferences = getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+            final SharedPreferences sharedpreferences = getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
             pdetails = (LinearLayout) view.findViewById(R.id.personaldetails);
             adetails = (LinearLayout) view.findViewById(R.id.addressdetails);
@@ -106,7 +108,14 @@ public class Register extends Fragment {
             txttelno = (EditText) view.findViewById(R.id.telephone);
             txtcode = (EditText) view.findViewById(R.id.code);
             editnum = (Button) view.findViewById(R.id.editnum);
+            resendcode = (Button) view.findViewById(R.id.resendcode);
+            textnocode = (TextView) view.findViewById(R.id.txtnocode);
             final Spinner spinner = (Spinner) view.findViewById(R.id.codespinner);
+
+
+            Log.e("On Create: ", "laststatus is: " + sharedpreferences.getString("laststatus", "") );
+
+
 
 
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -142,7 +151,50 @@ public class Register extends Fragment {
 
 
 
+
+
             signin = (Button) view.findViewById(R.id.register);
+
+
+
+
+
+            if (sharedpreferences.getString("laststatus", "").contentEquals("entercode") ){
+
+                Log.e("On Create: enetr code ", "laststatus is: " + sharedpreferences.getString("laststatus", "") );
+
+
+                adetails.setVisibility(View.GONE);
+                cdetails.setVisibility(View.VISIBLE);
+                editnum.setVisibility(View.VISIBLE);
+                resendcode.setVisibility(View.VISIBLE);
+                textnocode.setVisibility(View.VISIBLE);
+                signin.setText("SEND CODE");
+
+
+            }
+            else if (sharedpreferences.getString("laststatus", "").contentEquals("enterdetails")){
+
+                Log.e("On Create enetrdtils: ", "laststatus is: " + sharedpreferences.getString("laststatus", "") );
+
+                adetails.setVisibility(View.GONE);
+                cdetails.setVisibility(View.GONE);
+                editnum.setVisibility(View.GONE);
+                resendcode.setVisibility(View.GONE);
+                textnocode.setVisibility(View.GONE);
+                pdetails.setVisibility(View.VISIBLE);
+                signin.setText("SIGN UP");
+
+            }
+
+
+
+
+
+
+
+
+
             signin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
@@ -151,33 +203,60 @@ public class Register extends Fragment {
                     if (signin.getText().toString().trim().toUpperCase().contentEquals("VERIFY NUMBER")
                             ) {
                         if(txttelno.getText().toString().contentEquals("") ) {
-                            Toast.makeText(getContext(), "Please enter your mobile number", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getContext(), "Please enter your mobile number", Toast.LENGTH_LONG).show();
+
+                            Toast ToastMessage = Toast.makeText(getContext(),"Please enter your mobile number!",Toast.LENGTH_LONG);
+                            View toastView = ToastMessage.getView();
+                            toastView.setBackgroundResource(R.drawable.toast_background);
+                            ToastMessage.show();
+
                         }
 
                         else{
+
                             telno = (selectcode + txttelno.getText().toString());
                             Log.e("Submit Button Text", signin.getText().toString());
-//                            pdetails.setVisibility(View.GONE);
-//                            adetails.setVisibility(View.VISIBLE);
-//                            cdetails.setVisibility(View.VISIBLE);
-//
-//
-//
-//                            signin.setText("SEND CODE");
-                            saveTel(telno);
 
-                            Log.e("Success", "" + telno);
+                            new AlertDialog.Builder(getActivity())
+                                    .setTitle("Confirm number")
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+
+
+
+
+
+                                            saveTel(telno, "notresend");
+
+                                            Log.e("Success", "" + telno);
+
+
+                                        }
+                                    })
+                                    .setNegativeButton("No", null)
+                                    .setMessage(Html.fromHtml("Send sms to the number " + telno + "?" ))
+                                    .show();
+
+
                         }
                     }
 
                     else if (signin.getText().toString().trim().toUpperCase().contentEquals("SEND CODE")
                             ) {
                         if(txtcode.getText().toString().contentEquals("") ) {
-                            Toast.makeText(getContext(), "Please enter the confirmation code!", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getContext(), "Please enter the confirmation code!", Toast.LENGTH_LONG).show();
+
+                            Toast ToastMessage = Toast.makeText(getContext(),"Please enter the confirmation code!",Toast.LENGTH_LONG);
+                            View toastView = ToastMessage.getView();
+                            toastView.setBackgroundResource(R.drawable.toast_background);
+                            ToastMessage.show();
                         }
 
                         else{
                             code = txtcode.getText().toString();
+                            telno = sharedpreferences.getString("lastnumber", "");
 
                             saveCode(code, telno);
 
@@ -189,7 +268,12 @@ public class Register extends Fragment {
                             ) {
                         if(txtusername.getText().toString().contentEquals("")  || txtpassword.getText().toString().contentEquals("") || txtemail.getText().toString().contentEquals("") ||
                                 txtfname.getText().toString().contentEquals("")  || txtsname.getText().toString().contentEquals("") ) {
-                            Toast.makeText(getContext(), "All fields are mandatory", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getContext(), "All fields are mandatory", Toast.LENGTH_LONG).show();
+
+                            Toast ToastMessage = Toast.makeText(getContext(),"All fields are mandatory!",Toast.LENGTH_LONG);
+                            View toastView = ToastMessage.getView();
+                            toastView.setBackgroundResource(R.drawable.toast_background);
+                            ToastMessage.show();
                         }
 
                         else{
@@ -211,7 +295,12 @@ public class Register extends Fragment {
                             }
 
                             else{
-                                Toast.makeText(getContext(), "Passwords do not match!", Toast.LENGTH_LONG).show();
+                                //Toast.makeText(getContext(), "Passwords do not match!", Toast.LENGTH_LONG).show();
+
+                                Toast ToastMessage = Toast.makeText(getContext(),"Passwords do not match!!",Toast.LENGTH_LONG);
+                                View toastView = ToastMessage.getView();
+                                toastView.setBackgroundResource(R.drawable.toast_background);
+                                ToastMessage.show();
 
                             }
 
@@ -240,6 +329,8 @@ public class Register extends Fragment {
                 @Override
                 public void onClick(View view) {
 
+                    telno = MyPref.getPhone(getContext());
+
                     Log.e("onClick", "num from prefs" + telno);
                     Editnum(telno);   //get user id from lastinsert save code & upload editinum script
 
@@ -248,6 +339,21 @@ public class Register extends Fragment {
                 }
 
             });
+
+            resendcode.setOnClickListener(new View.OnClickListener(){
+
+
+                @Override
+                public  void onClick(View view){
+
+                    telno = MyPref.getPhone(getContext());
+
+                    Log.e("onClick", "num from prefs" + telno);
+                    saveTel(telno, "Resend");
+
+                }
+                                          }
+            );
 
             return view;
 
@@ -341,7 +447,13 @@ public class Register extends Fragment {
             // dismiss the dialog once product deleted
             pDialog.dismiss();
             if (file_url != null){
-                Toast.makeText(getContext(), file_url, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), file_url, Toast.LENGTH_LONG).show();
+
+                Toast ToastMessage = Toast.makeText(getContext(),file_url,Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
+
             }
 
         }
@@ -369,24 +481,37 @@ public class Register extends Fragment {
                 try {
                     JSONObject jsonObject=new JSONObject(s);
                     int success=jsonObject.getInt("success");
+                    String message=jsonObject.getString("message");
                     if(success==1){
+
+
+                        sharedpreferences = getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.remove("laststatus");
+                        editor.commit();
 
                         Intent intent = new Intent(getActivity(), UserActivity.class);
                         startActivity(intent);
 
 
-                      //  mChangeAdapter.callbackToZero(0);
-                        Toast.makeText(getContext(), "Your account was created successful", Toast.LENGTH_SHORT).show();
-                        Fragment fragment = new Register();
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.idcontainer, fragment);
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
+
+                        //Toast.makeText(getContext(), "Your account was created successful", Toast.LENGTH_SHORT).show();
+
+
+                        Toast ToastMessage = Toast.makeText(getContext(),"Your account was created successful",Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
+
 
 
                     }else{
-                        Toast.makeText(getContext(), (s), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), (s), Toast.LENGTH_SHORT).show();
+
+                        Toast ToastMessage = Toast.makeText(getContext(),message,Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
                     }
 
 
@@ -400,6 +525,11 @@ public class Register extends Fragment {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 pDialog.dismiss();
+
+                Toast ToastMessage = Toast.makeText(getContext(),"Please check your Intenet and try again!",Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
 
                 Log.e("RUEERROR",""+volleyError);
             }
@@ -435,7 +565,7 @@ public class Register extends Fragment {
 
     }
 
-    private void saveTel(final String telno){
+    private void saveTel(final String telno, final String type){
         com.android.volley.RequestQueue requestQueue= Volley.newRequestQueue(getContext());
 
 
@@ -460,11 +590,19 @@ public class Register extends Fragment {
 
                         Log.e("Success", "" + telno);
 
+                        sharedpreferences = getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString("laststatus", "entercode");
+                        editor.putString("lastnumber", telno);
+                        editor.commit();
+
                         pdetails.setVisibility(View.GONE);
                         adetails.setVisibility(View.GONE);
                         cdetails.setVisibility(View.VISIBLE);
-
-
+                        editnum.setVisibility(View.VISIBLE);
+                        resendcode.setVisibility(View.VISIBLE);
+                        textnocode.setVisibility(View.VISIBLE);
 
                         signin.setText("SEND CODE");
 
@@ -472,7 +610,12 @@ public class Register extends Fragment {
                         MyPref.savePhoneNumber(getContext(),telno);
 
 
-                        Toast.makeText(getContext(),"Code sent!", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(),"Code sent!", Toast.LENGTH_SHORT).show();
+
+                        Toast ToastMessage = Toast.makeText(getContext(),"Code sent!",Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
 
 
                         JSONArray array=jsonObject.getJSONArray("posts");
@@ -482,14 +625,34 @@ public class Register extends Fragment {
 
 
                     }else{
-                        Toast.makeText(getContext(), ("Number already in use!"), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), ("Number already in use!"), Toast.LENGTH_SHORT).show();
+
+
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle("Info")
+                                .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+
+                                    }
+                                })
+                                .setNegativeButton("", null)
+                                .setMessage(Html.fromHtml("Number already in use!" ))
+                                .show();
+
                     }
 
 
 
                 } catch (JSONException e) {
 
-                    Toast.makeText(getContext(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+
+                    Toast ToastMessage = Toast.makeText(getContext(),"Check your internet connection!",Toast.LENGTH_LONG);
+                    View toastView = ToastMessage.getView();
+                    toastView.setBackgroundResource(R.drawable.toast_background);
+                    ToastMessage.show();
 
                     e.printStackTrace();
                 }
@@ -500,16 +663,24 @@ public class Register extends Fragment {
             public void onErrorResponse(VolleyError volleyError) {
                 pDialog.dismiss();
 
+
+
                 Log.e("RUEERROR",""+volleyError);
 
 
-                Toast.makeText(getContext(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+
+                Toast ToastMessage = Toast.makeText(getContext(),"Check your internet connection!",Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
             }
         }){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> values=new HashMap();
                 values.put("telno", telno);
+                values.put("type", type);
 
                 return values;
             }
@@ -544,20 +715,56 @@ String codeDB=jsonObject.getString("code");
 
                         if(!code.equals(codeDB)){
 
-                            Toast.makeText(getContext(), "Invalid code", Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getContext(), "Invalid code", Toast.LENGTH_LONG).show();
+
+                            new AlertDialog.Builder(getActivity())
+                                    .setTitle("Info")
+                                    .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+
+                                        }
+                                    })
+                                    .setNegativeButton("", null)
+                                    .setMessage(Html.fromHtml("Code incorrect, try again..." ))
+                                    .show();
 
                             return;
                         }
-
+                        sharedpreferences = getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString("laststatus", "enterdetails");
+                        editor.commit();
 
                         Log.e("Submit Button Text", signin.getText().toString());
                         pdetails.setVisibility(View.VISIBLE);
+                        editnum.setVisibility(View.GONE);
+                        resendcode.setVisibility(View.GONE);
+                        textnocode.setVisibility(View.GONE);
                         adetails.setVisibility(View.GONE);
                         cdetails.setVisibility(View.GONE);
                         signin.setText("SIGN UP");
 
 
-                        Toast.makeText(getContext(), "Verification successful", Toast.LENGTH_SHORT).show();
+
+
+                        //Toast.makeText(getContext(), "Verification successful", Toast.LENGTH_SHORT).show();
+
+
+
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle("Info")
+                                .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+
+                                    }
+                                })
+                                .setNegativeButton("", null)
+                                .setMessage(Html.fromHtml("Number Verification successful. Register your basic details" ))
+                                .show();
 
 
 
@@ -565,19 +772,30 @@ String codeDB=jsonObject.getString("code");
 
                         SharedPreferences sharedpreferences = getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
-                        SharedPreferences.Editor editor = sharedpreferences.edit();
+
 
                         editor.putString("user_id", UserId);
                         editor.commit();
 
 
                     }else{
-                        Toast.makeText(getContext(), ("Verification failed"), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), ("Verification failed"), Toast.LENGTH_SHORT).show();
+
+
+                        Toast ToastMessage = Toast.makeText(getContext(),"Verification failed!",Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
                     }
 
 
 
                 } catch (JSONException e) {
+
+                    Toast ToastMessage = Toast.makeText(getContext(),"Please check your Intenet and try again!",Toast.LENGTH_LONG);
+                    View toastView = ToastMessage.getView();
+                    toastView.setBackgroundResource(R.drawable.toast_background);
+                    ToastMessage.show();
                     e.printStackTrace();
                 }
 
@@ -586,6 +804,11 @@ String codeDB=jsonObject.getString("code");
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 pDialog.dismiss();
+
+                Toast ToastMessage = Toast.makeText(getContext(),"Please check your Intenet and try again!",Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
 
                 Log.e("RUEERROR",""+volleyError);
             }
@@ -628,21 +851,40 @@ String codeDB=jsonObject.getString("code");
 
 
 
-                        Toast.makeText(getContext(), "Number edit", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), "Number edit", Toast.LENGTH_SHORT).show();
+
+                        Toast ToastMessage = Toast.makeText(getContext(),"Edit your Number ",Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
 
                         pdetails.setVisibility(View.GONE);
                         cdetails.setVisibility(View.GONE);
+                        editnum.setVisibility(View.GONE);
+                        resendcode.setVisibility(View.GONE);
+                        textnocode.setVisibility(View.GONE);
                         adetails.setVisibility(View.VISIBLE);
                         signin.setText("VERIFY NUMBER");
 
 
                     }else{
-                        Toast.makeText(getContext(), ("Cannot edit number"), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), ("Cannot edit number"), Toast.LENGTH_SHORT).show();
+
+                        Toast ToastMessage = Toast.makeText(getContext(),"Cannot edit number",Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
                     }
 
 
 
                 } catch (JSONException e) {
+
+                    Toast ToastMessage = Toast.makeText(getContext(),"Please check your Intenet and try again!",Toast.LENGTH_LONG);
+                    View toastView = ToastMessage.getView();
+                    toastView.setBackgroundResource(R.drawable.toast_background);
+                    ToastMessage.show();
+
                     e.printStackTrace();
                 }
 
@@ -652,6 +894,10 @@ String codeDB=jsonObject.getString("code");
             public void onErrorResponse(VolleyError volleyError) {
                 pDialog.dismiss();
 
+                Toast ToastMessage = Toast.makeText(getContext(),"Please check your Intenet and try again!",Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
                 Log.e("RUEERROR",""+volleyError);
             }
         }){

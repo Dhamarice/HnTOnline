@@ -2,5 +2,9 @@
     {
         "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\xml\\shortcuts.xml",
         "source": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\src\\main\\res\\xml\\shortcuts.xml"
+    },
+    {
+        "merged": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\res\\merged\\debug\\xml\\searchable.xml",
+        "source": "C:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\src\\main\\res\\xml\\searchable.xml"
     }
 ]

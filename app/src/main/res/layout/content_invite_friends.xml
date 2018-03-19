@@ -1,0 +1,42 @@
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.hammerandtongues.online.hntonline.UserActivity"
+                android:id="@+id/outerparent">
+
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageViewlogo"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/logo"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Invite your contacts to start using the hammerandtoungues shopping mall mobile application!"
+        android:layout_gravity="center_horizontal"
+        android:textSize="18dp"
+        android:layout_below="@+id/imageViewlogo"
+        android:textColor="@color/colorDarkness"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="INVITE"
+        android:layout_below="@+id/imageViewlogo"
+        android:textColor="#ecf0f1"
+        android:background="@drawable/default_rounded"
+        android:padding="15dp"
+        android:layout_marginTop="100dp"
+        android:id="@+id/btninvite"
+        android:layout_weight="1"/>
+
+
+</RelativeLayout>

@@ -232,7 +232,13 @@ public class CheckoutFragment  extends Fragment {
 
                         Intent intent = new Intent(getActivity(), CheckOut_Activity.class);
                         startActivity(intent);
-                        Toast.makeText(getActivity(),"Order total updated!",Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(),"Order total updated!",Toast.LENGTH_SHORT).show();
+
+                        Toast ToastMessage = Toast.makeText(getActivity(),"Order total updated!",Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
+
                         getActivity().finish();
                     }
 
@@ -417,7 +423,7 @@ public class CheckoutFragment  extends Fragment {
 
                                                        Qty = quantity;
 
-                                                    dbHandler.updatecart(quantity, PostId);
+                                                    dbHandler.updatecart(quntonline, ProdId);
 
 
                                                     SharedPreferences.Editor editorr = shared.edit();
@@ -492,7 +498,20 @@ public class CheckoutFragment  extends Fragment {
                                     editor.apply();
 
 
-                                        Toast.makeText(getActivity(), "Unknown error! Please try again later", Toast.LENGTH_LONG).show();
+                                        //Toast.makeText(getActivity(), "Unknown error! Please try again later", Toast.LENGTH_LONG).show();
+
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+                                            Toast ToastMessage = Toast.makeText(getActivity(),"Unknown error! Please try again later",Toast.LENGTH_LONG);
+                                            View toastView = ToastMessage.getView();
+                                            toastView.setBackgroundResource(R.drawable.toast_background);
+                                            ToastMessage.show();
+                                        }
+                                    });
+
+
 
 
 
@@ -624,14 +643,27 @@ public class CheckoutFragment  extends Fragment {
 
             //pDialog.dismiss();
             if (posts != null){
-                Toast.makeText(getContext(), posts, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), posts, Toast.LENGTH_LONG).show();
+
+                Toast ToastMessage = Toast.makeText(getActivity(),posts,Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
+
 
                 if (shared.getString("Name", "")!= null && shared.getString("Name", "")!= "") {
 
                     PrName = shared.getString("Name", "");
 
 
-                    Toast.makeText(getActivity(), PrName + "is now out of stock!!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getActivity(), PrName + "is now out of stock!!", Toast.LENGTH_LONG).show();
+
+                    Toast ToastMessage1 = Toast.makeText(getActivity(),"is now out of stock!!",Toast.LENGTH_LONG);
+                    View toastView1 = ToastMessage1.getView();
+                    toastView1.setBackgroundResource(R.drawable.toast_background);
+                    ToastMessage1.show();
+
+
 
                 }
             }

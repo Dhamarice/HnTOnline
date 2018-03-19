@@ -438,7 +438,12 @@ else {
                 itmcontr.addView(resultno);
 
                 Log.e("Cursor handler null", "cursor handler null");
-                Toast.makeText(Search.this, "No items match your search!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(Search.this, "No items match your search!", Toast.LENGTH_SHORT).show();
+
+                Toast ToastMessage = Toast.makeText(Search.this,"No items match your search!",Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
 
 
                 Snackbar snackbar = Snackbar
@@ -465,7 +470,12 @@ else {
 
             Log.e("DB handler null", "db handler null");
 
-            Toast.makeText( Search.this, "No items match your search!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText( Search.this, "No items match your search!", Toast.LENGTH_SHORT).show();
+
+            Toast ToastMessage = Toast.makeText(Search.this,"No items match your search!",Toast.LENGTH_LONG);
+            View toastView = ToastMessage.getView();
+            toastView.setBackgroundResource(R.drawable.toast_background);
+            ToastMessage.show();
 
 
             Snackbar snackbar = Snackbar
@@ -505,7 +515,13 @@ else {
         db.addFavoriteItem(ctm);
         Log.e("Notifications", "Finished saving an item" + id );
 
-        Toast.makeText(Search.this , "Item added to Favourites!", Toast.LENGTH_LONG).show();
+        //Toast.makeText(Search.this , "Item added to Favourites!", Toast.LENGTH_LONG).show();
+
+        Toast ToastMessage = Toast.makeText(Search.this,"Item added to Favourites!",Toast.LENGTH_LONG);
+        View toastView = ToastMessage.getView();
+        toastView.setBackgroundResource(R.drawable.toast_background);
+        ToastMessage.show();
+
         Locale locale = new Locale("en", "US");
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
 
@@ -679,7 +695,12 @@ else {
 
                 } catch (JSONException e) {
 
-                    Toast.makeText(getApplicationContext(), "An error accoured, please try again ", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "An error accoured, please try again ", Toast.LENGTH_SHORT).show();
+
+                    Toast ToastMessage = Toast.makeText(getApplicationContext(),"An error accoured, please try again !",Toast.LENGTH_LONG);
+                    View toastView = ToastMessage.getView();
+                    toastView.setBackgroundResource(R.drawable.toast_background);
+                    ToastMessage.show();
 
                     e.printStackTrace();
                 }
@@ -689,7 +710,15 @@ else {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
 
-                Toast.makeText(getApplicationContext(), "No internet connection! ", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "No internet connection! ", Toast.LENGTH_SHORT).show();
+
+
+                Toast ToastMessage = Toast.makeText(getApplicationContext(),"No internet connection !",Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
+
+
                 pDialog.dismiss();
 
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -863,7 +892,14 @@ else {
                     noresult.setText("Network is Currently Unavailable");
                     layout.addView(noresult);
 
-                    Toast.makeText( Search.this ,"Network is Currently Unavailable",Toast.LENGTH_LONG).show();
+                    //Toast.makeText( Search.this ,"Network is Currently Unavailable",Toast.LENGTH_LONG).show();
+
+
+                Toast ToastMessage = Toast.makeText(getApplicationContext(),"Network is Currently Unavailable !",Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
+
                 }
             }
         }
