@@ -103,7 +103,7 @@ public class Login  extends Fragment {
     int success=0;
 
     EditText username, password, nameoremail;
-    String uname, pword, uEname, fEname, eEmail, sEname,Plogin,Pconfirm, userReset;
+    String uname, pword, uEname, fEname, eEmail, sEname,Plogin,Pconfirm, userReset, oldpassword;
     String Email, uName,membership_level, loyalty_points, Balance="";
     String Address = "";
     String UserID = "";
@@ -111,7 +111,7 @@ public class Login  extends Fragment {
     ImageView symbolcoin;
     LinearLayout add_details, forgotform, input_container, inside,BasicForm, notifyform, my_finances;
     Button update, logout, basic, shopping, addadd, back,bac,updat, reset,btnnotify, deposit_money, withdraw,my_transactions,transfer_credits,redeem_points,back_to_profile, finances;
-    EditText txtadd1, txtadd2, txtidno, uEName, fName, sName, email, pword_login, pword_confrim;
+    EditText txtadd1, txtadd2, txtidno, uEName, fName, sName, email, pword_login, pword_confrim, oldpass;
     String   idno, add1,add2, suburb, city, region, country;
     AutoCompleteTextView  txtsurbub, txtcity, txtregion;
     Spinner txtcountry;
@@ -190,6 +190,7 @@ public class Login  extends Fragment {
             email = (EditText) view.findViewById(R.id.eEmail);
             pword_login = (EditText) view.findViewById(R.id.pword_login);
             pword_confrim = (EditText) view.findViewById(R.id.pword_confrim);
+            oldpass = (EditText) view.findViewById(R.id.oldpassword);
             symbolcoin = (ImageView) view.findViewById(R.id.coin);
 
 
@@ -458,9 +459,10 @@ public class Login  extends Fragment {
 
                     Plogin = pword_login.getText().toString();
                     Pconfirm = pword_confrim.getText().toString();
+                    oldpassword = oldpass.getText().toString();
                     userReset = "notnecessary";
                     if(Plogin.contentEquals(Pconfirm) ) {
-                        ResetPass(Plogin,UserID, userReset);
+                        ResetPass(Plogin,UserID, userReset, oldpassword);
                     }
 
                     else{
@@ -515,8 +517,9 @@ else {
                         userReset = nameoremail.getText().toString();
                         UserID = "unknownhapanazeronada";
                         Plogin = "unknownhapanazeronada";
+                        oldpassword = "notthere";
 
-                        ResetPass(Plogin, UserID, userReset);
+                        ResetPass(Plogin, UserID, userReset, oldpassword);
                     }
 
                 }
@@ -1321,7 +1324,7 @@ else {
 
     }
 
-    private void ResetPass(final String Pass, final String userID, final String useroremail){
+    private void ResetPass(final String Pass, final String userID, final String useroremail, final String oldpassword){
         com.android.volley.RequestQueue requestQueue= Volley.newRequestQueue(getContext());
 
         Log.e("NUMBER",(shared.getString("telno", "")));
@@ -1356,7 +1359,7 @@ else {
                                     }
                                 })
                                 .setNegativeButton("", null)
-                                .setMessage(Html.fromHtml("Your password was reset successful Password to " + Pass ))
+                                .setMessage(Html.fromHtml("Your password was reset successfully. New Password is " + Pass ))
                                 .show();
 
 
@@ -1430,6 +1433,7 @@ else {
                 values.put("password",Pass);
                 values.put("userid",userID);
                 values.put("useroremail",useroremail);
+                values.put("oldpassword",oldpassword);
 
                 return values;
             }
