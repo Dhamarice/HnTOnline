@@ -71,7 +71,7 @@
 
             <item
                 android:id="@+id/invite"
-                android:icon="@drawable/faq"
+                android:icon="@drawable/manypeopleoutline"
                 android:title="Invite Friends" />
         </menu>
     </item>

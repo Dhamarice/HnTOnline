@@ -15,11 +15,23 @@
     <string name="hello_world">Invite your contacts to start using HnTOnline Shopping App</string>
     <string name="permission_rationale">You have not granted permission to acces your contacts. </string>
 
+    <string name="hntbankdetails">Bank Details: Name:
+        Hammer and Tongues
+       Bank: CBZ
+       Branch: Selous Ave
+       Acc#: 02122858190015k
+    </string>
 
     <string name="findContact">find person&#8230;</string>
 
     <string name="termsandconditons">
     </string>
+
+    <string-array name="site_arrays">
+
+        <item>Online Auction</item>
+
+    </string-array>
 
     <string-array name="code_arrays">
         <item>+263</item>
@@ -251,10 +263,6 @@
 
     </string-array>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_chat__webview">Chat_Webview</string>
-    <string name="title_activity_invite_friends">Invite_friends</string>
 </resources>
 
 

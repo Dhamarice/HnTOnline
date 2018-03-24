@@ -43,7 +43,7 @@ import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-import static com.hammerandtongues.online.hntonline.Login.isNumeric;
+import static com.hammerandtongues.online.hntonline.UserActivity.isNumeric;
 
 /**
  * Created by NgonidzaIshe on 9/6/2016.

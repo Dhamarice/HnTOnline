@@ -82,6 +82,19 @@
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="Register"
+                        android:textSize="12dp"
+                        android:background="@drawable/offwhite"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:padding="15dp"
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/btnregistration"
+                        android:layout_weight="1"/>
+
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:text="forgot password"
                         android:textSize="12dp"
                         android:background="@drawable/offwhite"
@@ -92,18 +105,6 @@
                         android:layout_weight="1"/>
 
 
-
-                    <Button
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Register"
-                        android:textColor="#ecf0f1"
-                        android:background="@drawable/default_rounded"
-                        android:padding="15dp"
-                        android:layout_marginTop="10dp"
-                        android:id="@+id/btnSignUp"
-                        android:visibility="gone"/>
 
                 </LinearLayout>
 

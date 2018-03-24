@@ -159,13 +159,7 @@
         </activity>
         <activity
             android:name="com.hammerandtongues.online.hntonline.Invite_friends"
-            android:label="@string/title_activity_invite_friends"
-            android:launchMode="singleTop"
             android:parentActivityName="com.hammerandtongues.online.hntonline.MainActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
@@ -226,7 +220,10 @@
                  </service>
         -->
 
-
+        <activity android:name="com.hammerandtongues.online.hntonline.Registration" >
+        </activity>
+        <activity android:name="com.hammerandtongues.online.hntonline.Finances" >
+        </activity>
         <!-- Include the AdActivity and InAppPurchaseActivity configChanges and themes. -->
         <activity
             android:name="com.google.android.gms.ads.AdActivity"

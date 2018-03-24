@@ -942,6 +942,15 @@ return  "";
 
             startActivity(intent);
         }
+
+        else if (id == R.id.invite) {
+            Intent intent = new Intent(CategoriesActivity.this, Invite_friends.class);
+            startActivity(intent);
+
+
+
+        }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

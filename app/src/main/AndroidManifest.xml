@@ -10,8 +10,8 @@
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="com.github.hathibelagal.pn.permission.C2D_MESSAGE"/>
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
 
     <permission
         android:name="com.github.hathibelagal.pn.permission.C2D_MESSAGE"
@@ -39,12 +39,9 @@
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts"/>
-
-
             <meta-data
                 android:name="com.google.android.gms.version"
-                android:value="@integer/google_play_services_version" />
-
+                android:value="@integer/google_play_services_version"/>
         </activity>
         <activity
             android:name=".MainActivity"
@@ -126,8 +123,6 @@
         <activity
             android:name=".WebViewActivity"
             android:parentActivityName=".MainActivity"/>
-
-
         <activity
             android:name=".Favourites"
             android:parentActivityName=".MainActivity">
@@ -138,20 +133,14 @@
         </activity>
         <activity
             android:name=".Finances_Webview"
-            android:parentActivityName=".MainActivity"
-            >
+            android:parentActivityName=".MainActivity">
         </activity>
         <activity
             android:name=".Invite_friends"
-            android:label="@string/title_activity_invite_friends"
-            android:launchMode="singleTop"
             android:parentActivityName=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+                android:resource="@xml/searchable"/>
         </activity>
 
         <!--
@@ -161,8 +150,6 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
-
-
 
         <service
             android:name=".LocalService"
@@ -211,6 +198,12 @@
                  </service>
         -->
 
+        <activity
+            android:name=".Registration">
+        </activity>
+        <activity
+            android:name=".Finances">
+        </activity>
     </application>
 
 </manifest>

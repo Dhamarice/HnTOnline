@@ -149,7 +149,7 @@ public class TransactionHistory  extends AppCompatActivity {
 
     public void setuielements() {
         final SharedPreferences shared = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
-        LinearLayout layout = (LinearLayout) findViewById(R.id.cartlayout);
+       final LinearLayout layout = (LinearLayout) findViewById(R.id.cartlayout);
         //Log.e("Set UI Elements", strOrders);
         final ProgressBar pgr = (ProgressBar) findViewById(R.id.progressBar1);
 
@@ -189,9 +189,9 @@ public class TransactionHistory  extends AppCompatActivity {
         if (jsonarray02 != null) {
                 //iterate through transactions in JSON string and
                 for (int i = 0; i < jsonarray02.length(); i++) {
-                    LinearLayout itmcontr = new LinearLayout(this);
+                   final LinearLayout itmcontr = new LinearLayout(this);
 
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                   final LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
                     layoutParams.setMargins(10, 10, 10, 10);
@@ -255,7 +255,16 @@ public class TransactionHistory  extends AppCompatActivity {
                         }
 
                     });
-                    layout.addView(itmcontr, layoutParams);
+
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            layout.addView(itmcontr, layoutParams);
+
+                        }
+                    });
                 }
 
             }

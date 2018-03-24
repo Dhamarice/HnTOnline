@@ -34,7 +34,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hammerandtongues.online.hntonline.Login.isNumeric;
+import static com.hammerandtongues.online.hntonline.UserActivity.isNumeric;
 
 /**
  * Created by NgonidzaIshe on 16/6/2016.
@@ -50,10 +50,10 @@ public class Payment  extends Fragment implements View.OnClickListener {
     private static final String ORDERCONTENTS_URL = "https://devshopping.hammerandtongues.com/demo/webservice/createordercontents.php";
     */
     //private static final String ECASH_PAYMENT_URL = "https://hammerandtongues.com/shopping/ecocash_api.php";
-    private static final String ECASH_PAYMENT_URL = "https://devshop.hammerandtongues.com/webservice/ecocash_api.php";
+    private static final String ECASH_PAYMENT_URL = "https://devshop.hammerandtongues.com/wp-content/themes/Walleto/ecocash_api_mobile.php";
     private static final String DISCOUNT_URL = "https://devshop.hammerandtongues.com/webservice/getdiscount.php";
     //private static final String TCASH_PAYMENT_URL = "http://10.0.2.2:8012/wp-content/themes/Walleto/tcasi.php";
-    private static final String TCASH_PAYMENT_URL = "https://devshop.hammerandtongues.com/webservice/tcash_api.php";
+    private static final String TCASH_PAYMENT_URL = "https://devshop.hammerandtongues.com/wp-content/themes/Walleto/tcash_api_mobile.php";
     private static final String PAYNOW_PAYMENT_URL = "https://devshop.hammerandtongues.com/webservice/paynowapi.php";
     //private static final String ECORESPONSE_URL = "https://devshop.hammerandtongues.com/webservice/CheckDb.php";
     private static final String ECORESPONSE_URL = "https://devshop.hammerandtongues.com/wp-content/themes/Walleto/CheckDb.php";
@@ -730,7 +730,7 @@ private String deleteId;
                                         }
                                         if (isSumarry == 2) {
 
-                                            Log.e("Processing Payment", "Ecocash, Mobile:" + accno + ", Amount:" + totalPrc + ", OrderID:" + String.valueOf(oid) + "Dilivery Charge:" + DlvryChrg + "User" + uid );
+                                            Log.e("Processing Payment", "Ecocash, Mobile:" + accno + ", Amount:" + totalPrc + ", OrderID:" + String.valueOf(oid) + "Dilivery Charge:" + DlvryChrg + "User" + uid);
                                             params.add(new BasicNameValuePair("ptype", "Ecocash"));
                                             params.add(new BasicNameValuePair("endUserId", accno));
                                             params.add(new BasicNameValuePair("amt", totalPrc));
@@ -755,31 +755,33 @@ private String deleteId;
 
                                                     //Toast.makeText(getContext(), TAG_MESSAGE, Toast.LENGTH_LONG).show();
 
+                                                    if (success == 1) {
 
-                                                    getActivity().runOnUiThread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
+                                                        getActivity().runOnUiThread(new Runnable() {
+                                                            @Override
+                                                            public void run() {
 
-                                                            Toast ToastMessage = Toast.makeText(getContext(),TAG_MESSAGE,Toast.LENGTH_LONG);
-                                                            View toastView = ToastMessage.getView();
-                                                            toastView.setBackgroundResource(R.drawable.toast_background);
-                                                            ToastMessage.show();
+                                                                Toast ToastMessage = Toast.makeText(getContext(), TAG_MESSAGE, Toast.LENGTH_LONG);
+                                                                View toastView = ToastMessage.getView();
+                                                                toastView.setBackgroundResource(R.drawable.toast_background);
+                                                                ToastMessage.show();
 
-                                                                }
+                                                            }
 
-                                                            });
+                                                        });
 
 
 
-                                                    return json.getString(TAG_MESSAGE);
+
+                                                    //catch(Exception e){
+                                                    //Log.e("Ecocash error: ", e.getMessage());
+                                                //}
+
+                                                if (Looper.myLooper() == null) {
+                                                    Looper.prepare();
                                                 }
-                                            } catch (Exception e) {
-                                                Log.e("Ecocash error: ", e.getMessage());
-                                            }
 
-                                            if (Looper.myLooper() == null) {
-                                                Looper.prepare();
-                                            }
+                                            /*
                                             try {
                                                 params.add(new BasicNameValuePair("oid", String.valueOf(oid)));
                                             params.add(new BasicNameValuePair("cartitems", JsonArr.toString()));
@@ -797,6 +799,7 @@ private String deleteId;
                                                   } catch (Exception e) {
                                                       Log.e("Ecocashresp error: ", e.getMessage());
                                                   }
+
 
                                                   if (success == 1) {
 
@@ -837,53 +840,59 @@ private String deleteId;
 
                                                       Log.e("Payment not valid!", json.getString(TAG_MESSAGE));
 
-                                                      try {
-                                                          params.add(new BasicNameValuePair("oid", String.valueOf(oid)));
-                                                          params.add(new BasicNameValuePair("cartitems", JsonArr.toString()));
-                                                          params.add(new BasicNameValuePair("userid", uid));
-                                                          json = jsonParser.makeHttpRequest(
-                                                                  DELETEORDER_URL, "POST", params);
+                                                      */
 
-                                                          Log.e("Order cleared!", json.getString(TAG_MESSAGE));
+                                                        return json.getString(TAG_MESSAGE);
 
-                                                          //Toast.makeText(getContext(), "Payment validation failed, Please Try again later!", Toast.LENGTH_LONG).show();
+                                            }
 
+                                            else{
+                                                try {
+                                                    params.add(new BasicNameValuePair("oid", String.valueOf(oid)));
+                                                    params.add(new BasicNameValuePair("cartitems", JsonArr.toString()));
+                                                    params.add(new BasicNameValuePair("userid", uid));
+                                                    json = jsonParser.makeHttpRequest(
+                                                            DELETEORDER_URL, "POST", params);
 
-                                                          getActivity().runOnUiThread(new Runnable() {
-                                                              @Override
-                                                              public void run() {
+                                                    Log.e("Order cleared!", json.getString(TAG_MESSAGE));
 
-                                                                  Toast ToastMessage = Toast.makeText(getContext(),"Failed To process payment, Please Try again!",Toast.LENGTH_LONG);
-                                                                  View toastView = ToastMessage.getView();
-                                                                  toastView.setBackgroundResource(R.drawable.toast_background);
-                                                                  ToastMessage.show();
-                                                              }
-
-                                                          });
+                                                    //Toast.makeText(getContext(), "Payment validation failed, Please Try again later!", Toast.LENGTH_LONG).show();
 
 
+                                                    getActivity().runOnUiThread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
 
-                                                          return json.getString(TAG_MESSAGE);
-                                                      }
-                                                      catch(Exception x){
+                                                            Toast ToastMessage = Toast.makeText(getContext(), "Failed To process payment, Please Try again!", Toast.LENGTH_LONG);
+                                                            View toastView = ToastMessage.getView();
+                                                            toastView.setBackgroundResource(R.drawable.toast_background);
+                                                            ToastMessage.show();
+                                                        }
 
-                                                          //Toast.makeText(getContext(), "Possible Network Error!", Toast.LENGTH_LONG).show();
+                                                    });
 
-                                                          getActivity().runOnUiThread(new Runnable() {
-                                                              @Override
-                                                              public void run() {
 
-                                                                  Toast ToastMessage = Toast.makeText(getContext(),"Network Connection Error!!",Toast.LENGTH_LONG);
-                                                                  View toastView = ToastMessage.getView();
-                                                                  toastView.setBackgroundResource(R.drawable.toast_background);
-                                                                  ToastMessage.show();
+                                                    //return json.getString(TAG_MESSAGE);
+                                                } catch (Exception x) {
 
-                                                              }
+                                                    //Toast.makeText(getContext(), "Possible Network Error!", Toast.LENGTH_LONG).show();
 
-                                                          });
+                                                    getActivity().runOnUiThread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
 
-                                                      }
-                                                  }
+                                                            Toast ToastMessage = Toast.makeText(getContext(), "Network Connection Error!!", Toast.LENGTH_LONG);
+                                                            View toastView = ToastMessage.getView();
+                                                            toastView.setBackgroundResource(R.drawable.toast_background);
+                                                            ToastMessage.show();
+
+                                                        }
+
+                                                    });
+
+                                                }
+                                            }
+                                        }
 
                                               }
                                                 catch(Exception e) {
@@ -892,7 +901,7 @@ private String deleteId;
                                                 }
 
 
-
+                                            return json.getString(TAG_MESSAGE);
 
                                         }
                                         if (isSumarry == 3) {
@@ -901,7 +910,6 @@ private String deleteId;
                                             params.add(new BasicNameValuePair("endUserId", accno));
                                             params.add(new BasicNameValuePair("endUserotp", Otp));
                                             params.add(new BasicNameValuePair("oid", String.valueOf(oid)));
-                                            params.add(new BasicNameValuePair("endUserotp", "Hammer and Tongues Online Order"));
                                             params.add(new BasicNameValuePair("amt", totalPrc));
                                             params.add(new BasicNameValuePair("userid", uid));
                                             params.add(new BasicNameValuePair("yes", "Proceed Now"));
@@ -913,10 +921,16 @@ private String deleteId;
                                             // full json response
                                             Log.d("Processing Telecash ", json.toString());
 
+                                            try {
+                                                if (TAG_SUCCESS != null) {
+                                                    success = json.getInt(TAG_SUCCESS);
+                                                    Log.d("JSon Results", "Success-" + json.getInt(TAG_SUCCESS) + "  |Message-" + json.getString(TAG_PRODUCTDETAILS));
+
 
                                             if (success == 1) {
                                                 Log.d("Payment Process Success", json.toString());
 
+                                                /*
                                                 params.add(new BasicNameValuePair("oid", String.valueOf(oid)));
                                                 params.add(new BasicNameValuePair("cartitems", JsonArr.toString()));
                                                 json = jsonParser.makeHttpRequest(
@@ -958,13 +972,19 @@ private String deleteId;
                                                         }
 
                                                     });
+                                                     }
+
+*/
+                                                Log.e("SUCCESS", "you can delete " + oid);
+                                                myDBHandler myDBHandler = new myDBHandler(getContext(), null, null, 0);
+
+                                                myDBHandler.clearCartItems();
+
+                                                return json.getString(TAG_MESSAGE);
 
 
-                                                    return json.getString(TAG_MESSAGE);
 
-
-                                                }
-
+                                            }
                                                 else {
                                                     Log.e("Payment not valid!", json.getString(TAG_MESSAGE));
 
@@ -997,8 +1017,8 @@ private String deleteId;
 
 
 
-
-                                            } else {
+                                                }
+                                            } catch (Exception e) {
                                                 Log.d("No Internet Failure!", json.getString(TAG_MESSAGE));
 
                                                 //Toast.makeText(getContext(), "Failed To process payment, Please Try again later: NETWORK ERROR", Toast.LENGTH_LONG).show();
@@ -1015,9 +1035,9 @@ private String deleteId;
                                                         View toastView = ToastMessage.getView();
                                                         toastView.setBackgroundResource(R.drawable.toast_background);
                                                         ToastMessage.show();
-                                                            }
+                                                    }
 
-                                                        });
+                                                });
 
 
 
@@ -1025,7 +1045,6 @@ private String deleteId;
 
 
                                                 return json.getString(TAG_MESSAGE);
-
 
 
                                             }
@@ -1333,7 +1352,8 @@ private String deleteId;
                         .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
+                                Intent intent = new Intent(getActivity(), MainActivity.class);
+                                startActivity(intent);
 
                             }
                         })

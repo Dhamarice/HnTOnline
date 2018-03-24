@@ -473,6 +473,15 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
                            @Override
                            public void onClick(DialogInterface dialog, int which) {
                                db.updatecart(newqty, id);
+
+
+                               Toast ToastMessage = Toast.makeText(Product.this,"Item added with new quantity " + newqty,Toast.LENGTH_LONG);
+                               View toastView = ToastMessage.getView();
+                               toastView.setBackgroundResource(R.drawable.toast_background);
+                               ToastMessage.show();
+
+
+
                            }
                        })
                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -480,6 +489,11 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
                            public void onClick(DialogInterface dialog, int which) {
 
                                db.updatecart(qty, id);
+
+                               Toast ToastMessage = Toast.makeText(Product.this,"Item added with new quantity " + qty,Toast.LENGTH_LONG);
+                               View toastView = ToastMessage.getView();
+                               toastView.setBackgroundResource(R.drawable.toast_background);
+                               ToastMessage.show();
                            }
                            })
 

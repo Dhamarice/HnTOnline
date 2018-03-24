@@ -28,7 +28,7 @@ public final class WebViewActivity extends Activity {
     public static final String MyPREFERENCES = "MyPrefs";
     private int currcart;
     private  double total;
-    private  String totalPrc, uid;
+    private  String totalPrc, uid, amount, type;
 
 
     private static final String TAG_ID = "id";
@@ -55,6 +55,7 @@ public final class WebViewActivity extends Activity {
 
         }
 
+
         else currcart = 0;
 
             OrderID=  shared.getString("OrderID", "");
@@ -63,6 +64,8 @@ public final class WebViewActivity extends Activity {
 
             Log.e("In Webview", "webview orderid inside cartid condition" + OrderID);
 
+        amount = shared.getString("theamount", "");
+        type = shared.getString("type", "");
 
 
 
@@ -84,8 +87,19 @@ public final class WebViewActivity extends Activity {
 
 
 //Specify the URL you want to display//
-        Log.e("In Webview", "webview orderid" + OrderID + "&delivery_charge=" + DlvryChrg);
-        webView.loadUrl("https://devshop.hammerandtongues.com/webservice/paynowapi.php?action=createtransaction&order_id=" + OrderID + "&delivery_charge=" + DlvryChrg);
+
+        if (type.contentEquals("deposit")){
+
+            webView.loadUrl("https://devshop.hammerandtongues.com/wp-content/themes/Walleto/deposit_paynow_mobile.php?pn_action=createtransaction&am=" + amount + "&user_id=" + uid);
+
+
+
+        }
+
+        else {
+            Log.e("In Webview", "webview orderid" + OrderID + "&delivery_charge=" + DlvryChrg);
+            webView.loadUrl("https://devshop.hammerandtongues.com/webservice/paynowapi.php?action=createtransaction&order_id=" + OrderID + "&delivery_charge=" + DlvryChrg);
+        }
 
         webView.setWebViewClient(new WebViewClient(){
 
@@ -98,7 +112,7 @@ public final class WebViewActivity extends Activity {
             {
 
                 url = webView.getUrl();
-                if (url.contains("https://devshop.hammerandtongues.com/webservice/paynowapi.php?action=return&hsh="))
+                if (url.contains("action=return&hsh="))
                 {
                     SharedPreferences.Editor editor = shared.edit();
                     editor.putString("ptype", "paynow");
