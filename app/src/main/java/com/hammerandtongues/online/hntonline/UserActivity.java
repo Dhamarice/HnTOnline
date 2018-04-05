@@ -432,13 +432,14 @@ public class UserActivity extends AppCompatActivity {
 
                     } else {
 
+                        UserID = (shared.getString("userid", ""));
                         uEname = uEName.getText().toString();
                         fEname = fName.getText().toString();
                         sEname = sName.getText().toString();
                         eEmail = email.getText().toString();
 
 
-                        saveReg(sEname, eEmail, fEname, uEname);
+                        saveReg(sEname, UserID, fEname, uEname);
                         SharedPreferences.Editor editor = shared.edit();
                         editor.putString("address", add1 + add2);
                         editor.commit();
@@ -1145,7 +1146,7 @@ public class UserActivity extends AppCompatActivity {
     }
 
 
-    private void saveReg(final String surname, final String email,
+    private void saveReg(final String surname, final String user_id,
                          final String firstname, final String username) {
         com.android.volley.RequestQueue requestQueue = Volley.newRequestQueue(UserActivity.this);
 
@@ -1165,6 +1166,14 @@ public class UserActivity extends AppCompatActivity {
                     int success = jsonObject.getInt("success");
                     String message = jsonObject.getString("message");
                     if (success == 1) {
+
+
+                        SharedPreferences.Editor editor = shared.edit();
+                        editor.putString("Fname", firstname);
+                        editor.putString("sname", surname);
+                        editor.commit();
+                        editor.apply();
+
 
                         new AlertDialog.Builder(UserActivity.this)
                                 .setTitle("Info")
@@ -1216,7 +1225,7 @@ public class UserActivity extends AppCompatActivity {
                 values.put("update", "update");
                 values.put("username", username);
                 values.put("surname", surname);
-                values.put("email", email);
+                values.put("user_id", user_id);
                 values.put("firstname", firstname);
 
                 values.put("telno", MyPref.getPhone(UserActivity.this));

@@ -1,4 +1,4 @@
-#Fri Mar 23 15:41:14 CAT 2018
+#Thu Apr 05 09:43:15 CAT 2018
 base.0=C\:\\Users\\Ruvimbo\\Documents\\HammerandTongues\\HnTOnline\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\1f\\main
 renamed.1=classes.dex
 renamed.0=classes2.dex
