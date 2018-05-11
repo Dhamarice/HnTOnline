@@ -433,7 +433,7 @@ public final class R {
         public static final int abc_textfield_search_activated_mtrl_alpha = 0x7f020049;
         public static final int abc_textfield_search_default_mtrl_alpha = 0x7f02004a;
         public static final int abc_textfield_search_material = 0x7f02004b;
-        public static final int indicator_corner_bg = 0x7f0200da;
+        public static final int indicator_corner_bg = 0x7f0200e5;
     }
     public static final class id {
         public static final int Accordion = 0x7f0f0070;
@@ -475,19 +475,19 @@ public final class R {
         public static final int contentPanel = 0x7f0f00ac;
         public static final int custom = 0x7f0f00b2;
         public static final int customPanel = 0x7f0f00b1;
-        public static final int daimajia_indicator_wrapper = 0x7f0f014c;
-        public static final int daimajia_slider_image = 0x7f0f01e2;
-        public static final int daimajia_slider_viewpager = 0x7f0f01ec;
+        public static final int daimajia_indicator_wrapper = 0x7f0f014d;
+        public static final int daimajia_slider_image = 0x7f0f01e5;
+        public static final int daimajia_slider_viewpager = 0x7f0f01ef;
         public static final int decor_content_parent = 0x7f0f00ba;
         public static final int default_activity_button = 0x7f0f00a2;
-        public static final int default_bottom_left_indicator = 0x7f0f01ef;
-        public static final int default_bottom_right_indicator = 0x7f0f01ee;
-        public static final int default_center_bottom_indicator = 0x7f0f01ed;
-        public static final int default_center_top_indicator = 0x7f0f01f0;
-        public static final int default_center_top_left_indicator = 0x7f0f01f2;
-        public static final int default_center_top_right_indicator = 0x7f0f01f1;
-        public static final int description = 0x7f0f01cc;
-        public static final int description_layout = 0x7f0f01e4;
+        public static final int default_bottom_left_indicator = 0x7f0f01f2;
+        public static final int default_bottom_right_indicator = 0x7f0f01f1;
+        public static final int default_center_bottom_indicator = 0x7f0f01f0;
+        public static final int default_center_top_indicator = 0x7f0f01f3;
+        public static final int default_center_top_left_indicator = 0x7f0f01f5;
+        public static final int default_center_top_right_indicator = 0x7f0f01f4;
+        public static final int description = 0x7f0f01cf;
+        public static final int description_layout = 0x7f0f01e7;
         public static final int disableHome = 0x7f0f0019;
         public static final int edit_query = 0x7f0f00be;
         public static final int end = 0x7f0f002b;
@@ -501,7 +501,7 @@ public final class R {
         public static final int invisible = 0x7f0f005c;
         public static final int listMode = 0x7f0f0016;
         public static final int list_item = 0x7f0f00a3;
-        public static final int loading_bar = 0x7f0f01e3;
+        public static final int loading_bar = 0x7f0f01e6;
         public static final int middle = 0x7f0f0051;
         public static final int multiply = 0x7f0f0031;
         public static final int never = 0x7f0f005a;

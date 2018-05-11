@@ -6,6 +6,16 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:fillViewport="true"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:paddingTop="10dp">
+
 <LinearLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -238,6 +248,8 @@
 
 
 </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -95,13 +95,13 @@ public class UserActivity extends AppCompatActivity {
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MESSAGE = "message";
     private static final String TAG_CATEGORIES = "posts";
-    TextView ewallet, pemail, address, welcum, ewall, addwarning, membership, points, addresslbl, plsaddlbl;
+    TextView ewallet, pemail, address, welcum, ewall, addwarning, membership, points, addresslbl, plsaddlbl, mobilenum;
     int success = 0;
 
     EditText username, password, nameoremail;
     String uname, pword, uEname, fEname, eEmail, sEname, Plogin, Pconfirm, userReset, oldpassword;
-    String Email, uName, membership_level, loyalty_points, Balance = "";
-    String Address = "";
+    String Email, uName, membership_level, loyalty_points, number, Balance = "";
+    String request_type, Address = "";
     String UserID = "";
     RelativeLayout tione;
     ImageView symbolcoin;
@@ -179,6 +179,7 @@ public class UserActivity extends AppCompatActivity {
             points = (TextView) findViewById(R.id.loyalty_points);
             addresslbl = (TextView) findViewById(R.id.paddresslabel);
             plsaddlbl = (TextView) findViewById(R.id.pladdress);
+            mobilenum = (TextView) findViewById(R.id.mobilenum);
             nameoremail = (EditText) findViewById(R.id.nameoremailll);
             txtadd1 = (EditText) findViewById(R.id.addressLn1);
             txtadd2 = (EditText) findViewById(R.id.addressLn2);
@@ -685,6 +686,8 @@ public class UserActivity extends AppCompatActivity {
                 Balance = (shared.getString("balance", ""));
                 membership_level = (shared.getString("membership", ""));
                 loyalty_points = (shared.getString("points", ""));
+                number = (shared.getString("telno", ""));
+                request_type = shared.getString("request_type", "");
                 input_container.setVisibility(View.GONE);
 
 
@@ -698,9 +701,10 @@ public class UserActivity extends AppCompatActivity {
 
                 welcum.setText(Html.fromHtml("<b>" + uName + "</b>"));
                 pemail.setText(Html.fromHtml("<b>" + Email + "</b>"));
+                mobilenum.setText(Html.fromHtml("<b>" + number + "</b>"));
 
 
-                if (Address != null && Address != "" && Address != "null null null" && !Address.contentEquals("null null null")) {
+                if (Address != null && Address != "" && Address != "null null null" && !Address.contentEquals("null null null") && !Address.contentEquals("null")) {
 
                     plsaddlbl.setText("Edit address details!");
 
@@ -734,6 +738,19 @@ public class UserActivity extends AppCompatActivity {
                     sName.setText(shared.getString("sname", ""));
                     fName.setText(shared.getString("Fname", ""));
 
+
+                }
+
+                if (request_type.contentEquals("to-finances")){
+
+
+                    SharedPreferences.Editor editor = shared.edit();
+                    editor.remove("request_type");
+                    editor.apply();
+                    inside.setVisibility(View.GONE);
+                    BasicForm.setVisibility(View.GONE);
+                    tione.setVisibility(View.VISIBLE);
+                    my_finances.setVisibility(View.VISIBLE);
 
                 }
 
@@ -888,7 +905,7 @@ public class UserActivity extends AppCompatActivity {
                         editor.putString("sname", sname);
                         editor.putString("umail", umail);
                         editor.putString("balance", balance);
-                        editor.putString("telno", number);
+                        editor.putString("telno", telno);
                         editor.putString("membership", membership);
                         editor.putString("idno", idno);
                         editor.putString("points", points);

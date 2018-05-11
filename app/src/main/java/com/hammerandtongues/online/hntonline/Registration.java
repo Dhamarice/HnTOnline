@@ -223,7 +223,7 @@ public class Registration extends AppCompatActivity {
 
                                         }
                                     })
-                                    .setNegativeButton("No", null)
+                                    .setNegativeButton("Edit number", null)
                                     .setMessage(Html.fromHtml("Send sms to the number " + telno + "?" ))
                                     .show();
 

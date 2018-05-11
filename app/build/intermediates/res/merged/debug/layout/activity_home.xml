@@ -150,6 +150,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:id="@+id/imgGrocery"
+                    android:src="@drawable/grocery"
                     android:paddingLeft="7dp"
                     android:paddingRight="7dp"
                     android:layout_marginBottom="5dp"
@@ -163,12 +164,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="170dp"
                         android:id="@+id/imgAppliances"
+                        android:src="@drawable/appliances"
                         android:layout_weight="1"
                         android:paddingLeft="7dp"
                         android:paddingRight="2dp"/>
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="170dp"
+                        android:src="@drawable/liqour"
                         android:id="@+id/imgLiquor"
                         android:layout_weight="1"
                         android:paddingLeft="2dp"
@@ -178,6 +181,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:id="@+id/imgRealEstate"
+                    android:src="@drawable/real_estate"
                     android:paddingLeft="7dp"
                     android:paddingRight="7dp"/>
                 <LinearLayout
@@ -189,12 +193,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="170dp"
                         android:id="@+id/imgBuilding"
+                        android:src="@drawable/building"
                         android:layout_weight="1"
                         android:paddingLeft="7dp"
                         android:paddingRight="2dp"/>
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="170dp"
+                        android:src="@drawable/home_grown"
                         android:id="@+id/imgFresh"
                         android:layout_weight="1"
                         android:paddingLeft="2dp"
@@ -205,6 +211,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:id="@+id/imgAuction"
+                    android:src="@drawable/auction"
                     android:paddingLeft="7dp"
                     android:paddingRight="7dp"
                     android:layout_marginBottom="10dp"/>

@@ -813,6 +813,26 @@ final int pID =  Integer.parseInt(productID.toString());
 
         }
 
+        else if (dbHandler.cartItems(currcart) == null) {
+
+
+
+            new AlertDialog.Builder(Cart.this)
+                    .setTitle("Info")
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+
+                        }
+                    })
+                    .setNegativeButton("", null)
+                    .setMessage(Html.fromHtml("You cannot proceed with an empty cart!" ))
+                    .show();
+
+
+        }
+
 
 
         else if((shared.getString("userid", "") != null && shared.getString("userid", "") !="")){
@@ -824,6 +844,8 @@ final int pID =  Integer.parseInt(productID.toString());
             startActivity(intent);
 
         }
+
+
 
         else {
 

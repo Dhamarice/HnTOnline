@@ -82,7 +82,7 @@ public class CheckoutFragment  extends Fragment {
     RelativeLayout checkout;
     LinearLayout checkoutt ;
     TextView Response, Order, Nameinfo ;
-    Button shopping;
+    Button shopping, cart;
 
 
 
@@ -107,6 +107,7 @@ public class CheckoutFragment  extends Fragment {
             Response = (TextView) view.findViewById(R.id.response);
             Nameinfo = (TextView) view.findViewById(R.id.nameinfo);
             shopping = (Button) view.findViewById(R.id.shopp);
+            cart = (Button) view.findViewById(R.id.tocart);
 
             shopping.setOnClickListener(new View.OnClickListener() {
 
@@ -114,6 +115,16 @@ public class CheckoutFragment  extends Fragment {
                 public void onClick(View view) {
 
                     Intent intent = new Intent(getActivity(), MainActivity.class);
+                    startActivity(intent);
+                }
+
+            });
+            cart.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+
+                    Intent intent = new Intent(getActivity(), Cart.class);
                     startActivity(intent);
                 }
 

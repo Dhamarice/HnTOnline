@@ -659,6 +659,10 @@ else {
 
                 updatebal(userid);
 
+                SharedPreferences.Editor editor = shared.edit();
+                editor.putString("request_type", "to-finances");
+                editor.apply();
+
                 Intent intent = new Intent(Finances.this, UserActivity.class);
                 startActivity(intent);
 

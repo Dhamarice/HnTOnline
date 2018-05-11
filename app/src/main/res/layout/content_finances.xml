@@ -96,7 +96,12 @@
                     android:background="@drawable/roundcorner"
                     android:layout_gravity="center_horizontal"/>
 
-
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Enter amount to withdraw"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18dp"/>
 
             <EditText
                 android:layout_width="match_parent"

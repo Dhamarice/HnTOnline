@@ -361,6 +361,9 @@ public class MainActivity extends AppCompatActivity
 
             sharedpreferences = this.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
+            shopbystore = (Button) findViewById(R.id.btn_ShopByStore);
+            shopbycateg = (Button) findViewById(R.id.btn_ShopByCateg);
+
 
             if (sharedpreferences.getString("CartID", "") != null && sharedpreferences.getString("CartID", "") != "") {
                 currcart = Integer.parseInt(sharedpreferences.getString("CartID", ""));
@@ -415,6 +418,36 @@ public class MainActivity extends AppCompatActivity
 
             sharedpreferences = this.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
+
+            shopbystore.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+
+
+                    Intent intent = new Intent(MainActivity.this, StoresFragment.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+
+                }
+            });
+
+            shopbycateg.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+
+
+                    Intent intent = new Intent(MainActivity.this, CategoriesActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+
+                }
+            });
+
+
+
+
             btngrocer = (ImageView) findViewById(R.id.imgGrocery);
             btngrocer.setOnClickListener(this);
 
@@ -452,7 +485,7 @@ public class MainActivity extends AppCompatActivity
             loadImages("https://hammerandtongues.com/demo/webservice/appimgs/Real Estate.png", btnrealestate);
             loadImages("https://hammerandtongues.com/demo/webservice/appimgs/Building.png", btnbuilding);
             loadImages("https://hammerandtongues.com/demo/webservice/appimgs/Home Grown.png", btnhomegrown);
-*/
+
 
 
             btngrocer.setImageResource(R.drawable.grocery);
@@ -462,18 +495,11 @@ public class MainActivity extends AppCompatActivity
             btnrealestate.setImageResource(R.drawable.real_estate);
             btnbuilding.setImageResource(R.drawable.building);
             btnhomegrown.setImageResource(R.drawable.home_grown);
-
+*/
 
 // SNACK BAR LOOK AT AND REPLACE TOAST
 
             // hOW TO load data on scrollview bit by bit....
-
-
-            shopbystore = (Button) findViewById(R.id.btn_ShopByStore);
-            shopbystore.setOnClickListener(this);
-
-            shopbycateg = (Button) findViewById(R.id.btn_ShopByCateg);
-            shopbycateg.setOnClickListener(this);
 
 
             //pDialog = new ProgressDialog(MainActivity.this);
@@ -690,8 +716,16 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    /*
+
+if(savedInstanceState != null){
+
+        mButtonClickCount = (Integer)saveInstanceState.getSerializable(STATE_BUTTON_CLICK_COUNT);
+        mTextToDisplay = (String)saveInstanceState.getSerializable(STATE_TEXT_TO_DISPLAY);
 
 
+    }
+*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -761,6 +795,8 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
+
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
@@ -772,11 +808,36 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onPageScrollStateChanged(int state) {}
 
+private static final String STATE_TEXT_TO_DISPLAY = MainActivity.class.getName() + ".TEXT_TO_DISPLAY";
+    private static final String STATE_BUTTON_CLICK_COUNT = MainActivity.class.getName() + ".BUTTON_CLICK_COUNT";
+
+    /*
+    @Override
+    protected void onSaveInstanceState(Bundle outState){
+
+        super.onSaveInstanceState(outState);
+
+        outState.putSerializable(STATE_TEXT_TO_DISPLAY, mTextToDisplay);
+        outState.putSerializable(STATE_BUTTON_CLICK_COUNT, mButtonClickCount);
+    }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState){}
+    protected  void onRestoreInstanceState(Bundle bundle){
+        super.onRestoreInstanceState(bundle);
 
+        mTextToDisplay = (String)bundle.getSerializable(STATE_TEXT_TO_DISPLAY);
+        mButtonClickCount = (Integer)bundle.getSerializable(STATE_BUTTON_CLICK_COUNT);
 
+    }
+
+    public void onResume(){
+
+        super.onResume();
+
+        //what to do
+
+    }
+*/
 
     @Override
     public void onStop() {
@@ -802,7 +863,7 @@ public class MainActivity extends AppCompatActivity
         // TODO Auto-generated method stub
         String id1 =null;
         SharedPreferences.Editor editor = null;
-        Intent intent;
+        final Intent intent = new Intent(MainActivity.this, Products_List.class);
         System.gc();
         switch (v.getId()) {
             case R.id.imgRealEstate:
@@ -810,20 +871,44 @@ public class MainActivity extends AppCompatActivity
                 editor = sharedpreferences.edit();
                 editor.putString(Category, id1);
                 editor.commit();
-                intent = new Intent(MainActivity.this, Products_List.class);
+                //intent = new Intent(MainActivity.this, Products_List.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 //finish();
                 break;
 
             case R.id.imgLiquor:
+
                 id1 = Integer.toString(0000);
                 editor = sharedpreferences.edit();
                 editor.putString(Category, id1);
                 editor.commit();
-                intent = new Intent(MainActivity.this, Products_List.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Alert")
+                        .setNeutralButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+
+
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+
+                            }
+                        })
+                        .setMessage(Html.fromHtml("You can only view and buy from this store if you are 18years and above. Are you 18years or above?"))
+                        .show();
+
+
+
                 //finish();
                 break;
 
@@ -833,7 +918,7 @@ public class MainActivity extends AppCompatActivity
                 editor = sharedpreferences.edit();
                 editor.putString(Category, id1);
                 editor.commit();
-                intent = new Intent(MainActivity.this, Products_List.class);
+                //intent = new Intent(MainActivity.this, Products_List.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 //finish();
@@ -844,7 +929,7 @@ public class MainActivity extends AppCompatActivity
                 editor = sharedpreferences.edit();
                 editor.putString(Category, id1);
                 editor.commit();
-                intent = new Intent(MainActivity.this, Products_List.class);
+                //intent = new Intent(MainActivity.this, Products_List.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 //finish();
@@ -855,7 +940,7 @@ public class MainActivity extends AppCompatActivity
                 editor = sharedpreferences.edit();
                 editor.putString(Category, id1);
                 editor.commit();
-                intent = new Intent(MainActivity.this, Products_List.class);
+                //intent = new Intent(MainActivity.this, Products_List.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 //finish();
@@ -867,7 +952,7 @@ public class MainActivity extends AppCompatActivity
                 editor = sharedpreferences.edit();
                 editor.putString(Category, id1);
                 editor.commit();
-                intent = new Intent(MainActivity.this, Products_List.class);
+               // intent = new Intent(MainActivity.this, Products_List.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 //finish();
@@ -878,12 +963,12 @@ public class MainActivity extends AppCompatActivity
                 editor = sharedpreferences.edit();
                 editor.putString(Category, id1);
                 editor.commit();
-                intent = new Intent(MainActivity.this, Products_List.class);
+                //intent = new Intent(MainActivity.this, Products_List.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 //finish();
                 break;
-
+/*
             case R.id.btn_ShopByStore:
                 intent = new Intent(MainActivity.this, StoresFragment.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -897,7 +982,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
                 //finish();
                 break;
-/*
+
             case R.id.btn_signup:
                 intent = new Intent(MainActivity.this, UserActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

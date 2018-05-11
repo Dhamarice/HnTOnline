@@ -62,6 +62,15 @@
                         <Button
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:text="BACK TO CART"
+                            android:layout_marginTop="10dp"
+                            android:textColor="#ecf0f1"
+                            android:background="@drawable/default_rounded"
+                            android:id="@+id/tocart"
+                            android:layout_weight="1"/>
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:text="BACK TO SHOPPING"
                             android:layout_marginTop="10dp"
                             android:textColor="#ecf0f1"

@@ -220,9 +220,13 @@
                  </service>
         -->
 
-        <activity android:name="com.hammerandtongues.online.hntonline.Registration" >
+        <activity
+            android:name="com.hammerandtongues.online.hntonline.Registration"
+            android:parentActivityName="com.hammerandtongues.online.hntonline.MainActivity" >
         </activity>
-        <activity android:name="com.hammerandtongues.online.hntonline.Finances" >
+        <activity
+            android:name="com.hammerandtongues.online.hntonline.Finances"
+            android:parentActivityName="com.hammerandtongues.online.hntonline.MainActivity" >
         </activity>
         <!-- Include the AdActivity and InAppPurchaseActivity configChanges and themes. -->
         <activity

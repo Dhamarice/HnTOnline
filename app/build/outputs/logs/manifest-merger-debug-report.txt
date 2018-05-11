@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:2:1-209:12
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:2:1-235:12
 	package
 		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:3:11-58
 		INJECTED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml
@@ -75,7 +75,7 @@ ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\An
 	android:name
 		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:17:9-73
 application
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:20:5-207:19
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:20:5-233:19
 MERGED from [com.android.support:design:23.2.1] C:\Users\Ruvimbo\.android\build-cache\a61c9e2d7d85707856c7fdfb5974c0ac71141b61\output\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.gms:play-services:9.0.0] C:\Users\Ruvimbo\.android\build-cache\bf035b91b6dbd841f7d1db96aae6bd177736de60\output\AndroidManifest.xml:5:5-20
 MERGED from [com.google.android.gms:play-services-ads-lite:9.0.0] C:\Users\Ruvimbo\.android\build-cache\30747ddd6ef0c5d0ccd6e031efe3517188c692af\output\AndroidManifest.xml:24:5-32:19
@@ -167,207 +167,211 @@ MERGED from [com.google.android.gms:play-services-basement:9.0.0] C:\Users\Ruvim
 	android:name
 		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:43:17-62
 activity#com.hammerandtongues.online.hntonline.MainActivity
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:46:9-57:20
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:46:9-58:20
 	android:label
 		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:48:13-45
 	android:theme
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:49:13-56
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:50:13-56
 	android:name
 		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:47:13-41
 intent-filter#android.intent.action.SEARCH
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:50:13-52:29
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:51:13-53:29
 action#android.intent.action.SEARCH
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:51:17-70
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:52:17-70
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:51:25-68
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:52:25-68
 meta-data#android.app.searchable
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:54:13-56:56
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:55:13-57:56
 	android:resource
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:57:17-54
+	android:name
 		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:56:17-54
-	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:55:17-54
 activity#com.hammerandtongues.online.hntonline.Search
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:58:9-69:20
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:59:9-72:20
 	android:parentActivityName
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:60:13-55
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:61:13-55
 	android:theme
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:61:13-56
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:63:13-56
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:59:13-35
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:60:13-35
 activity#com.hammerandtongues.online.hntonline.NotificationView
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:70:9-77:20
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:73:9-81:20
 	android:label
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:72:13-52
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:75:13-52
 	android:parentActivityName
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:73:13-55
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:77:13-55
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:71:13-45
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:74:13-45
 meta-data#android.support.PARENT_ACTIVITY
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:74:13-76:48
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:78:13-80:48
 	android:value
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:76:17-46
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:80:17-46
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:75:17-63
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:79:17-63
 activity#com.hammerandtongues.online.hntonline.CategoriesActivity
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:78:9-81:58
-	android:parentActivityName
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:80:13-55
-	android:theme
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:81:13-56
-	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:79:13-47
-activity#com.hammerandtongues.online.hntonline.StoresFragment
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:82:9-85:58
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:82:9-86:58
 	android:parentActivityName
 		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:84:13-55
 	android:theme
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:85:13-56
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:86:13-56
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:83:13-43
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:83:13-47
+activity#com.hammerandtongues.online.hntonline.StoresFragment
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:87:9-91:58
+	android:parentActivityName
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:89:13-55
+	android:theme
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:91:13-56
+	android:name
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:88:13-43
 activity#com.hammerandtongues.online.hntonline.PromotionsFragment
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:86:9-88:57
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:92:9-95:57
 	android:parentActivityName
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:88:13-55
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:95:13-55
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:87:13-47
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:93:13-47
 activity#com.hammerandtongues.online.hntonline.Product
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:89:9-91:57
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:96:9-98:57
 	android:parentActivityName
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:91:13-55
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:98:13-55
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:90:13-36
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:97:13-36
 activity#com.hammerandtongues.online.hntonline.Store
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:92:9-94:57
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:99:9-102:57
 	android:parentActivityName
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:94:13-55
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:102:13-55
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:93:13-34
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:100:13-34
 activity#com.hammerandtongues.online.hntonline.Cart
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:95:9-97:57
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:103:9-106:57
 	android:parentActivityName
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:97:13-55
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:106:13-55
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:96:13-33
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:104:13-33
 activity#com.hammerandtongues.online.hntonline.CheckOut_Activity
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:98:9-101:20
-	android:parentActivityName
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:100:13-55
-	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:99:13-46
-activity#com.hammerandtongues.online.hntonline.UserActivity
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:102:9-104:57
-	android:parentActivityName
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:104:13-55
-	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:103:13-41
-activity#com.hammerandtongues.online.hntonline.Products_List
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:105:9-107:57
-	android:parentActivityName
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:107:13-55
-	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:106:13-42
-activity#com.hammerandtongues.online.hntonline.TransactionHistory
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:108:9-110:57
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:107:9-111:20
 	android:parentActivityName
 		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:110:13-55
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:109:13-47
-activity#com.hammerandtongues.online.hntonline.AboutUs
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:111:9-113:57
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:108:13-46
+activity#com.hammerandtongues.online.hntonline.UserActivity
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:112:9-115:57
 	android:parentActivityName
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:113:13-55
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:115:13-55
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:112:13-36
-activity#com.hammerandtongues.online.hntonline.Faqs
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:114:9-116:57
-	android:parentActivityName
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:116:13-55
-	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:115:13-33
-activity#com.hammerandtongues.online.hntonline.ContactUs
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:117:9-119:57
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:113:13-41
+activity#com.hammerandtongues.online.hntonline.Products_List
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:116:9-119:57
 	android:parentActivityName
 		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:119:13-55
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:118:13-38
-activity#com.hammerandtongues.online.hntonline.TermsAndConditions
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:120:9-122:57
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:117:13-42
+activity#com.hammerandtongues.online.hntonline.TransactionHistory
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:120:9-123:57
 	android:parentActivityName
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:122:13-55
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:123:13-55
 	android:name
 		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:121:13-47
+activity#com.hammerandtongues.online.hntonline.AboutUs
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:124:9-127:57
+	android:parentActivityName
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:127:13-55
+	android:name
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:125:13-36
+activity#com.hammerandtongues.online.hntonline.Faqs
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:128:9-131:57
+	android:parentActivityName
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:131:13-55
+	android:name
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:129:13-33
+activity#com.hammerandtongues.online.hntonline.ContactUs
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:132:9-135:57
+	android:parentActivityName
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:135:13-55
+	android:name
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:133:13-38
+activity#com.hammerandtongues.online.hntonline.TermsAndConditions
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:136:9-139:57
+	android:parentActivityName
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:139:13-55
+	android:name
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:137:13-47
 activity#com.hammerandtongues.online.hntonline.WebViewActivity
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:123:9-125:57
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:140:9-143:57
 	android:parentActivityName
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:125:13-55
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:143:13-55
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:124:13-44
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:141:13-44
 activity#com.hammerandtongues.online.hntonline.Favourites
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:126:9-129:20
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:144:9-148:20
 	android:parentActivityName
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:128:13-55
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:147:13-55
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:127:13-39
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:145:13-39
 activity#com.hammerandtongues.online.hntonline.Chat_Webview
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:130:9-133:20
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:149:9-153:20
 	android:parentActivityName
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:132:13-55
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:152:13-55
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:131:13-41
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:150:13-41
 activity#com.hammerandtongues.online.hntonline.Finances_Webview
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:134:9-137:20
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:154:9-158:20
 	android:parentActivityName
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:136:13-55
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:157:13-55
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:135:13-45
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:155:13-45
 activity#com.hammerandtongues.online.hntonline.Invite_friends
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:138:9-144:20
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:159:9-166:20
 	android:parentActivityName
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:140:13-55
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:162:13-55
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:139:13-43
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:160:13-43
 service#com.hammerandtongues.online.hntonline.LocalService
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:154:9-156:39
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:176:9-178:39
 	android:exported
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:156:13-37
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:178:13-37
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:155:13-41
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:177:13-41
 fragment
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:158:9-45
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:180:9-45
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:158:19-43
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:180:19-43
 receiver#com.hammerandtongues.online.hntonline.NetworkStateChecker
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:161:9-165:20
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:183:9-187:20
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:161:19-54
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:183:19-54
 intent-filter#android.net.conn.CONNECTIVITY_CHANGE
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:162:13-164:29
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:184:13-186:29
 action#android.net.conn.CONNECTIVITY_CHANGE
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:163:17-78
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:185:17-78
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:163:25-76
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:185:25-76
 receiver#com.hammerandtongues.online.hntonline.MyAppReciever
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:166:9-171:20
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:188:9-193:20
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:166:19-48
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:188:19-48
 intent-filter#android.Intent.ACTION_TIME_TICK+android.intent.action.TIMEZONE_CHANGED
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:167:13-170:29
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:189:13-192:29
 action#android.Intent.ACTION_TIME_TICK
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:168:17-73
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:190:17-73
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:168:25-71
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:190:25-71
 action#android.intent.action.TIMEZONE_CHANGED
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:169:17-80
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:191:17-80
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:169:25-78
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:191:25-78
 activity#com.hammerandtongues.online.hntonline.Registration
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:201:9-203:20
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:223:9-227:20
+	android:parentActivityName
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:225:13-55
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:202:13-41
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:226:13-41
 activity#com.hammerandtongues.online.hntonline.Finances
-ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:204:9-206:20
+ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:228:9-232:20
+	android:parentActivityName
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:230:13-55
 	android:name
-		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:205:13-37
+		ADDED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:231:13-37
 uses-sdk
 INJECTED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 MERGED from [com.android.support:design:23.2.1] C:\Users\Ruvimbo\.android\build-cache\a61c9e2d7d85707856c7fdfb5974c0ac71141b61\output\AndroidManifest.xml:20:5-43
@@ -564,7 +568,7 @@ ADDED from [com.google.android.gms:play-services-maps:9.0.0] C:\Users\Ruvimbo\.a
 	android:required
 		ADDED from [com.google.android.gms:play-services-maps:9.0.0] C:\Users\Ruvimbo\.android\build-cache\3ea8b042a63ed69360050922e49d9ba0d4fbe8a1\output\AndroidManifest.xml:24:8-31
 uses-permission#android.permission.READ_EXTERNAL_STORAGE
-IMPLIED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:2:1-209:12 reason: com.daimajia.slider.library requested WRITE_EXTERNAL_STORAGE
+IMPLIED from C:\Users\Ruvimbo\Documents\HammerandTongues\HnTOnline\app\src\main\AndroidManifest.xml:2:1-235:12 reason: com.daimajia.slider.library requested WRITE_EXTERNAL_STORAGE
 receiver#com.google.android.gms.measurement.AppMeasurementReceiver
 ADDED from [com.google.firebase:firebase-analytics:9.0.0] C:\Users\Ruvimbo\.android\build-cache\60c552ce7e50028337a7b1e183b187569edacd20\output\AndroidManifest.xml:28:7-34:18
 MERGED from [com.google.firebase:firebase-analytics-impl:9.0.0] C:\Users\Ruvimbo\.android\build-cache\708aa1df20cb9b89700d157dfa0050a541bdf0c3\output\AndroidManifest.xml:28:7-34:18

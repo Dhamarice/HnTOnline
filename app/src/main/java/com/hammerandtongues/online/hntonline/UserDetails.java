@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -61,7 +62,7 @@ public class UserDetails extends Fragment implements View.OnClickListener{
     private  LinearLayout ll01,ll02;
     private Spinner spin, spin1, spcountry, spprovince, spcity, spsurburb;
     private String type,value, totalprice, chrg;
-    private TextView txtaddress , txterr, txtno;
+    private TextView txtaddress , txterr, txtno, tell;
     private EditText txtaddline1,txtaddline2;
     private LinearLayout main,top;
     private RadioGroup rdg;
@@ -329,7 +330,7 @@ public class UserDetails extends Fragment implements View.OnClickListener{
 
 
 
-                            if (txtaddress.getText().toString().isEmpty()) {
+                            if (txtaddress.getText().toString().isEmpty() || txtaddress.getText().toString() == null || txtaddress.getText().toString().contentEquals("null")) {
                                 //Toast.makeText(getActivity(), "No Valid Registered Delivery Address Detected", Toast.LENGTH_LONG).show();
 
                                 Toast ToastMessage = Toast.makeText(getActivity(),"No Valid Registered Delivery Address Detected",Toast.LENGTH_LONG);
@@ -1178,6 +1179,15 @@ public class UserDetails extends Fragment implements View.OnClickListener{
                                 String Normal, Express, Extended = "";
                                 try {
                                     rdg.removeAllViews();
+
+                                    tell = new TextView(getContext());
+
+                                    tell.setTextColor(getResources().getColor(R.color.colorDarkness));
+                                    tell.setTypeface(null, Typeface.BOLD);
+                                    tell.setTextSize(13);
+
+                                    tell.setText("Select a Dilivery Service");
+
                                     Normal = String.valueOf(array.getJSONObject(0).getJSONObject("dlvrychrges").getJSONObject("normal").getString("Large"));
                                     rdNormal.setText("Normal ($" + Normal + ")");
 
@@ -1190,6 +1200,7 @@ public class UserDetails extends Fragment implements View.OnClickListener{
                                     rdg.removeAllViews();
                                     //main.removeAllViews();
                                     ll02.removeAllViews();
+                                    rdg.addView(tell);
                                     rdg.addView(rdNormal);
                                     rdg.addView(rdExpress);
                                     rdg.addView(rdExtended);
@@ -1254,6 +1265,7 @@ public class UserDetails extends Fragment implements View.OnClickListener{
                                     .setNegativeButton("", null)
                                     .setMessage(Html.fromHtml("Please select another surbub or choose another option as this one is out of our zone." ))
                                     .show();
+                            return;
 
                         }
 
