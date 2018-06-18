@@ -253,49 +253,49 @@ catch (OutOfMemoryError  ex)
 
             if (cart.matches("[0-9]+")) {
                 if (Integer.parseInt(cart) == 3157) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/appliances.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/appliances.jpg";
                 } else if (Integer.parseInt(cart) == 3158) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/e_gadgets.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/e_gadgets.jpg";
                 } else if (Integer.parseInt(cart) == 3159) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/e_gadgets.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/e_gadgets.jpg";
                 } else if (Integer.parseInt(cart) == 3160) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/Grocery.png";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/Grocery.png";
                 } else if (Integer.parseInt(cart) == 3161) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/electronics.png";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/electronics.png";
                 } else if (Integer.parseInt(cart) == 3162) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/hardware.jpeg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/hardware.jpeg";
                 } else if (Integer.parseInt(cart) == 3163) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/health_beauty.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/health_beauty.jpg";
                 } else if (Integer.parseInt(cart) == 3164) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/fruit_vegie.png";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/fruit_vegie.png";
                 } else if (Integer.parseInt(cart) == 3165) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/sport.png";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/sport.png";
                 } else if (Integer.parseInt(cart) == 3166) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/school.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/school.jpg";
                 } else if (Integer.parseInt(cart) == 3167) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/appliances.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/appliances.jpg";
                 } else if (Integer.parseInt(cart) == 3168) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/Real_Estate.png";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/Real_Estate.png";
                 } else if (Integer.parseInt(cart) == 3169) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/appliance.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/appliance.jpg";
                 } else if (Integer.parseInt(cart) == 9999) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/Auction.png";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/Auction.png";
                 } else if (Integer.parseInt(cart) == 0000) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/liquor1.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/liquor1.jpg";
                 }
             }else {
                 if (cart == "NewArrivals" || cart == "99990") {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/newarrivals.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/newarrivals.jpg";
                     cart = "99990";
                 } else if (cart == "OnSpecial" || cart == "99991") {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/onspecial.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/onspecial.jpg";
                     cart = "99991";
                 } else if (cart == "Popular" || cart == "99992") {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/productbanner.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/productbanner.jpg";
                     cart = "99992";
                 } else {
                     Log.e("Category ID", cart);
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/productbanner.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/productbanner.jpg";
                 }
             }
 
@@ -801,7 +801,7 @@ catch (OutOfMemoryError  ex)
         SharedPreferences.Editor editor = shared.edit();
         editor.putString("CartID", String.valueOf(cartno.get_CartID()));
         editor.commit();
-        Toast.makeText(this,"New Shopping Session Created"+String.valueOf(cartno.get_CartID()),Toast.LENGTH_LONG).show();
+        Toast.makeText(this,"New shopping Session Created"+String.valueOf(cartno.get_CartID()),Toast.LENGTH_LONG).show();
         currcart=cartno.get_CartID();
 
             /*

@@ -20,6 +20,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txttell"
+                android:visibility="gone"
+                android:textColor="@android:color/holo_red_dark"/>
+
             <LinearLayout
                 android:layout_marginBottom="10dp"
                 android:orientation="vertical"
@@ -156,11 +163,13 @@
                       android:background="@drawable/roundcorner"
                       android:layout_gravity="center_horizontal"/>
                   <TextView
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:id="@+id/txtinfo"
-                      android:visibility="gone"
-                      android:textColor="@android:color/holo_red_dark"/>
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/txtinfo"
+                  android:visibility="gone"
+                  android:textColor="@android:color/holo_red_dark"/>
+
+
                   <Spinner
                       android:layout_height="50dp"
                       android:id="@+id/spin_country"
@@ -224,4 +233,5 @@
     </android.support.v4.widget.NestedScrollView>
 
 </RelativeLayout>
+
 </android.support.design.widget.CoordinatorLayout>

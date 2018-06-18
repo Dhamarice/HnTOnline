@@ -45,10 +45,10 @@ public class Registration extends AppCompatActivity {
     //testing on Emulator:
     //  private static final String LOGIN_URL = "https://hammerandtongues.com/webservice/register.php";
 
-    private static final String LOGIN_URL = "https://devshop.hammerandtongues.com/webservice/register.php";
-    private static final String CODE_URL = "https://devshop.hammerandtongues.com/webservice/sms-api.php";
-    private static final String VERIFY_URL = "https://devshop.hammerandtongues.com/webservice/verify.php";
-    private static final String EDIT_URL = "https://devshop.hammerandtongues.com/webservice/DeleteNum.php";
+    private static final String LOGIN_URL = "https://shopping.hammerandtongues.com/webservice/register.php";
+    private static final String CODE_URL = "https://shopping.hammerandtongues.com/webservice/sms-api.php";
+    private static final String VERIFY_URL = "https://shopping.hammerandtongues.com/webservice/verify.php";
+    private static final String EDIT_URL = "https://shopping.hammerandtongues.com/webservice/DeleteNum.php";
     //ids
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MESSAGE = "message";
@@ -572,6 +572,7 @@ public class Registration extends AppCompatActivity {
                 try {
                     JSONObject jsonObject=new JSONObject(s);
                     int success=jsonObject.getInt("success");
+                    String message=jsonObject.getString("message");
                     if(success==1){
 
                         Log.e("Success", "" + telno);
@@ -624,7 +625,7 @@ public class Registration extends AppCompatActivity {
                                     }
                                 })
                                 .setNegativeButton("", null)
-                                .setMessage(Html.fromHtml("Number already in use!" ))
+                                .setMessage(Html.fromHtml(message ))
                                 .show();
 
                     }
@@ -634,6 +635,7 @@ public class Registration extends AppCompatActivity {
                 } catch (JSONException e) {
 
                     //Toast.makeText(getContext(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+                    Log.e("Exception","  "+e);
 
                     Toast ToastMessage = Toast.makeText(Registration.this,"Check your internet connection!",Toast.LENGTH_LONG);
                     View toastView = ToastMessage.getView();

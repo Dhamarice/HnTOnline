@@ -43,7 +43,7 @@ public class Chat_Webview extends AppCompatActivity {
 
 //Specify the URL you want to display//
 
-        webView.loadUrl("https://tawk.to/dhamarice" );
+        webView.loadUrl("https://tawk.to/hntshoppingmobile" );
 
         webView.setWebViewClient(new WebViewClient(){
 

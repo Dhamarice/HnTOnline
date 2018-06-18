@@ -4,10 +4,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -21,18 +19,22 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by NgonidzaIshe on 30/6/2016.
@@ -49,14 +51,14 @@ public class TransactionHistory  extends AppCompatActivity {
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
 
-    private static final String GETTRANSACTION_HISTORY_URL = "https://devshop.hammerandtongues.com/webservice/gettransactionhistory.php";
+    private static final String GETTRANSACTION_HISTORY_URL = "https://shopping.hammerandtongues.com/webservice/gettransactionhistory.php";
 
     //JSON element ids from repsonse of php script:
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MESSAGE = "message";
     private static final String TAG_PRODUCTDETAILS = "posts";
-    private static final String ECORESPONSE_URL = "https://devshop.hammerandtongues.com/wp-content/themes/Walleto/CheckDb.php";
-    private static final String DELETEORDER_URL = "https://devshop.hammerandtongues.com/webservice/deleteoder.php";
+    private static final String ECORESPONSE_URL = "https://shopping.hammerandtongues.com/wp-content/themes/Walleto/CheckDb.php";
+    private static final String DELETEORDER_URL = "https://shopping.hammerandtongues.com/webservice/deleteoder.php";
     private  double total;
     private  String OrderID, uid, ptype, totalPrc;
     int success;
@@ -93,17 +95,29 @@ public class TransactionHistory  extends AppCompatActivity {
 
         if (shared.getString("userid", "") != null && shared.getString("userid", "") !="") {
             userID = (shared.getString("userid", ""));
-            new GetProductDetails().execute();
+            GetProductDetails();
 
 
-            if (shared.getString("ptype", "") != null && shared.getString("ptype", "") !="") {
+            if (shared.getString("ptype", "") != null && shared.getString("ptype", "") !="" && shared.getString("ptype", "") != "DepositPaynow") {
                 ptype = (shared.getString("ptype", ""));
-                new ProcessRequest().execute();
+                //new ProcessRequest().execute();
+               ProcessRequest( ptype, ECORESPONSE_URL, OrderID, uid, totalPrc );
 
 
                 SharedPreferences.Editor editor = shared.edit();
                 editor.remove("ptype");
                 editor.apply();
+            }
+
+            if(shared.getString("ptype", "") == "DepositPaynow"){
+
+                Intent intent = new Intent(TransactionHistory.this, Finances.class);
+                startActivity(intent);
+
+                SharedPreferences.Editor editor = shared.edit();
+                editor.remove("ptype");
+                editor.apply();
+
             }
 
 
@@ -334,307 +348,357 @@ itmcontr.setVisibility(View.VISIBLE);
     }
 
 
+    private void GetProductDetails() {
 
-    class GetProductDetails extends AsyncTask<String, String, String> {
 
-        /**
-         * Before starting background thread Show Progress Dialog
-         */
-        boolean failure = false;
+        //Log.e("NUMBER", (shared.getString("telno", "")));
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-          /*  pDialog = new ProgressDialog(Store.this);
-            pDialog.setMessage("Getting Product Details...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
-            */
-        }
+        pDialog = new ProgressDialog(TransactionHistory.this);
+        pDialog.setMessage("Getting  Transaction History...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(true);
+        pDialog.show();
 
-        @Override
-        protected String doInBackground(String... args) {
-            // TODO Auto-generated method stub
-            // Check for success tag
-            int success;
 
-            try {
-                // Building Parameters
-                JSONObject json1 = new JSONObject();
-                List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-                params.add(new BasicNameValuePair("uid", userID));
-
-                Log.d("request!", "starting");
-                // getting product details by making HTTP request
-                json1 = jsonParser.makeHttpRequest(
-                        GETTRANSACTION_HISTORY_URL, "POST", params);
-                Log.e("Cart JSONing...", userID + GETTRANSACTION_HISTORY_URL);
-                // check your log for json response
-                if (json1 != null) {
-
-                    Log.d("Login attempt", json1.toString());
-
-                    // json success tag
-                    success = json1.getInt(TAG_SUCCESS);
-                    if (success == 1) {
-                        Log.e("Get Cart Success", json1.getString(TAG_PRODUCTDETAILS));
-                        strOrders = json1.getString(TAG_PRODUCTDETAILS);
-
-                        setuielements();
-                        return json1.getString(TAG_PRODUCTDETAILS);
+        try {
+            // Building Parameters
+            total=0.0;
+            final JSONObject json = new JSONObject();
 
 
 
-                    } else {
-
-                        setnohistory();
-                        return json1.getString(TAG_MESSAGE);
-                    }
-                } }
-            catch(JSONException e){
-                    e.printStackTrace();
-                }
-
-                return null;
-
-            }
-
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
-        protected void onPostExecute(String posts) {
-            // dismiss the dialog once product deleted
-            //pDialog.dismiss();
-            if (posts != null) {
-                //setuielements();
-                Log.e("JSONing", posts);
-            }
-
-            else{
-                seterror();
-            }
-
-        }
-
-    }
 
 
-    class ProcessRequest extends AsyncTask<String, String, String> {
-
-        /**
-         * Before starting background thread Show Progress Dialog
-         *
-         * */
-        boolean failure = false;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(TransactionHistory.this);
-            pDialog.setMessage("Please wait...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... args) {
-            // TODO Auto-generated method stub
-            // Check for success tag
-
-            try {
-                // Building Parameters
-                total = 0.0;
-                JSONObject json = new JSONObject();
-                List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-                dbHandler = new DatabaseHelper(getBaseContext());
-                JSONArray JsonArr = new JSONArray();
-
-                if (dbHandler.cartItems(currcart) != null) {
-                    Cursor cursor01 = dbHandler.cartItems(currcart);
-                    if (cursor01 != null && cursor01.moveToFirst()) {
-                        Log.e("Cart Cursor Count", "Items in Cart: " + cursor01.getCount()
-                                + "  PrdID:" + cursor01.getString(8)
-                                + "  qnty:" + cursor01.getString(3)
-                                + "  price:" + cursor01.getString(4)
-                                + "  title:" + cursor01.getString(7)
-                                + "  storeid:" + cursor01.getString(10)
-                                + "  storename:" + cursor01.getString(11)
-                                + "  seller:" + cursor01.getString(12)
-                                + "  discount:"
-                                + "  variation:"
-                        );
-
-                        do {
-                            JSONObject jsonprdct = new JSONObject();
-                            jsonprdct.put("productid", cursor01.getString(8));
-                            jsonprdct.put("qnty", cursor01.getString(3));
-                            jsonprdct.put("variation", "");
-                            jsonprdct.put("price", cursor01.getString(4));
-                            jsonprdct.put("ptitle", cursor01.getString(7));
-                            jsonprdct.put("storeid", cursor01.getString(10));
-                            jsonprdct.put("storename", cursor01.getString(11));
-                            //TO DO SELLER WANGU
-                            jsonprdct.put("seller", cursor01.getString(12));
-                            jsonprdct.put("discount", "0.0");
 
 
-                            JsonArr.put(jsonprdct);
-                            Double SubTotal = 0.0;
-                            total = total + SubTotal;
-                        } while (cursor01.moveToNext());
-                        cursor01.close();
-                        Log.e("Cart Items JSON String", JsonArr.toString());
+            com.android.volley.RequestQueue requestQueue = Volley.newRequestQueue(TransactionHistory.this);
 
 
-                        params.add(new BasicNameValuePair("cartitems", JsonArr.toString()));
-                        params.add(new BasicNameValuePair("userid", uid));
-                        params.add(new BasicNameValuePair("ptype", ptype));
-                        params.add(new BasicNameValuePair("amt", totalPrc));
 
-                        params.add(new BasicNameValuePair("oid", OrderID));
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, GETTRANSACTION_HISTORY_URL, new com.android.volley.Response.Listener<String>() {
+                @Override
+                public void onResponse(String s) {
 
+                    //pDialog.dismiss();
 
-                        json = jsonParser.makeHttpRequest(
-                                ECORESPONSE_URL, "POST", params);
+                    Log.e("Success", "" + s);
+                    //{"success":1,"message":"Username Successfully Added!"}
 
-                        Log.e("cart items", "" + JsonArr.toString());
-
-                        try {
-                            if (TAG_SUCCESS != null) {
-                                success = json.getInt(TAG_SUCCESS);
-                                Log.d("JSon Results", "Success-" + json.getInt(TAG_SUCCESS) + "  |Message-" + json.getString(TAG_PRODUCTDETAILS));
-                            }
-                        } catch (Exception e) {
-                            Log.e("Ecocashresp error: ", e.getMessage());
+                    try {
+                        JSONObject jsonObject = new JSONObject(s);
+                        int success = 0;
+                        if (jsonObject.has("success")) {
+                            success = jsonObject.getInt("success");
                         }
+                        String message = "";
+                        if (jsonObject.has("message")) {
+                            message = jsonObject.getString("message");
+                        }
+
+
+                        Log.e("Get Cart Success", "" + success);
+
 
                         if (success == 1) {
 
-                            Log.e("SUCCESS", "you can delete " + OrderID);
-                            DatabaseHelper myDBHandler = new DatabaseHelper(getBaseContext());
 
-                            myDBHandler.clearCartItems();
+                            Log.e("Get Cart Success", jsonObject.getString(TAG_PRODUCTDETAILS));
+                            strOrders = jsonObject.getString(TAG_PRODUCTDETAILS);
 
-                            Log.e("logging", "starting intent...............");
-                            Intent intent = new Intent(TransactionHistory.this, TransactionHistory.class);
-                            startActivity(intent);
-
-                            //Toast.makeText(TransactionHistory.this, " Payment successfull", Toast.LENGTH_LONG).show();
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
+                            setuielements();
 
 
-                                    Toast ToastMessage = Toast.makeText(TransactionHistory.this,"Payment successfull!",Toast.LENGTH_LONG);
-                                    View toastView = ToastMessage.getView();
-                                    toastView.setBackgroundResource(R.drawable.toast_background);
-                                    ToastMessage.show();
-                                }
 
-                            });
-
-                            return json.getString(TAG_MESSAGE);
-
-
-                        } else {
-                            Log.e("Payment not valid!", json.getString(TAG_MESSAGE));
-
-                            params.add(new BasicNameValuePair("oid", OrderID));
-                            params.add(new BasicNameValuePair("cartitems", JsonArr.toString()));
-                            json = jsonParser.makeHttpRequest(
-                                    DELETEORDER_URL, "POST", params);
-
-                            Log.e("Order cleared!", json.getString(TAG_MESSAGE));
-
-                            Toast.makeText(TransactionHistory.this, "Payment validation failed, Please Try again later!", Toast.LENGTH_LONG).show();
-
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-
-
-                                    Toast ToastMessage = Toast.makeText(TransactionHistory.this,"Payment validation failed, Please Try again later!",Toast.LENGTH_LONG);
-                                    View toastView = ToastMessage.getView();
-                                    toastView.setBackgroundResource(R.drawable.toast_background);
-                                    ToastMessage.show();
-                                }
-
-                            });
-
-                            return json.getString(TAG_MESSAGE);
 
                         }
 
 
+                        else {
+
+                            setnohistory();
+                            //return jsonObject.getString(TAG_MESSAGE);
+
+                            new AlertDialog.Builder(TransactionHistory.this)
+                                    .setTitle("Info")
+                                    .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+
+
+
+                                        }
+                                    })
+                                    .setNegativeButton("", null)
+                                    .setMessage(Html.fromHtml(jsonObject.getString(TAG_MESSAGE)))
+                                    .show();
+                        }
+
 
                     }
 
+                            catch (JSONException e) {
+                    e.printStackTrace();
 
+                    Log.e("Try error: ", "Exception when continuing" + e.toString());
+
+                    Toast ToastMessage = Toast.makeText(TransactionHistory.this, "No Intenet connection!", Toast.LENGTH_LONG);
+                    View toastView = ToastMessage.getView();
+                    toastView.setBackgroundResource(R.drawable.toast_background);
+                    ToastMessage.show();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.e("Cart Async Task Error ", e.toString());
+
 
             }
 
-            return null;
 
-        }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                //pDialog.dismiss();
 
-        /**
-         * After completing background task Dismiss the progress dialog
-         * **/
-        protected void onPostExecute(final String posts) {
-            // dismiss the dialog once product deleted
+                Log.e("RUEERROR", "" + volleyError);
 
+                //Toast.makeText(getContext(), "No Intenet connection!", Toast.LENGTH_SHORT).show();
 
-
-            pDialog.dismiss();
-            if (posts != null){
-                //Toast.makeText(TransactionHistory.this, posts, Toast.LENGTH_LONG).show();
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-
-                        /*
-                        Toast ToastMessage = Toast.makeText(TransactionHistory.this,posts,Toast.LENGTH_LONG);
-                        View toastView = ToastMessage.getView();
-                        toastView.setBackgroundResource(R.drawable.toast_background);
-                        ToastMessage.show();
-*/
+                seterror();
 
 
 
-                                new AlertDialog.Builder(TransactionHistory.this)
-                                        .setTitle("Info")
-                                        .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-
-                                            }
-                                        })
-                                        .setNegativeButton("", null)
-                                        .setMessage(Html.fromHtml(posts))
-                                        .show();
-
-
-
-                    }
-
-                });
             }
-        }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> values = new HashMap();
+                values.put("uid", userID);
+
+
+                return values;
+            }
+        };
+
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 500, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        requestQueue.add(stringRequest);
+
+        pDialog.dismiss();
+
 
     }
 
+
+        catch (Exception e) {
+        e.printStackTrace();
+        Log.e("Process Error ", e.toString());
+
+
+    }
+
+}
+
+
+    private void ProcessRequest( final String paytype, final String URL, final String OrderId, final String userid, final String totalPrice ) {
+
+
+        //Log.e("NUMBER", (shared.getString("telno", "")));
+
+        pDialog = new ProgressDialog(TransactionHistory.this);
+        pDialog.setMessage("Processing Order & Payment...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(true);
+        pDialog.show();
+
+
+        try {
+            // Building Parameters
+            total=0.0;
+            final JSONObject json = new JSONObject();
+
+
+
+
+
+
+
+                    com.android.volley.RequestQueue requestQueue = Volley.newRequestQueue(TransactionHistory.this);
+
+
+
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new com.android.volley.Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String s) {
+
+                            //pDialog.dismiss();
+
+                            Log.e("Success", "" + s);
+                            //{"success":1,"message":"Username Successfully Added!"}
+
+                            try {
+                                JSONObject jsonObject = new JSONObject(s);
+                                int success = 0;
+                                if (jsonObject.has("success")) {
+                                    success = jsonObject.getInt("success");
+                                }
+                                String message = "";
+                                if (jsonObject.has("message")) {
+                                    message = jsonObject.getString("message");
+                                }
+
+
+                                Log.e("Get Cart Success", "" + success);
+
+
+                                if (success == 1) {
+
+
+                                    /*
+                                    Log.e("Get Cart Success", "" + success);
+                                    flag = 1;
+                                    //oid = jsonObject.getInt(TAG_ID);
+
+                                    if (oid != 0){Log.e("Get payment ID", "after oid" + oid);
+
+                                        Log.e("Get order ID from prefs", "orderid: " + OrderId);
+
+
+                                        SharedPreferences.Editor editor = shared.edit();
+                                        editor.putString("OrderID", String.valueOf(oid));
+                                        editor.apply();}
+*/
+
+
+                                    if(paytype != null ){
+
+                                        new AlertDialog.Builder(TransactionHistory.this)
+                                                .setTitle("Info")
+                                                .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+
+                                                        new AlertDialog.Builder(TransactionHistory.this)
+                                                                .setTitle("")
+                                                                .setNeutralButton("Yes", new DialogInterface.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(DialogInterface dialog, int which) {
+
+
+                                                                        myDBHandler myDBHandler = new myDBHandler(TransactionHistory.this, null, null, 0);
+
+                                                                        myDBHandler.clearCartItems();
+
+
+                                                                        Intent intent = new Intent(TransactionHistory.this, MainActivity.class);
+                                                                        startActivity(intent);
+
+
+
+
+                                                                    }
+                                                                })
+                                                                .setNegativeButton("No", null)
+                                                                .setMessage(Html.fromHtml("Clear cart?"))
+                                                                .show();
+
+
+
+
+                                                    }
+                                                })
+                                                .setNegativeButton("", null)
+                                                .setMessage(Html.fromHtml(message))
+                                                .show();
+
+
+
+                                    }
+
+
+
+
+
+                                }
+
+                                else {
+                                    new AlertDialog.Builder(TransactionHistory.this)
+                                            .setTitle("Info")
+                                            .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+
+
+
+
+                                                }
+                                            })
+                                            .setNegativeButton("", null)
+                                            .setMessage(Html.fromHtml(message))
+                                            .show();
+                                }
+
+
+                            }
+
+                            catch (JSONException e) {
+                                e.printStackTrace();
+
+                                Log.e("Try error: ", "Exception when continuing" + e.toString());
+
+                                Toast ToastMessage = Toast.makeText(TransactionHistory.this, "No Intenet connection!", Toast.LENGTH_LONG);
+                                View toastView = ToastMessage.getView();
+                                toastView.setBackgroundResource(R.drawable.toast_background);
+                                ToastMessage.show();
+                            }
+
+
+                        }
+
+
+                    }, new com.android.volley.Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            //pDialog.dismiss();
+
+                            Log.e("RUEERROR", "" + volleyError);
+
+                            //Toast.makeText(getContext(), "No Intenet connection!", Toast.LENGTH_SHORT).show();
+
+
+
+
+
+                        }
+                    }) {
+                        @Override
+                        protected Map<String, String> getParams() throws AuthFailureError {
+                            Map<String, String> values = new HashMap();
+                            values.put("userid", userid);
+                            values.put("amt", totalPrice);
+                            values.put("oid", OrderId);
+                            values.put("ptype", paytype);
+
+                            return values;
+                        }
+                    };
+
+                    stringRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 500, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+                    requestQueue.add(stringRequest);
+
+                    pDialog.dismiss();
+
+
+        }
+
+
+        catch (Exception e) {
+            e.printStackTrace();
+            Log.e("Process Error ", e.toString());
+
+
+        }
+
+    }
 
 
 

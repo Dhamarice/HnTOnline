@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
@@ -24,15 +23,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.hammerandtongues.online.hntonline.UserActivity.isNumeric;
 
@@ -49,19 +53,19 @@ public class Payment  extends Fragment implements View.OnClickListener {
    /* private static final String ORDER_URL = "https://devshopping.hammerandtongues.com/demo/webservice/createorder.php";
     private static final String ORDERCONTENTS_URL = "https://devshopping.hammerandtongues.com/demo/webservice/createordercontents.php";
     */
-    //private static final String ECASH_PAYMENT_URL = "https://hammerandtongues.com/shopping/ecocash_api.php";
-    private static final String ECASH_PAYMENT_URL = "https://devshop.hammerandtongues.com/wp-content/themes/Walleto/ecocash_api_mobile.php";
-    private static final String DISCOUNT_URL = "https://devshop.hammerandtongues.com/webservice/getdiscount.php";
-    //private static final String TCASH_PAYMENT_URL = "http://10.0.2.2:8012/wp-content/themes/Walleto/tcasi.php";
-    private static final String TCASH_PAYMENT_URL = "https://devshop.hammerandtongues.com/wp-content/themes/Walleto/tcash_api_mobile.php";
-    private static final String PAYNOW_PAYMENT_URL = "https://devshop.hammerandtongues.com/webservice/paynowapi.php";
-    //private static final String ECORESPONSE_URL = "https://devshop.hammerandtongues.com/webservice/CheckDb.php";
-    private static final String ECORESPONSE_URL = "https://devshop.hammerandtongues.com/wp-content/themes/Walleto/CheckDb.php";
-    private static final String DELETEORDER_URL = "https://devshop.hammerandtongues.com/webservice/deleteoder.php";
+    //private static final String ECASH_PAYMENT_URL = "https://shopping.hammerandtongues.com/wp-content/themes/Walleto/lib/my_account/pay_for_item_ecash.php";
+    private static final String ECASH_PAYMENT_URL = "https://shopping.hammerandtongues.com/wp-content/themes/Walleto/ecocash_api_mobile.php";
+    private static final String DISCOUNT_URL = "https://shopping.hammerandtongues.com/webservice/getdiscount.php";
+    //private static final String TCASH_PAYMENT_URL = "https://10.0.2.2:8012/wp-content/themes/Walleto/tcasi.php";
+    private static final String TCASH_PAYMENT_URL = "https://shopping.hammerandtongues.com/wp-content/themes/Walleto/tcash_api_mobile.php";
+    private static final String PAYNOW_PAYMENT_URL = "https://shopping.hammerandtongues.com/webservice/paynowapi.php";
+    //private static final String ECORESPONSE_URL = "https://shopping.hammerandtongues.com/webservice/CheckDb.php";
+    private static final String ECORESPONSE_URL = "https://shopping.hammerandtongues.com/wp-content/themes/Walleto/CheckDb.php";
+    private static final String DELETEORDER_URL = "https://shopping.hammerandtongues.com/webservice/deleteoder.php";
     //ids
-    private static final String CREATE_ORDERS_URL = "https://devshop.hammerandtongues.com/webservice/createorder.php";
-    private static final String PAYTRANSACT_URL = "https://devshop.hammerandtongues.com/webservice/paytransact.php";
-    private static final String CHECKUSERLEVEL_URL = "https://devshop.hammerandtongues.com/webservice/CheckUserLvl.php";
+    private static final String CREATE_ORDERS_URL = "https://shopping.hammerandtongues.com/webservice/createorder.php";
+    private static final String PAYTRANSACT_URL = "https://shopping.hammerandtongues.com/webservice/paytransact.php";
+    private static final String CHECKUSERLEVEL_URL = "https://shopping.hammerandtongues.com/webservice/CheckUserLvl.php";
 
     //JSON element ids from repsonse of php script:
     private static final String TAG_ID = "id";
@@ -82,8 +86,9 @@ public class Payment  extends Fragment implements View.OnClickListener {
     LinearLayout ewallet, paynow, ecocash, telecash, cod;
     ImageView imgewallet, imgpaynow, imgecocash, imgtelecash, imgcod;
     private Button btnApplyDiscount;
-    private String Ewall, Balance, uid, totalprice, Discount,DiscountAmount,ecash_number, Otp, accno, wallbalance, amount, frmgateway;
-    private String DlvryType, DlvryChrg, DlvryAdd, totalPrc;
+JSONArray JsonArr = new JSONArray();
+    private String Ewall, Balance, uid, totalprice, Discount,DiscountAmount,ecash_number, Otp, accno, wallbalance, amount, frmgateway, idoforder = "notapplicable";
+    private String DlvryType, DlvryChrg, DlvryAdd, totalPrc, paytype, orderid, resp;
     private TextView balance;
     private int currcart,isSumarry,success,Count, oid, flag=0, totalAll, DlvryPrc, DscntPrc, OrdrPrc ;
     private Double total=0.0;
@@ -143,7 +148,7 @@ public class Payment  extends Fragment implements View.OnClickListener {
             //totalPrc = Integer.toString(totalAll);
 
 
-            totalPrc = String.valueOf (Double.parseDouble(new DecimalFormat("#.##").format((Double.parseDouble(totalprice) + Double.parseDouble(DlvryChrg)))));
+            totalPrc = String.valueOf (Double.parseDouble(totalprice) + Double.parseDouble(DlvryChrg));
 
 
             SharedPreferences.Editor editor = shared.edit();
@@ -197,17 +202,17 @@ public class Payment  extends Fragment implements View.OnClickListener {
                 @Override
                 public void onClick(View view) {
                     Discount = discount.getText().toString();
-                    new GetDiscountVoucher().execute();
+                    GetDiscountVoucher();
                 }
             });
 
             //Toast.makeText(getActivity(),"Number: " +  ecash_number + " Amount: " + totalprice + " Other Amt:" + amount, Toast.LENGTH_SHORT).show();
 
             return view;
-        }
+       }
        catch (Exception ex)
        {
-           Log.e("Main Thread Exception", "Error: " + ex.toString());
+         Log.e("Main Thread Exception", "Error: " + ex.toString());
            System.gc();
            return null;
        }
@@ -237,18 +242,30 @@ public class Payment  extends Fragment implements View.OnClickListener {
             //Toast.makeText(getActivity(),"Number: " +  ecash_number + " Amount: " + totalprice + " Other Amt:" + amount, Toast.LENGTH_LONG).show();
             if (gateway == "ewallet") {
                 isSumarry = 0;
+                paytype = "ewallet";
+                Otp = "notapplicable";
+                accno = "notapplicable";
+                Discount =  "notapplicable";
+
+
+                SharedPreferences.Editor editor = shared.edit();
+                editor.putString("ptype", paytype);
+                editor.apply();
+
                 Double ttl = Double.parseDouble(totalprice);
                 Double dchrg = Double.parseDouble(DlvryChrg);
-                ttl = Double.parseDouble(new DecimalFormat("#.##").format(ttl));
+                //ttl = Double.parseDouble(new DecimalFormat("#.##").format(ttl));
                 Double bal = Double.parseDouble(Balance);
-                bal = Double.parseDouble(new DecimalFormat("#.##").format(bal));
+                //bal = Double.parseDouble(new DecimalFormat("#.##").format(bal));
                 totalprice = ttl.toString();
                 if (DiscountAmount == null || DiscountAmount == "") {
                     DiscountAmount = "0.0";
                 }
                 Double disc = Double.parseDouble(DiscountAmount);
-                disc = Double.parseDouble(new DecimalFormat("#.##").format(disc));
+                //disc = Double.parseDouble(new DecimalFormat("#.##").format(disc));
                 Log.e("Total", "total is: " + ttl + dchrg);
+
+
 
                 if ((ttl  > (bal + disc)) || (dchrg > bal)) {
                     //Toast.makeText(getContext(), "Insufficent Funds in Wallet Order Total: $" + totalprice + "Wallet Balance: $" + Balance, Toast.LENGTH_SHORT).show();
@@ -270,11 +287,34 @@ public class Payment  extends Fragment implements View.OnClickListener {
                     return;
                 }
 
+                else {
+
+
+                    ProcessOrder(paytype, CREATE_ORDERS_URL, idoforder);
+
+
+                //ProcessRequest(paytype, ECORESPONSE_URL, idoforder);
+
+
+                }
+
+
+
 
             }
             if (gateway == "ecocash") {
 
                     isSumarry = 2;
+                paytype = "Ecocash";
+                Otp = "notapplicable";
+                Discount =  "notapplicable";
+
+                SharedPreferences.Editor editor = shared.edit();
+                editor.putString("ptype", paytype);
+                editor.apply();
+                if (DiscountAmount == null || DiscountAmount == "") {
+                    DiscountAmount = "0.0";
+                }
                         if (accno.contentEquals("")) {
                             //Toast.makeText(getContext(), "Please enter a mobile number!", Toast.LENGTH_SHORT).show();
 
@@ -286,11 +326,30 @@ public class Payment  extends Fragment implements View.OnClickListener {
                             return;
                         }
 
+                        else{
+
+
+                            ProcessOrder(paytype, CREATE_ORDERS_URL, idoforder);
+
+
+                        }
+
+
+
             }
             if (gateway == "telecash")
 
             {
                     isSumarry = 3;
+                paytype = "Telecash";
+                Discount =  "notapplicable";
+
+                SharedPreferences.Editor editor = shared.edit();
+                editor.putString("ptype", paytype);
+                editor.apply();
+                if (DiscountAmount == null || DiscountAmount == "") {
+                    DiscountAmount = "0.0";
+                }
                 if (accno.contentEquals("") || Otp.contentEquals("") ) {
 
                     //Toast.makeText(getContext(), "Please enter a mobile number or Otp!", Toast.LENGTH_SHORT).show();
@@ -304,20 +363,58 @@ public class Payment  extends Fragment implements View.OnClickListener {
                     return;
 
                 }
+
+                else{
+
+
+                    ProcessOrder(paytype, CREATE_ORDERS_URL, idoforder);
+
+
+                }
             }
 
             if (gateway =="paynow")
             {
                 isSumarry=4;
+                Otp = "notapplicable";
+                accno = "notapplicable";
+                Discount =  "notapplicable";
+                SharedPreferences.Editor editor = shared.edit();
+                editor.putString("ptype", paytype);
+                editor.apply();
+                if (DiscountAmount == null || DiscountAmount == "") {
+                    DiscountAmount = "0.0";
+                }
+
+                flag = 1;
+                paytype = "paynow";
+                ProcessOrder(paytype, CREATE_ORDERS_URL, idoforder);
+
+
 
             }
             if (gateway =="cod")
             {
                 isSumarry=1;
 
+                paytype = "COD";
+                Discount =  "notapplicable";
+                SharedPreferences.Editor editor = shared.edit();
+                editor.putString("ptype", paytype);
+                editor.apply();
+                if (DiscountAmount == null || DiscountAmount == "") {
+                    DiscountAmount = "0.0";
+                }
+
+
+                resp = shared.getString("resp", "");
+
+                ProcessRequest(paytype, CHECKUSERLEVEL_URL, idoforder);
+
+
             }
 
-            new ProcessRequest().execute();
+            //new ProcessRequest().execute();
         }
     });
         submit.setText("Pay");
@@ -360,8 +457,8 @@ public class Payment  extends Fragment implements View.OnClickListener {
 
         if (gateway=="ecocash")
         {
-            account.setHint("77/78...");
-            //prefix.setText("+263:");
+            account.setHint("Ecocash number");
+            prefix.setText("+263:");
             //account.setText("+263:");
             total.setText("Order Total: $"+ totalprice  );
             delivery.setText("Delivery / Pickup Charge: $"+ DlvryChrg  );
@@ -426,7 +523,8 @@ public class Payment  extends Fragment implements View.OnClickListener {
                 discount.setText("Discount Amount: $0.00");
             }
 
-            account.setHint("73...");
+            account.setHint("Telecel number ");
+            prefix.setText("+263:");
             otp.setHint("OTP");
             total.setText("Order Total: $" + totalprice);
             delivery.setText("Delivery / Pickup Charge: $"+ DlvryChrg  );
@@ -437,6 +535,7 @@ public class Payment  extends Fragment implements View.OnClickListener {
             telecash.addView(delivery);
             telecash.addView(discount);
             telecash.addView(totalpayment);
+            telecash.addView(prefix);
             telecash.addView(account);
             telecash.addView(otp);
             telecash.addView(submit);
@@ -527,860 +626,314 @@ private String deleteId;
         //return true;
     }
 
-    class ProcessRequest extends AsyncTask<String, String, String> {
-
-        /**
-         * Before starting background thread Show Progress Dialog
-         * */
-        boolean failure = false;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(getContext());
-            pDialog.setMessage("Processing Order & Payment...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... args) {
-            // TODO Auto-generated method stub
-            // Check for success tag
-
-                 try {
-                    // Building Parameters
-                    total=0.0;
-                     JSONObject json = new JSONObject();
-                    List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-                    dbHandler = new DatabaseHelper(getContext());
-                    JSONArray JsonArr = new JSONArray();
-
-                    if (dbHandler.cartItems(currcart) != null) {
-                        Cursor cursor01 = dbHandler.cartItems(currcart);
-                        if (cursor01 != null && cursor01.moveToFirst()) {
-                            Log.e("Cart Cursor Count", "Items in Cart: " + cursor01.getCount()
-                                    + "  PrdID:" + cursor01.getString(8)
-                                    + "  qnty:" + cursor01.getString(3)
-                                    + "  price:" + cursor01.getString(4)
-                                    + "  title:" + cursor01.getString(7)
-                                    + "  storeid:" + cursor01.getString(11)
-                                    + "  storename:" + cursor01.getString(12)
-                                    + "  seller:" + cursor01.getString(13)
-                                    + "  discount:"
-                                    + "  variation:"
-                            );
-                            deleteId = cursor01.getString(8);
-                            do {
-                                JSONObject jsonprdct = new JSONObject();
-                                jsonprdct.put("productid", cursor01.getString(8));
-                                jsonprdct.put("qnty", cursor01.getString(3));
-                                jsonprdct.put("variation", "");
-                                jsonprdct.put("price", cursor01.getString(4));
-                                jsonprdct.put("ptitle", cursor01.getString(7));
-                                jsonprdct.put("storeid", cursor01.getString(10));
-                                jsonprdct.put("storename", cursor01.getString(11));
-                                //TO DO SELLER WANGU
-                                jsonprdct.put("seller", cursor01.getString(13));
-                                jsonprdct.put("discount", "0.0");
-
-                                PPrice = cursor01.getString(4);
-                                Qty = cursor01.getString(3);
-                                JsonArr.put(jsonprdct);
-                                Double SubTotal = 0.0;
-                                SubTotal = (Double.parseDouble(PPrice) * Double.parseDouble(Qty));
-                                total = total + SubTotal;
-                                Count++;
-                            } while (cursor01.moveToNext());
-                            cursor01.close();
-                            Log.e("Cart Items JSON String", JsonArr.toString());
-
-                            if (Discount == null || Discount == "") {
-                                Discount = "XXX000";
-                            }
 
 
-                            params.add(new BasicNameValuePair("cartitems", JsonArr.toString()));
-                            params.add(new BasicNameValuePair("userid", uid));
-                            params.add(new BasicNameValuePair("totalprice", totalprice));
-                            params.add(new BasicNameValuePair("discount", DiscountAmount));
-                            params.add(new BasicNameValuePair("Coupon", Discount));
-                            params.add(new BasicNameValuePair("dlvrytype", DlvryType));
-                            params.add(new BasicNameValuePair("dlvrychrg", DlvryChrg));
-                            params.add(new BasicNameValuePair("dlvryadd", DlvryAdd));
-                            params.add(new BasicNameValuePair("amt", totalPrc));
-                            params.add(new BasicNameValuePair("endUserId", accno));
+    private void ProcessRequest( final String ptype, final String URL, final String OrderId) {
 
-                            if (isSumarry == 0) {
-                                params.add(new BasicNameValuePair("ptype", "ewallet"));
-                                params.add(new BasicNameValuePair("oid", String.valueOf(oid)));
-                            } else if (isSumarry == 2) {
-                                params.add(new BasicNameValuePair("ptype", "ecocash"));
-                            } else if (isSumarry == 3) {
-                                params.add(new BasicNameValuePair("ptype", "telecash"));
-                            } else if (isSumarry == 4) {
-                                params.add(new BasicNameValuePair("ptype", "paynow"));
-                            }
-                            else if (isSumarry == 1) {
-                                params.add(new BasicNameValuePair("ptype", "cod"));
-                            }
 
-                            //To do dzosera create order
+        //Log.e("NUMBER", (shared.getString("telno", "")));
+
+        pDialog = new ProgressDialog(getContext());
+        pDialog.setMessage("Processing Order & Payment...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(true);
+        pDialog.show();
+
+
+        try {
+            // Building Parameters
+            total=0.0;
+          final JSONObject json = new JSONObject();
+
+
+            dbHandler = new DatabaseHelper(getContext());
+
+
+            if (dbHandler.cartItems(currcart) != null) {
+                Cursor cursor01 = dbHandler.cartItems(currcart);
+                if (cursor01 != null && cursor01.moveToFirst()) {
+                    Log.e("Cart Cursor Count", "Items in Cart: " + cursor01.getCount()
+                            + "  PrdID:" + cursor01.getString(8)
+                            + "  qnty:" + cursor01.getString(3)
+                            + "  price:" + cursor01.getString(4)
+                            + "  title:" + cursor01.getString(7)
+                            + "  storeid:" + cursor01.getString(11)
+                            + "  storename:" + cursor01.getString(12)
+                            + "  seller:" + cursor01.getString(13)
+                            + "  discount:"
+                            + "  variation:"
+                    );
+
+                    deleteId = cursor01.getString(8);
+                    do {
+                        JSONObject jsonprdct = new JSONObject();
+                        jsonprdct.put("productid", cursor01.getString(8));
+                        jsonprdct.put("qnty", cursor01.getString(3));
+                        jsonprdct.put("variation", "");
+                        jsonprdct.put("price", cursor01.getString(4));
+                        jsonprdct.put("ptitle", cursor01.getString(7));
+                        jsonprdct.put("storeid", cursor01.getString(11));
+                        jsonprdct.put("storename", cursor01.getString(12));
+
+                        jsonprdct.put("seller", cursor01.getString(13));
+                        jsonprdct.put("discount", "0.0");
+
+                        PPrice = cursor01.getString(4);
+                        Qty = cursor01.getString(3);
+                        JsonArr.put(jsonprdct);
+                        Double SubTotal = 0.0;
+                        SubTotal = (Double.parseDouble(PPrice) * Double.parseDouble(Qty));
+                        total = total + SubTotal;
+                        Count++;
+                    } while (cursor01.moveToNext());
+                    cursor01.close();
+
+
+
+
+                    Log.e("Cart Items JSON String", JsonArr.toString());
+
+                    //Log.e("Mapping values", "userid: " + uid + " totalprice " + DiscountAmount + " Coupon " + Discount + " dlvrytype " + DlvryType + " lvrychrg " +  DlvryChrg + " dlvryadd " + DlvryAdd + " amt " + totalPrc + " endUserId " + accno + " oid " + orderid + " endUserotp " + Otp + " ptype " + ptype );
+
+
+                    if (Discount == null || Discount == "") {
+                        Discount = "XXX000";
+                    }
+
+
+                    com.android.volley.RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+
+
+
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new com.android.volley.Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String s) {
+
+                            //pDialog.dismiss();
+
+                            Log.e("Success", "" + s);
+                            //{"success":1,"message":"Username Successfully Added!"}
 
                             try {
-
-                                Log.e("CreateOrder", "starting order creation");
-                                json = jsonParser.makeHttpRequest(
-                                        CREATE_ORDERS_URL, "POST", params);
-
-                                // json success tag
-                                try {
-                                    if (TAG_SUCCESS != null) {
-                                        success = json.getInt(TAG_SUCCESS);
-                                        Log.d("JSon Results", "Success-" + json.getInt(TAG_SUCCESS) + "  |Message-" + json.getString(TAG_PRODUCTDETAILS));
-
-
-                                        wallbalance = json.getString(TAG_BALANCE);
-                                        amount = json.getString(TAG_AMOUNT);
-
-                                        Log.e("Get Cart Success", "after wallbalance and amount" + success);
-                                    }
-
-
-
-                                } catch (Exception e) {
-                                    Log.e("doInBackground error: ", e.getMessage());
-
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-
-                                            Toast ToastMessage = Toast.makeText(getContext(), "Network Connection Error!!", Toast.LENGTH_LONG);
-                                            View toastView = ToastMessage.getView();
-                                            toastView.setBackgroundResource(R.drawable.toast_background);
-                                            ToastMessage.show();
-
-                                        }
-
-                                    });
+                                JSONObject jsonObject = new JSONObject(s);
+                                int success = 0;
+                                if (jsonObject.has("success")) {
+                                    success = jsonObject.getInt("success");
                                 }
-                                if (Looper.myLooper() == null){
-                                    Looper.prepare();}
-                                if (success == 1) {
+                                String message = "";
+                                if (jsonObject.has("message")) {
+                                    message = jsonObject.getString("message");
+                                }
+
+                                else  if (jsonObject.has("levelmessage")) {
+                                    message = jsonObject.getString("levelmessage");
+                                }
 
 
-                                    Log.e("Get Cart Success", "" + success);
-                                    flag = 1;
-                                    oid = json.getInt(TAG_ID);
+                                Log.e("Get Cart Success", "" + success);
+                                flag = 1;
 
+
+                                //if (oid != 0){}
+
+
+                                if (jsonObject.has(TAG_ID)) {
+
+                                    oid = jsonObject.getInt(TAG_ID);
+                                    idoforder = String.valueOf(oid);
                                     Log.e("Get payment ID", "after oid" + oid);
+
+                                    Log.e("Get order ID from prefs", "orderid: " + idoforder);
 
 
                                     SharedPreferences.Editor editor = shared.edit();
                                     editor.putString("OrderID", String.valueOf(oid));
-                                    editor.apply();
+                                    editor.apply();}
 
-                                    success = json.getInt(TAG_SUCCESS);
-                                    Log.e("JSon Results", "Success-For Pay" + json.getInt(TAG_SUCCESS) + "  |Message-" + json.getString(TAG_PRODUCTDETAILS));
+                                else {
 
-                                    //return json.getString(TAG_PRODUCTDETAILS);
-
-                                    try {
-                                        // Building Parameters
-                                        //List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-                                        if (isSumarry == 0) {
-                                            Log.e("Processing Payment", "E-wallet:" + accno + ", Amount:" + totalPrc + ", OrderID:" + String.valueOf(oid) + "Dilivery Charge:" + DlvryChrg + "User" + uid );
-                                            params.add(new BasicNameValuePair("amt", amount));
-                                            params.add(new BasicNameValuePair("userid", uid));
-                                            params.add(new BasicNameValuePair("ptype", "ewallet"));
-                                            params.add(new BasicNameValuePair("oid", String.valueOf(oid)));
-                                            params.add(new BasicNameValuePair("cartitems", JsonArr.toString()));
-                                            json = jsonParser.makeHttpRequest(
-                                                    ECORESPONSE_URL, "POST", params);
-                                            Log.e("Processing Payment", "EWallet");
-
-                                            Ewall = "Done";
-
-
-                                            try {
-                                                if (TAG_SUCCESS != null) {
-                                                    success = json.getInt(TAG_SUCCESS);
-                                                    Log.d("JSon Results", "Success-" + json.getInt(TAG_SUCCESS) + "  |Message-" + json.getString(TAG_PRODUCTDETAILS));
-
-
-                                                    Log.e("Payment Failure!", json.getString(TAG_MESSAGE));
-
-                                                    //Toast.makeText(getContext(), TAG_MESSAGE, Toast.LENGTH_LONG).show();
-
-
-                                                    getActivity().runOnUiThread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-
-                                                            Toast ToastMessage = Toast.makeText(getContext(),TAG_MESSAGE,Toast.LENGTH_LONG);
-                                                            View toastView = ToastMessage.getView();
-                                                            toastView.setBackgroundResource(R.drawable.toast_background);
-                                                            ToastMessage.show();
-
-                                                        }
-
-                                                    });
-
-
-
-                                                    return json.getString(TAG_MESSAGE);
-                                                }
-                                            } catch (Exception e) {
-                                                Log.e("Wallet error: ", e.getMessage());
-                                            }
-
-
-
-
-                                        }
-                                        if (isSumarry == 2) {
-
-                                            Log.e("Processing Payment", "Ecocash, Mobile:" + accno + ", Amount:" + totalPrc + ", OrderID:" + String.valueOf(oid) + "Dilivery Charge:" + DlvryChrg + "User" + uid);
-                                            params.add(new BasicNameValuePair("ptype", "Ecocash"));
-                                            params.add(new BasicNameValuePair("endUserId", accno));
-                                            params.add(new BasicNameValuePair("amt", totalPrc));
-                                            params.add(new BasicNameValuePair("yes", "Proceed Now"));
-                                            params.add(new BasicNameValuePair("oid", String.valueOf(oid)));
-                                            params.add(new BasicNameValuePair("userid", uid));
-
-                                            try {
-                                                //Posting user data to script
-                                                json = jsonParser.makeHttpRequest(
-                                                        ECASH_PAYMENT_URL, "POST", params);
-                                                Ewall = "";
-                                                // full json response
-                                                //Log.d("Processing \nEcocash ", json.toString());
-
-
-                                                try {
-                                                    if (TAG_SUCCESS != null) {
-                                                        success = json.getInt(TAG_SUCCESS);
-                                                        Log.d("JSon Results", "Success-" + json.getInt(TAG_SUCCESS) + "  |Message-" + json.getString(TAG_PRODUCTDETAILS));
-
-                                                        frmgateway = json.getString(TAG_MESSAGE);
-                                                    }
-                                                } catch (Exception e) {
-                                                    Log.e("Ecash error: ", e.getMessage());
-                                                }
-
-                                                if (success == 1) {
-
-                                                    getActivity().runOnUiThread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-
-                                                            Toast ToastMessage = Toast.makeText(getContext(), TAG_MESSAGE, Toast.LENGTH_LONG);
-                                                            View toastView = ToastMessage.getView();
-                                                            toastView.setBackgroundResource(R.drawable.toast_background);
-                                                            ToastMessage.show();
-
-                                                        }
-
-                                                    });
-
-
-                                                    //catch(Exception e){
-                                                    //Log.e("Ecocash error: ", e.getMessage());
-                                                    //}
-
-                                                    if (Looper.myLooper() == null) {
-                                                        Looper.prepare();
-                                                    }
-
-                                            /*
-                                            try {
-                                                params.add(new BasicNameValuePair("oid", String.valueOf(oid)));
-                                            params.add(new BasicNameValuePair("cartitems", JsonArr.toString()));
-
-                                                  json = jsonParser.makeHttpRequest(
-                                                          ECORESPONSE_URL, "POST", params);
-
-                                                  Log.e("cart items", "" + JsonArr.toString());
-
-                                                  try {
-                                                      if (TAG_SUCCESS != null) {
-                                                          success = json.getInt(TAG_SUCCESS);
-                                                          Log.d("JSon Results", "Success-" + json.getInt(TAG_SUCCESS) + "  |Message-" + json.getString(TAG_PRODUCTDETAILS));
-                                                      }
-                                                  } catch (Exception e) {
-                                                      Log.e("Ecocashresp error: ", e.getMessage());
-                                                  }
-
-
-                                                  if (success == 1) {
-
-                                                      Log.e("SUCCESS", "you can delete " + oid);
-                                                      DatabaseHelper myDBHandler = new DatabaseHelper(getContext());
-
-                                                      myDBHandler.clearCartItems();
-
-                                                      Log.e("logging", "starting intent...............");
-                                                     // Intent intent = new Intent(getActivity(), TransactionHistory.class);
-                                                      //startActivity(intent);
-
-                                                      //Toast.makeText(getContext(), " Payment successfull", Toast.LENGTH_LONG).show();
-
-
-
-                                                      getActivity().runOnUiThread(new Runnable() {
-                                                          @Override
-                                                          public void run() {
-
-                                                              Toast ToastMessage = Toast.makeText(getContext(),"Payment succesfull!",Toast.LENGTH_LONG);
-                                                              View toastView = ToastMessage.getView();
-                                                              toastView.setBackgroundResource(R.drawable.toast_background);
-                                                              ToastMessage.show();
-                                                          }
-
-                                                      });
-
-
-
-                                                      return json.getString(TAG_MESSAGE);
-
-
-                                                  }
-
-
-                                                  else{
-
-                                                      Log.e("Payment not valid!", json.getString(TAG_MESSAGE));
-
-                                                      */
-
-                                                    return json.getString(TAG_MESSAGE);
-
-                                                } else {
-                                                    try {
-                                                        params.add(new BasicNameValuePair("oid", String.valueOf(oid)));
-                                                        params.add(new BasicNameValuePair("cartitems", JsonArr.toString()));
-                                                        params.add(new BasicNameValuePair("userid", uid));
-                                                        json = jsonParser.makeHttpRequest(
-                                                                DELETEORDER_URL, "POST", params);
-
-                                                        Log.e("Order cleared!", json.getString(TAG_MESSAGE));
-
-                                                        //Toast.makeText(getContext(), "Payment validation failed, Please Try again later!", Toast.LENGTH_LONG).show();
-
-
-                                                        getActivity().runOnUiThread(new Runnable() {
-                                                            @Override
-                                                            public void run() {
-
-                                                                Toast ToastMessage = Toast.makeText(getContext(), "Failed To process payment, Please Try again!", Toast.LENGTH_LONG);
-                                                                View toastView = ToastMessage.getView();
-                                                                toastView.setBackgroundResource(R.drawable.toast_background);
-                                                                ToastMessage.show();
-                                                            }
-
-                                                        });
-
-
-                                                        //return json.getString(TAG_MESSAGE);
-                                                    } catch (Exception x) {
-
-                                                        //Toast.makeText(getContext(), "Possible Network Error!", Toast.LENGTH_LONG).show();
-
-                                                        getActivity().runOnUiThread(new Runnable() {
-                                                            @Override
-                                                            public void run() {
-
-                                                                Toast ToastMessage = Toast.makeText(getContext(), "Network Connection Error!!", Toast.LENGTH_LONG);
-                                                                View toastView = ToastMessage.getView();
-                                                                toastView.setBackgroundResource(R.drawable.toast_background);
-                                                                ToastMessage.show();
-
-                                                            }
-
-                                                        });
-
-                                                    }
-
-                                                    return json.getString(frmgateway);
-                                                }
-                                            } catch (Exception e) {
-
-
-                                                getActivity().runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-
-                                                        Toast ToastMessage = Toast.makeText(getContext(), "Network Connection Error!!", Toast.LENGTH_LONG);
-                                                        View toastView = ToastMessage.getView();
-                                                        toastView.setBackgroundResource(R.drawable.toast_background);
-                                                        ToastMessage.show();
-
-                                                    }
-
-                                                });
-
-
-                                            }
-
-                                        }
-
-
-                                            //return json.getString(TAG_MESSAGE);
-
-
-                                        if (isSumarry == 3) {
-                                            Log.e("Processing Payment", "Telecash" + accno + "OTP" + Otp);
-                                            params.add(new BasicNameValuePair("ptype", "Telecash"));
-                                            params.add(new BasicNameValuePair("endUserId", accno));
-                                            params.add(new BasicNameValuePair("endUserotp", Otp));
-                                            params.add(new BasicNameValuePair("oid", String.valueOf(oid)));
-                                            params.add(new BasicNameValuePair("amt", totalPrc));
-                                            params.add(new BasicNameValuePair("userid", uid));
-                                            params.add(new BasicNameValuePair("yes", "Proceed Now"));
-
-                                            //Posting user data to script
-
-                                            try {
-                                            json = jsonParser.makeHttpRequest(
-                                                    TCASH_PAYMENT_URL, "POST", params);
-                                            Ewall = "";
-                                            // full json response
-                                            Log.d("Processing Telecash ", json.toString());
-
-
-                                                try {
-                                                    if (TAG_SUCCESS != null) {
-                                                        success = json.getInt(TAG_SUCCESS);
-                                                        Log.d("JSon Results", "Success-" + json.getInt(TAG_SUCCESS) + "  |Message-" + json.getString(TAG_PRODUCTDETAILS));
-
-                                                        frmgateway = json.getString(TAG_MESSAGE);
-                                                    }
-                                                } catch (Exception e) {
-                                                    Log.e("Telecash error: ", e.getMessage());
-                                                }
-
-
-                                            if (success == 1) {
-                                                Log.d("Payment Process Success", json.toString());
-
-                                                /*
-                                                params.add(new BasicNameValuePair("oid", String.valueOf(oid)));
-                                                params.add(new BasicNameValuePair("cartitems", JsonArr.toString()));
-                                                json = jsonParser.makeHttpRequest(
-                                                        ECORESPONSE_URL, "POST", params);
-
-                                                Log.e("cart items", "" + JsonArr.toString() );
-
-                                                try {
-                                                    if (TAG_SUCCESS != null) {
-                                                        success = json.getInt(TAG_SUCCESS);
-                                                        Log.d("JSon Results", "Success-" + json.getInt(TAG_SUCCESS) + "  |Message-" + json.getString(TAG_PRODUCTDETAILS));
-                                                    }
-                                                } catch (Exception e) {
-                                                    Log.e("Ecocashresp error: ", e.getMessage());
-                                                }
-
-                                                if (success == 1) {
-
-                                                    Log.e("SUCCESS", "you can delete " + oid);
-                                                    myDBHandler myDBHandler = new myDBHandler(getContext(), null, null, 0);
-
-                                                    myDBHandler.clearCartItems();
-
-                                                    Log.e("logging", "starting intent...............");
-                                                    Intent intent = new Intent(getActivity(), TransactionHistory.class);
-                                                    startActivity(intent);
-
-                                                    //Toast.makeText(getContext(), " Payment successfull" , Toast.LENGTH_LONG).show();
-
-
-                                                    getActivity().runOnUiThread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-
-                                                            Toast ToastMessage = Toast.makeText(getContext(),"Payment Success!",Toast.LENGTH_LONG);
-                                                            View toastView = ToastMessage.getView();
-                                                            toastView.setBackgroundResource(R.drawable.toast_background);
-                                                            ToastMessage.show();
-                                                        }
-
-                                                    });
-                                                     }
-
-*/
-                                                Log.e("SUCCESS", "you can delete " + oid);
-                                                myDBHandler myDBHandler = new myDBHandler(getContext(), null, null, 0);
-
-                                                myDBHandler.clearCartItems();
-
-                                                return json.getString(TAG_MESSAGE);
-
-
-
-                                            }
-                                                else {
-                                                    Log.e("Payment not valid!", json.getString(TAG_MESSAGE));
-
-                                                    params.add(new BasicNameValuePair("oid", String.valueOf(oid)));
-                                                    params.add(new BasicNameValuePair("cartitems", JsonArr.toString()));
-                                                    json = jsonParser.makeHttpRequest(
-                                                            DELETEORDER_URL, "POST", params);
-
-                                                    Log.e("Order cleared!", json.getString(TAG_MESSAGE));
-
-                                                    //Toast.makeText(getContext(), "Payment validation failed, Please Try again later!", Toast.LENGTH_LONG).show();
-
-                                                    getActivity().runOnUiThread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-
-                                                            Toast ToastMessage = Toast.makeText(getContext(),"Failed To process payment, Please Try again",Toast.LENGTH_LONG);
-                                                            View toastView = ToastMessage.getView();
-                                                            toastView.setBackgroundResource(R.drawable.toast_background);
-                                                            ToastMessage.show();
-                                                        }
-
-                                                    });
-
-
-                                                    return json.getString(frmgateway);
-
-                                                }
-
-
-
-
-                                                //}
-                                            } catch (Exception e) {
-                                                Log.d("No Internet Failure!", json.getString(TAG_MESSAGE));
-
-                                                //Toast.makeText(getContext(), "Failed To process payment, Please Try again later: NETWORK ERROR", Toast.LENGTH_LONG).show();
-
-
-
-
-
-                                                getActivity().runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-
-                                                        Toast ToastMessage = Toast.makeText(getContext(),"Failed To process payment, Please Try again later: NETWORK ERROR",Toast.LENGTH_LONG);
-                                                        View toastView = ToastMessage.getView();
-                                                        toastView.setBackgroundResource(R.drawable.toast_background);
-                                                        ToastMessage.show();
-                                                    }
-
-                                                });
-
-
-
-
-
-
-                                                //return json.getString(TAG_MESSAGE);
-
-
-                                            }
-
-
-                                        }
-
-                                        if (isSumarry == 1){
-
-                                            Log.e("Processing COD", "COD" );
-                                            params.add(new BasicNameValuePair("userid", uid));
-                                            params.add(new BasicNameValuePair("ptype", "COD"));
-
-                                            //Posting user data to script
-                                            json = jsonParser.makeHttpRequest(
-                                                    CHECKUSERLEVEL_URL, "POST", params);
-                                            Ewall = "";
-                                            // full json response
-
-                                            String resp = json.getString(TAG_USERRES);
-                                            Log.e("Processing COD ","Ecoed" + resp);
-
-
-                                            if (resp.equals("COD approved!")) {
-                                                Log.d("Payment Process Success", json.toString());
-
-                                                params.add(new BasicNameValuePair("oid", String.valueOf(oid)));
-                                                params.add(new BasicNameValuePair("cartitems", JsonArr.toString()));
-                                                params.add(new BasicNameValuePair("ptype", "COD"));
-                                                json = jsonParser.makeHttpRequest(
-                                                        ECORESPONSE_URL, "POST", params);
-
-                                                Log.e("cart items", "" + JsonArr.toString() );
-
-                                                try {
-                                                    if (TAG_SUCCESS != null) {
-                                                        success = json.getInt(TAG_SUCCESS);
-                                                        Log.d("JSon Results", "Success-" + json.getInt(TAG_SUCCESS) + "  |Message-" + json.getString(TAG_PRODUCTDETAILS));
-                                                    }
-                                                } catch (Exception e) {
-                                                    Log.e("COD error: ", e.getMessage());
-                                                }
-
-                                                if (success == 1) {
-
-                                                    pDialog.dismiss();
-
-
-                                                    //Toast.makeText(getContext(), " Order processed successfully!" , Toast.LENGTH_LONG).show();
-
-                                                    Log.e("SUCCESS", "you can delete " + oid);
-                                                    myDBHandler myDBHandler = new myDBHandler(getContext(), null, null, 0);
-
-                                                    myDBHandler.clearCartItems();
-
-                                                    getActivity().runOnUiThread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-
-                                                            new AlertDialog.Builder(getActivity())
-                                                                    .setTitle("Info")
-                                                                    .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-                                                                        @Override
-                                                                        public void onClick(DialogInterface dialog, int which) {
-
-                                                                            Log.e("logging", "starting intent...............");
-                                                                            Intent intent = new Intent(getActivity(), MainActivity.class);
-                                                                            startActivity(intent);
-
-                                                                        }
-                                                                    })
-                                                                    .setNegativeButton("", null)
-                                                                    .setMessage(Html.fromHtml("COD order approved. Thank you!" ))
-                                                                    .show();
-                                                        }
-
-                                                    });
-
-                                                    //Log.e("logging", "starting intent...............");
-                                                    //Intent intent = new Intent(getActivity(), MainActivity.class);
-                                                    //startActivity(intent);
-
-
-                                                    //return json.getString(TAG_MESSAGE);
-
-
-                                                }
-
-                                                else {
-                                                    Log.e("Notification not sent!", json.getString(TAG_MESSAGE));
-
-
-                                                    //Toast.makeText(getContext(), "Sending notification failed, Please Try again later!", Toast.LENGTH_LONG).show();
-
-                                                    getActivity().runOnUiThread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-
-                                                            Toast ToastMessage = Toast.makeText(getContext(),"Sending notification failed, Please Try again later: NETWORK ERROR",Toast.LENGTH_LONG);
-                                                            View toastView = ToastMessage.getView();
-                                                            toastView.setBackgroundResource(R.drawable.toast_background);
-                                                            ToastMessage.show();
-                                                        }
-
-                                                    });
-
-                                                    return json.getString("levelmessage");
-
-                                                }
-
-
-
-
-
-                                            }    else {
-
-                                                params.add(new BasicNameValuePair("oid", String.valueOf(oid)));
-                                                params.add(new BasicNameValuePair("cartitems", JsonArr.toString()));
-                                                json = jsonParser.makeHttpRequest(
-                                                        DELETEORDER_URL, "POST", params);
-
-                                                Log.e("Order cleared!", json.getString(TAG_MESSAGE));
-
-/*
-                                                getActivity().runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-
-                                                        Toast ToastMessage = Toast.makeText(getContext(),"Sorry, your use level does not alow you to use this option!",Toast.LENGTH_LONG);
-                                                        View toastView = ToastMessage.getView();
-                                                        toastView.setBackgroundResource(R.drawable.toast_background);
-                                                        ToastMessage.show();
-                                                    }
-
-                                                });
-*/
-
-
-                                                getActivity().runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        new AlertDialog.Builder(getActivity())
-                                                                .setTitle("Info")
-                                                                .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-                                                                    @Override
-                                                                    public void onClick(DialogInterface dialog, int which) {
-
-
-                                                                    }
-                                                                })
-                                                                .setNegativeButton("", null)
-                                                                .setMessage(Html.fromHtml("Sorry, your use level does not alow you to use this option!" ))
-                                                                .show();
-                                                    }
-
-                                                });
-
-
-
-
-                                                return json.getString("levelmessage");
-
-                                            }
-
-
-                                        }
-
-
-                                        if (isSumarry == 4) {
-
-                                            //Log.e("CreateOrder", "starting order creation");
-                                            //json = jsonParser.makeHttpRequest(
-                                            //      CREATE_ORDERS_URL, "POST", params);
-                                            //success = json.getInt(TAG_SUCCESS);
-                                            //if (success == 1) {
-
-                                            ///  Log.e("Get Cart Success", json.getString(TAG_PRODUCTDETAILS));
-                                            flag = 1;
-                                            oid = json.getInt(TAG_ID);
-                                            Intent i = new Intent(getActivity(), WebViewActivity.class);
-                                            startActivity(i);
-                                        }
-
-                                        //}
-                                        // json success element
-                                        success = json.getInt(TAG_SUCCESS);
-                                        if (success == 1) {
-                                            Log.d("Payment Process Success", json.toString());
-                                            return json.getString(TAG_MESSAGE);
-                                        } else {
-                                            Log.d("Login Failure!", json.getString(TAG_MESSAGE));
-                                            return json.getString(TAG_MESSAGE);
-
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                        Log.e("Error:", e.toString());
-
-                                    }
-                                    //return null;
-
-
-                                    return json.getString(TAG_PRODUCTDETAILS);
-
-
-                                } else {
-
-                                    //Toast.makeText(getContext(), "Failed To Create Your Order, Please Try again later: NETWORK ERROR", Toast.LENGTH_LONG).show();
-
-
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-
-                                            Toast ToastMessage = Toast.makeText(getContext(),"Failed To Create Your Order, Please Try again later: NETWORK ERROR!",Toast.LENGTH_LONG);
-                                            View toastView = ToastMessage.getView();
-                                            toastView.setBackgroundResource(R.drawable.toast_background);
-                                            ToastMessage.show();
-                                        }
-
-                                    });
-
-
-
-                                    return json.getString(TAG_MESSAGE);
 
                                 }
 
 
-                                //else{
-                                // Log.e("No Internet Failure!", json.getString(TAG_MESSAGE));
+                                if (jsonObject.has(TAG_USERRES)) {
 
-                                //Toast.makeText(getContext(), "Failed To process payment, Please Try again later: NETWORK ERROR", Toast.LENGTH_LONG).show();
-                                //return json.getString(TAG_MESSAGE);
+                                    String respp = jsonObject.getString(TAG_USERRES);
 
-                                //  }
-                            } catch (JSONException e) {
+
+                                    SharedPreferences.Editor editor = shared.edit();
+                                    editor.putString("resp", respp);
+                                    editor.apply();
+
+                                    if (respp.equals("COD approved!")) {
+
+                                        ProcessOrder(paytype, CREATE_ORDERS_URL, idoforder);
+
+                                    }
+
+
+                                }
+
+
+
+
+                                if (success == 1) {
+
+
+                                    /*
+                                    Log.e("Get Cart Success", "" + success);
+                                    flag = 1;
+                                    //oid = jsonObject.getInt(TAG_ID);
+
+                                    if (oid != 0){Log.e("Get payment ID", "after oid" + oid);
+
+                                        Log.e("Get order ID from prefs", "orderid: " + OrderId);
+
+
+                                        SharedPreferences.Editor editor = shared.edit();
+                                        editor.putString("OrderID", String.valueOf(oid));
+                                        editor.apply();}
+*/
+
+
+                                    if(ptype != null ){
+
+                                        new AlertDialog.Builder(getActivity())
+                                                .setTitle("Info")
+                                                .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+
+                                                        new AlertDialog.Builder(getActivity())
+                                                                .setTitle("")
+                                                                .setNeutralButton("Yes", new DialogInterface.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                                        Log.e("SUCCESS", "you can delete " + oid);
+                                                                        myDBHandler myDBHandler = new myDBHandler(getContext(), null, null, 0);
+
+                                                                        myDBHandler.clearCartItems();
+
+
+                                                                        Intent intent = new Intent(getActivity(), MainActivity.class);
+                                                                        startActivity(intent);
+
+
+
+
+                                                                    }
+                                                                })
+                                                                .setNegativeButton("No", null)
+                                                                .setMessage(Html.fromHtml("Clear cart?"))
+                                                                .show();
+
+
+
+
+                                                    }
+                                                })
+                                                .setNegativeButton("", null)
+                                                .setMessage(Html.fromHtml(message))
+                                                .show();
+
+
+
+                                    }
+
+
+
+
+
+                                }
+
+                                else {
+                                    new AlertDialog.Builder(getActivity())
+                                            .setTitle("Info")
+                                            .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+
+
+
+
+                                                }
+                                            })
+                                            .setNegativeButton("", null)
+                                            .setMessage(Html.fromHtml(message))
+                                            .show();
+                                }
+
 
                             }
 
+                            catch (JSONException e) {
+                                e.printStackTrace();
 
+                                Log.e("Try error: ", "Exception when continuing" + e.toString());
 
-
-
+                                Toast ToastMessage = Toast.makeText(getContext(), "No Intenet connection!", Toast.LENGTH_LONG);
+                                View toastView = ToastMessage.getView();
+                                toastView.setBackgroundResource(R.drawable.toast_background);
+                                ToastMessage.show();
                             }
 
 
+                        }
+
+
+                    }, new com.android.volley.Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            //pDialog.dismiss();
+
+                            Log.e("RUEERROR", "" + volleyError);
+
+                            //Toast.makeText(getContext(), "No Intenet connection!", Toast.LENGTH_SHORT).show();
 
 
 
 
 
                         }
+                    }) {
+                        @Override
+                        protected Map<String, String> getParams() throws AuthFailureError {
+                            Map<String, String> values = new HashMap();
+                            values.put("cartitems", JsonArr.toString());
+                            values.put("userid", uid);
+                            values.put("discount", DiscountAmount);
+                            values.put("totalprice", totalprice);
+                            values.put("Coupon", Discount);
+                            values.put("dlvrytype", DlvryType);
+                            values.put("dlvrychrg", DlvryChrg);
+                            values.put("dlvryadd", DlvryAdd);
+                            values.put("amt", totalPrc);
+                            values.put("yes", "Proceed Now");
+                            values.put("endUserId", accno);
+                            values.put("oid", OrderId);
+                            values.put("endUserotp", Otp);
+                            values.put("ptype", ptype);
 
-                        else {
+                            return values;
+                        }
+                    };
 
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                    stringRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 500, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-                                Toast ToastMessage = Toast.makeText(getContext(),"No items in Cart to process!",Toast.LENGTH_LONG);
-                                View toastView = ToastMessage.getView();
-                                toastView.setBackgroundResource(R.drawable.toast_background);
-                                ToastMessage.show();
-                            }
+                    requestQueue.add(stringRequest);
 
-                        });
-
-                        Log.e("Nothing", "Results null!!!!!!!");
-
-
-                    }
-
-                    }
-                 catch (Exception e) {
-                    e.printStackTrace();
-                    Log.e("Cart Async Task Error ", e.toString());
+                    pDialog.dismiss();
 
                 }
 
-            return null;
 
-        }
-        /**
-         * After completing background task Dismiss the progress dialog
-         * **/
-        protected void onPostExecute(String posts) {
-            // dismiss the dialog once product deleted
+            }
 
 
+            else{
 
-
-
-
-
-
-            pDialog.dismiss();
-            if (posts != null){
-                callPaymentsAsyncTask();
-                //Toast.makeText(getContext(), posts, Toast.LENGTH_LONG).show();
 
 
                 new AlertDialog.Builder(getActivity())
@@ -1388,21 +941,407 @@ private String deleteId;
                         .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+
                                 Intent intent = new Intent(getActivity(), MainActivity.class);
                                 startActivity(intent);
+
 
                             }
                         })
                         .setNegativeButton("", null)
-                        .setMessage(Html.fromHtml(posts ))
+                        .setMessage(Html.fromHtml("No products in cart"))
                         .show();
-
 
             }
 
         }
 
+
+        catch (Exception e) {
+            e.printStackTrace();
+            Log.e("Process Error ", e.toString());
+
+
+        }
+
     }
+
+
+
+
+
+
+    private void ProcessOrder( final String ptype, final String URL, final String OrderId) {
+
+
+        //Log.e("NUMBER", (shared.getString("telno", "")));
+
+        pDialog = new ProgressDialog(getContext());
+        pDialog.setMessage("Processing Order & Payment...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(true);
+        pDialog.show();
+
+
+        try {
+            // Building Parameters
+            total=0.0;
+            final JSONObject json = new JSONObject();
+
+
+            dbHandler = new DatabaseHelper(getContext());
+
+
+            if (dbHandler.cartItems(currcart) != null) {
+                Cursor cursor01 = dbHandler.cartItems(currcart);
+                if (cursor01 != null && cursor01.moveToFirst()) {
+                    Log.e("Cart Cursor Count", "Items in Cart: " + cursor01.getCount()
+                            + "  PrdID:" + cursor01.getString(8)
+                            + "  qnty:" + cursor01.getString(3)
+                            + "  price:" + cursor01.getString(4)
+                            + "  title:" + cursor01.getString(7)
+                            + "  storeid:" + cursor01.getString(11)
+                            + "  storename:" + cursor01.getString(12)
+                            + "  seller:" + cursor01.getString(13)
+                            + "  discount:"
+                            + "  variation:"
+                    );
+
+                    deleteId = cursor01.getString(8);
+                    do {
+                        JSONObject jsonprdct = new JSONObject();
+                        jsonprdct.put("productid", cursor01.getString(8));
+                        jsonprdct.put("qnty", cursor01.getString(3));
+                        jsonprdct.put("variation", "");
+                        jsonprdct.put("price", cursor01.getString(4));
+                        jsonprdct.put("ptitle", cursor01.getString(7));
+                        jsonprdct.put("storeid", cursor01.getString(11));
+                        jsonprdct.put("storename", cursor01.getString(12));
+
+                        jsonprdct.put("seller", cursor01.getString(13));
+                        jsonprdct.put("discount", "0.0");
+
+                        PPrice = cursor01.getString(4);
+                        Qty = cursor01.getString(3);
+                        JsonArr.put(jsonprdct);
+                        Double SubTotal = 0.0;
+                        SubTotal = (Double.parseDouble(PPrice) * Double.parseDouble(Qty));
+                        total = total + SubTotal;
+                        Count++;
+                    } while (cursor01.moveToNext());
+                    cursor01.close();
+
+
+
+
+                    Log.e("Cart Items JSON String", JsonArr.toString());
+
+                    //Log.e("Mapping values", "userid: " + uid + " totalprice " + DiscountAmount + " Coupon " + Discount + " dlvrytype " + DlvryType + " lvrychrg " +  DlvryChrg + " dlvryadd " + DlvryAdd + " amt " + totalPrc + " endUserId " + accno + " oid " + orderid + " endUserotp " + Otp + " ptype " + ptype );
+
+
+                    if (Discount == null || Discount == "") {
+                        Discount = "XXX000";
+                    }
+
+
+                    com.android.volley.RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+
+
+
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new com.android.volley.Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String s) {
+
+                            //pDialog.dismiss();
+
+                            Log.e("Success", "" + s);
+                            //{"success":1,"message":"Username Successfully Added!"}
+
+                            try {
+                                JSONObject jsonObject = new JSONObject(s);
+                                int success = 0;
+                                if (jsonObject.has("success")) {
+                                    success = jsonObject.getInt("success");
+                                }
+                                String message = "";
+                                if (jsonObject.has("message")) {
+                                    message = jsonObject.getString("message");
+                                }
+
+                                else if (jsonObject.has("levelmessage")) {
+                                    message = jsonObject.getString("levelmessage");
+                                }
+
+
+                                Log.e("Get Cart Success", "" + success);
+                                flag = 1;
+
+
+                                //if (oid != 0){}
+
+
+                                if (jsonObject.has(TAG_ID)) {
+
+                                    oid = jsonObject.getInt(TAG_ID);
+                                    idoforder = String.valueOf(oid);
+                                    Log.e("Get payment ID", "after oid" + oid);
+
+                                    Log.e("Get order ID from prefs", "orderid: " + idoforder);
+
+
+                                    SharedPreferences.Editor editor = shared.edit();
+                                    editor.putString("OrderID", String.valueOf(oid));
+                                    editor.apply();}
+
+                                else {
+
+
+                                }
+
+
+                                if (jsonObject.has(TAG_USERRES)) {
+
+                                    String respp = jsonObject.getString(TAG_USERRES);
+
+
+                                    SharedPreferences.Editor editor = shared.edit();
+                                    editor.putString("resp", respp);
+                                    editor.apply();}
+
+
+
+
+                                if (success == 1) {
+
+
+                                    /*
+                                    Log.e("Get Cart Success", "" + success);
+                                    flag = 1;
+                                    //oid = jsonObject.getInt(TAG_ID);
+
+                                    if (oid != 0){Log.e("Get payment ID", "after oid" + oid);
+
+                                        Log.e("Get order ID from prefs", "orderid: " + OrderId);
+
+
+                                        SharedPreferences.Editor editor = shared.edit();
+                                        editor.putString("OrderID", String.valueOf(oid));
+                                        editor.apply();}
+
+*/
+
+                                    if (ptype == "ewallet") {
+                                        ProcessRequest(paytype, ECORESPONSE_URL, idoforder);
+                                    }
+
+                                    else if (ptype == "Ecocash"){
+
+                                        ProcessRequest(paytype, ECASH_PAYMENT_URL, idoforder);
+
+                                    }
+
+                                    else if (ptype == "Telecash"){
+
+                                        ProcessRequest(paytype, TCASH_PAYMENT_URL, idoforder);
+
+                                    }
+
+
+                                    else if (ptype == "paynow"){
+
+                                        Intent i = new Intent(getActivity(), WebViewActivity.class);
+                                        startActivity(i);
+
+                                    }
+
+                                    else if (ptype == "COD"){
+
+                                        //ProcessRequest(paytype, TCASH_PAYMENT_URL, idoforder);
+
+                                        ProcessRequest(paytype, ECORESPONSE_URL, idoforder);
+
+                                    }
+
+
+                                    if(ptype != null ){
+
+                                        new AlertDialog.Builder(getActivity())
+                                                .setTitle("Info")
+                                                .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+
+                                                        new AlertDialog.Builder(getActivity())
+                                                                .setTitle("")
+                                                                .setNeutralButton("Yes", new DialogInterface.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                                        Log.e("SUCCESS", "you can delete " + oid);
+                                                                        myDBHandler myDBHandler = new myDBHandler(getContext(), null, null, 0);
+
+                                                                        myDBHandler.clearCartItems();
+
+
+                                                                        Intent intent = new Intent(getActivity(), MainActivity.class);
+                                                                        startActivity(intent);
+
+
+
+
+                                                                    }
+                                                                })
+                                                                .setNegativeButton("No", null)
+                                                                .setMessage(Html.fromHtml("Clear cart?"))
+                                                                .show();
+
+
+
+
+                                                    }
+                                                })
+                                                .setNegativeButton("", null)
+                                                .setMessage(Html.fromHtml(message))
+                                                .show();
+
+
+
+                                    }
+
+
+
+
+
+                                }
+
+                                else {
+                                    new AlertDialog.Builder(getActivity())
+                                            .setTitle("Info")
+                                            .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+
+
+
+
+                                                }
+                                            })
+                                            .setNegativeButton("", null)
+                                            .setMessage(Html.fromHtml(message))
+                                            .show();
+                                }
+
+
+                            }
+
+                            catch (JSONException e) {
+                                e.printStackTrace();
+
+                                Log.e("Try error: ", "Exception when continuing" + e.toString());
+
+                                Toast ToastMessage = Toast.makeText(getContext(), "No Intenet connection!", Toast.LENGTH_LONG);
+                                View toastView = ToastMessage.getView();
+                                toastView.setBackgroundResource(R.drawable.toast_background);
+                                ToastMessage.show();
+                            }
+
+
+                        }
+
+
+                    }, new com.android.volley.Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            //pDialog.dismiss();
+
+                            Log.e("RUEERROR", "" + volleyError);
+
+                            //Toast.makeText(getContext(), "No Intenet connection!", Toast.LENGTH_SHORT).show();
+
+
+
+
+
+                        }
+                    }) {
+                        @Override
+                        protected Map<String, String> getParams() throws AuthFailureError {
+                            Map<String, String> values = new HashMap();
+                            values.put("cartitems", JsonArr.toString());
+                            values.put("userid", uid);
+                            values.put("discount", DiscountAmount);
+                            values.put("totalprice", totalprice);
+                            values.put("Coupon", Discount);
+                            values.put("dlvrytype", DlvryType);
+                            values.put("dlvrychrg", DlvryChrg);
+                            values.put("dlvryadd", DlvryAdd);
+                            values.put("amt", totalPrc);
+                            values.put("yes", "Proceed Now");
+                            values.put("endUserId", accno);
+                            values.put("oid", OrderId);
+                            values.put("endUserotp", Otp);
+                            values.put("ptype", ptype);
+
+                            return values;
+                        }
+                    };
+
+                    stringRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 500, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+                    requestQueue.add(stringRequest);
+
+                    pDialog.dismiss();
+
+                }
+
+
+            }
+
+
+            else{
+
+
+
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Info")
+                        .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                Intent intent = new Intent(getActivity(), MainActivity.class);
+                                startActivity(intent);
+
+
+                            }
+                        })
+                        .setNegativeButton("", null)
+                        .setMessage(Html.fromHtml("No products in cart"))
+                        .show();
+
+            }
+
+        }
+
+
+        catch (Exception e) {
+            e.printStackTrace();
+            Log.e("Process Error ", e.toString());
+
+
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
 
 
     class ProcessPayment extends AsyncTask<String, String, String> {
@@ -1495,109 +1434,45 @@ private String deleteId;
         }
     }
 
+    private void GetDiscountVoucher() {
+
+        pDialog = new ProgressDialog(getContext());
+        pDialog.setMessage("Processing Order & Payment...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        com.android.volley.RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+
+        Log.e("NUMBER", (shared.getString("telno", "")));
 
 
-    class GetDiscountVoucher extends AsyncTask<String, String, String> {
+        pDialog.show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, DISCOUNT_URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                pDialog.dismiss();
 
-        /**
-         * Before starting background thread Show Progress Dialog
-         */
-        boolean failure = false;
+                Log.e("Success", "" + s);
+                //{"success":1,"message":"Username Successfully Added!"}
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(getContext());
-            pDialog.setMessage("Processing Order & Payment...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... args) {
-
-
-            try {
-                // Building Parameters
-                List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-                Log.e(" Discount Voucher", Discount);
-                        params.add(new BasicNameValuePair("voucherid", Discount));
-                        params.add(new BasicNameValuePair("amt", totalPrc));
-                params.add(new BasicNameValuePair("dlvrychrg", DlvryChrg));
-                    //Posting user data to script
-                    json = jsonParser.makeHttpRequest(
-                            DISCOUNT_URL, "POST", params);
-                     // full json response
-                    Log.d(" Voucher Result ", json.toString());
-
-
-
-                // json success element
-                success = json.getInt(TAG_SUCCESS);
-                if (success == 1) {
-                    Log.d("Payment Process Success", json.toString());
-                    return json.getString(TAG_PRODUCTDETAILS);
-                } else {
-                    Log.d("Login Failure!", json.getString(TAG_MESSAGE));
-
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            new AlertDialog.Builder(getActivity())
-                                    .setTitle("Info")
-                                    .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                        }
-                                    })
-                                    .setNegativeButton("", null)
-                                    .setMessage(Html.fromHtml("Invalid voucher number!" ))
-                                    .show();
-                        }
-
-                    });
-
-
-                    return json.getString(TAG_MESSAGE);
-
-
-                }
-            }catch(Exception e){
-                e.printStackTrace();
-                Log.e("Error:", e.toString());
-            }
-            return null;
-
-        }
-
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
-        protected void onPostExecute(String posts) {
-            // dismiss the dialog once product deleted
-            pDialog.dismiss();
-            if (posts != null) {
-                //Toast.makeText(getContext(),  " Results:" + posts, Toast.LENGTH_LONG).show();
-               // discount.setText(posts);
-
-                JSONArray jsonarray02 = null;
                 try {
-                    jsonarray02 = new JSONArray(posts);
+                    JSONObject jsonObject = new JSONObject(s);
+                    int success = jsonObject.getInt("success");
+                    String message = jsonObject.getString("message");
 
-                } catch (JSONException e) {
-                    Log.e("JSON Error: ", e.toString());
-                    Log.e("Detail of Error", posts);
-                    e.printStackTrace();
-                }
-                if (jsonarray02 != null) {
-                    try {
-                        JSONObject jsonobject = jsonarray02.getJSONObject(0);
-                        String disc  = jsonobject.optString("cpn_amt");
+                    if (success == 1) {
+
+
+                        JSONArray array = jsonObject.getJSONArray("posts");
+
+                        JSONObject object = array.getJSONObject(0);
+
+
+                        String disc = object.optString("cpn_amt");
+
                         DiscountAmount=disc;
+
                         SharedPreferences.Editor editor = shared.edit();
                         editor.putString("voucher_amount", disc);
                         editor.putString("voucher_code", Discount);
@@ -1606,20 +1481,99 @@ private String deleteId;
                         payment("ewallet");
 
                         Log.e("Balance", disc);
-                    } catch (JSONException e) {
-                        Log.e("JSON Error: ", e.toString());
-                        e.printStackTrace();
+
+
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle("Info")
+                                .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+
+                                    }
+                                })
+                                .setNegativeButton("", null)
+                                .setMessage(Html.fromHtml(message))
+                                .show();
+
+                        pDialog.dismiss();
+
+                    } else {
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                new AlertDialog.Builder(getActivity())
+                                        .setTitle("Info")
+                                        .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                            }
+                                        })
+                                        .setNegativeButton("", null)
+                                        .setMessage(Html.fromHtml("Invalid voucher number!" ))
+                                        .show();
+                            }
+
+                        });
+
+                        DiscountAmount=null;
+
+                        pDialog.dismiss();
                     }
 
 
-                }
-                else
-                {
-                    DiscountAmount=null;
-                   // Toast.makeText(getActivity(), posts, Toast.LENGTH_LONG).show();
-                }
-            }
+                } catch (JSONException e) {
+                    e.printStackTrace();
 
-        }
+                    //Toast.makeText(getContext(), "An error occurred", Toast.LENGTH_SHORT).show();
+
+                    Toast ToastMessage = Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG);
+                    View toastView = ToastMessage.getView();
+                    toastView.setBackgroundResource(R.drawable.toast_background);
+                    ToastMessage.show();
+
+                    pDialog.dismiss();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                pDialog.dismiss();
+
+                Log.e("RUEERROR", "" + volleyError);
+
+                //Toast.makeText(getContext(), "No Intenet connection!", Toast.LENGTH_SHORT).show();
+
+                Toast ToastMessage = Toast.makeText(getActivity(), "No Intenet connection!", Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
+                pDialog.dismiss();
+
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> values = new HashMap();
+                values.put("voucherid", Discount);
+                values.put("amt", totalPrc);
+                values.put("dlvrychrg", DlvryChrg);
+
+                return values;
+            }
+        };
+
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        requestQueue.add(stringRequest);
+
+
     }
+
+
 }

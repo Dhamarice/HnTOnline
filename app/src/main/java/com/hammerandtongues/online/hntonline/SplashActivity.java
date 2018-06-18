@@ -3,7 +3,6 @@ package com.hammerandtongues.online.hntonline;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -64,7 +63,8 @@ import java.util.Calendar;
                     getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit().putBoolean("isfirstrun", false).commit();
 
                     SharedPreferences.Editor editor = sharedpreferences.edit();
-                    editor.putString("storedday", dayofyeartext);
+                    editor.putString("storedday", "0");
+                    editor.putString("Appbusy", "Appbusy");
                     editor.apply();
 
                     Log.e("Spalshscreen  ", "Starting Main Activity");
@@ -74,6 +74,7 @@ import java.util.Calendar;
                 } else {
                     // other time your app loads
 
+/*
                     broadcastReceiver = new BroadcastReceiver() {
                         @Override
                         public void onReceive(Context context, Intent intent) {
@@ -87,9 +88,11 @@ import java.util.Calendar;
                         }
                     };
 
+                    */
+
                     dayofyeartext = String.valueOf(Calendar.getInstance().get(Calendar.DAY_OF_YEAR));
-                    dayofyearstored = (sharedpreferences.getString("storedday", ""));
-                    //dayofyearstored = "51";
+                    //dayofyearstored = (sharedpreferences.getString("storedday", ""));
+                    dayofyearstored = "51";
 
                     Log.e("My App day  ", "Previously stored day from splash screen was" + dayofyearstored);
 
@@ -191,7 +194,7 @@ import java.util.Calendar;
 
 
                 try {
-                    HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
+                    HttpURLConnection urlc = (HttpURLConnection) (new URL("https://www.google.com").openConnection());
                     urlc.setRequestProperty("User-Agent", "Test");
                     urlc.setRequestProperty("Connection", "close");
                     urlc.setConnectTimeout(1500);
@@ -242,6 +245,12 @@ import java.util.Calendar;
                                 dbHandler.fill_stores(getBaseContext());
 
 
+                                SharedPreferences.Editor editor = sharedpreferences.edit();
+                                //editor.putString("storedday", dayofyeartext);
+                                editor.putString("Appbusy", "Appbusy");
+                                editor.apply();
+
+
                                 //Cursor cursor = db.getUnsyncedNames();
                                 // if (cursor.moveToFirst()) {
                                 // do {
@@ -259,16 +268,18 @@ import java.util.Calendar;
                                 dbHandler.fill_stores(getBaseContext());
 
 
+                                SharedPreferences.Editor editor = sharedpreferences.edit();
+                                editor.putString("storedday", dayofyeartext);
+                                editor.putString("Appbusy", "Appbusy");
+                                editor.apply();
+
+
                             }
                         } else {
 //do nothing
 
                         }
 
-
-                        SharedPreferences.Editor editor = sharedpreferences.edit();
-                        editor.putString("storedday", dayofyeartext);
-                        editor.apply();
 
 
                     }

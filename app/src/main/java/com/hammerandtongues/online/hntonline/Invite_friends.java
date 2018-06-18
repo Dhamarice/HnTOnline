@@ -25,7 +25,7 @@ public class Invite_friends extends Activity {
 
     private static final
     String INVITATION_TITLE = "Invite friends to HnTOnline",
-            INVITATION_MESSAGE = "Hey! Download HnTShopping App and enjoy convinience! :)",
+            INVITATION_MESSAGE = "Hey! Download HnTshopping App and enjoy convinience! :)",
             INVITATION_CALL_TO_ACTION = "Invite";
     private Button invite;
 
@@ -41,7 +41,7 @@ invite = (Button) findViewById(R.id.btninvite);
             public void onClick(View view) {
                 Intent intent = new AppInviteInvitation.IntentBuilder(INVITATION_TITLE)
                         .setMessage(INVITATION_MESSAGE)
-                        .setDeepLink(Uri.parse("https://devshop.hammerandtongues.com/"))
+                        .setDeepLink(Uri.parse("https://shopping.hammerandtongues.com/"))
                         .setCallToActionText(INVITATION_CALL_TO_ACTION)
                         .build();
                 startActivityForResult(intent, REQUEST_INVITE);

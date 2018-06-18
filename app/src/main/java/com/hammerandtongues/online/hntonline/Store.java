@@ -27,6 +27,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
@@ -55,7 +56,7 @@ public class Store extends AppCompatActivity {
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MESSAGE = "message";
     private static final String TAG_PRODUCTDETAILS = "posts";
-    String storeID, PName,PPrice, post_id,imgurl, imgurl02 = "";
+    String storeID, PName,PPrice, post_id,imgurl,alturl, imgurl02 = "";
     ImageView banner;
     Boolean GetProducts = Boolean.FALSE;
     ImageView imgstore[] = new ImageView[1001];
@@ -66,10 +67,11 @@ public class Store extends AppCompatActivity {
     private TextView noresult;
     String msg = "";
     SharedPreferences shared;
+    SharedPreferences sharedpreferences;
     Calendar calendar = Calendar.getInstance();
     int daynumber =calendar.get(Calendar.DAY_OF_WEEK);
     int hourofday = calendar.get(Calendar.HOUR_OF_DAY);
-    private String openhrs, day, closehrs, dayofweek, hourofhour;
+    private String openhrs, day, closehrs, dayofweek, hourofhour, shop_open;
     String lastid = "",getlastid = "0";
 
 
@@ -291,10 +293,17 @@ public class Store extends AppCompatActivity {
         if (dbHandler.getStoreProducts(store,limit,offset, getlastid) != null) {
             Cursor cursor01 = dbHandler.getStoreProducts(store,limit,offset,getlastid);
 
-            day = cursor01.getString(18);
-            openhrs = cursor01.getString(19);
-            closehrs = cursor01.getString(20);
+            day = cursor01.getString(19);
+            openhrs = cursor01.getString(20);
+            closehrs = cursor01.getString(21);
+            shop_open = cursor01.getString(22);
 
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putString("shop_open", shop_open);
+            editor.putString("openhrs", openhrs);
+            editor.putString("closehrs", closehrs);
+            editor.commit();
+            editor.apply();
 
 
 
@@ -306,46 +315,93 @@ public class Store extends AppCompatActivity {
                 Log.e("Cursor", "Values" + DatabaseUtils.dumpCursorToString(cursor01));
 
 
+/*
+
+                if (!shop_open.contentEquals("always")) {
+
+                    if (!day.contentEquals(dayofweek) && day != null && !day.contentEquals("1") && !day.contentEquals("null") && !day.contentEquals("")) {
+
+                        msg = "This store is curently closed and opens every " + day;
+
+                        noresult.setText(msg);
+                        //Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 
 
+                        new AlertDialog.Builder(Store.this)
+                                .setTitle("Alert")
+                                .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        Intent i = new Intent(Store.this, StoresFragment.class);
+                                        startActivity(i);
 
 
-                if (!day.contentEquals(dayofweek) && day != null && !day.contentEquals("1") && !day.contentEquals("null") && !day.contentEquals("")) {
-
-                    msg = "This store is curently closed and opens every " + day;
-
-                    noresult.setText(msg);
-                    //Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-
-                    Toast ToastMessage = Toast.makeText(this,msg,Toast.LENGTH_LONG);
-                    View toastView = ToastMessage.getView();
-                    toastView.setBackgroundResource(R.drawable.toast_background);
-                    ToastMessage.show();
-
-                    noresult.setVisibility(View.VISIBLE);
+                                    }
+                                })
+                                .setNegativeButton("", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
 
 
-                }
-
-                else if (!openhrs.contentEquals(hourofhour) && openhrs != null && !openhrs.contentEquals("null") && !openhrs.contentEquals("")) {
-
-                    msg = "This store is curently closed and opens at " + openhrs;
-
-                    noresult.setText(msg);
-                    //Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-
-                    Toast ToastMessage = Toast.makeText(this,msg,Toast.LENGTH_LONG);
-                    View toastView = ToastMessage.getView();
-                    toastView.setBackgroundResource(R.drawable.toast_background);
-                    ToastMessage.show();
-
-                    noresult.setVisibility(View.VISIBLE);
+                                    }
+                                })
+                                .setMessage(Html.fromHtml(msg))
+                                .show();
 
 
+                        Toast ToastMessage = Toast.makeText(this, msg, Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
+
+                        noresult.setVisibility(View.VISIBLE);
+
+
+                    } else if (!openhrs.contentEquals(hourofhour) && openhrs != null && !openhrs.contentEquals("null") && !openhrs.contentEquals("")) {
+
+                        msg = "This store is curently closed and opens at " + openhrs;
+
+                        noresult.setText(msg);
+                        //Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+
+                        new AlertDialog.Builder(Store.this)
+                                .setTitle("Alert")
+                                .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        Intent i = new Intent(Store.this, StoresFragment.class);
+                                        startActivity(i);
+
+
+                                    }
+                                })
+                                .setNegativeButton("", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+
+                                    }
+                                })
+                                .setMessage(Html.fromHtml(msg))
+                                .show();
+
+                        Toast ToastMessage = Toast.makeText(this, msg, Toast.LENGTH_LONG);
+                        View toastView = ToastMessage.getView();
+                        toastView.setBackgroundResource(R.drawable.toast_background);
+                        ToastMessage.show();
+
+                        noresult.setVisibility(View.VISIBLE);
+
+
+                    }
                 }
 
 
 else {
+                    */
+
                     int i2 = cursor01.getCount();
                     for (i = 0; i < i2; i++) {
                         LinearLayout itmcontr = new LinearLayout(this);
@@ -366,24 +422,25 @@ else {
                         PName = cursor01.getString(3);
                         post_id = cursor01.getString(1);
                         imgurl = cursor01.getString(9);
+                        alturl = cursor01.getString(10);
                         lastid = cursor01.getString(0);
                         PPrice = cursor01.getString(6);
 
-                        SharedPreferences.Editor editor = shared.edit();
+                        //SharedPreferences.Editor editor = shared.edit();
                         editor.putString("lastsid", lastid);
+                        //editor.putString("alturl", alturl);
                         editor.commit();
                         editor.apply();
 
 
+                        sharedpreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+                        SharedPreferences.Editor editorr = sharedpreferences.edit();
+                        editorr.putString("alturl", alturl);
+                        editorr.commit();
+                        editorr.apply();
 
 
-                        Log.e("Cursor", "Values" + day + openhrs + closehrs);
-
-                        //imageLoader.displayImage(imgurl, imgstore[i], options);
-                        Picasso.with(this).load(imgurl)
-                                .placeholder(R.drawable.progress_animation)
-                                .error(R.drawable.offline)
-                                .into(imgstore[i]);
+                        SetBanner(imgurl, imgstore[i], alturl);
 
                         android.view.ViewGroup.LayoutParams imglayoutParams = imgstore[i].getLayoutParams();
 
@@ -518,12 +575,41 @@ else {
                         cursor01.moveToNext();
                     }
                     noresult.setVisibility(View.GONE);
-                }
+               // }
             }
             else {
 
                 if (offset == 0) {
-                    msg = "No Listings To Display Under This Category At The Moment";
+                    msg = "No Listings To Display Under This Store At The Moment";
+                    //LinearLayout itmcontr = new LinearLayout(this);
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                    Button AddToCart = new Button(this);
+                    AddToCart.setText("Reload");
+                    AddToCart.setTextColor(Color.WHITE);
+                    AddToCart.setTextSize(12);
+                    //AddToCart.setId(Integer.parseInt(post_id));
+                    AddToCart.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    AddToCart.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View view) {
+                            // do stuff
+                            String id1 = Integer.toString(view.getId());
+                            SharedPreferences.Editor editor = shared.edit();
+                            editor.putString(Product, id1);
+                            editor.commit();
+                            Intent i = new Intent(Store.this, SplashActivity.class);
+                            startActivity(i);
+
+
+                        }
+
+                    });
+
+                    //itmcontr.addView(AddToCart);
+                    layout.addView(AddToCart, layoutParams);
                 } else {
                     msg = "No Additional Products to Display";
                 }
@@ -542,6 +628,35 @@ else {
             String msg = "";
             if (offset == 0) {
                 msg = "No Listings To Display Under This Category At The Moment";
+
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                Button AddToCart = new Button(this);
+                AddToCart.setText("Reload");
+                AddToCart.setTextColor(Color.WHITE);
+                AddToCart.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                AddToCart.setTextSize(12);
+                //AddToCart.setId(Integer.parseInt(post_id));
+                AddToCart.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        // do stuff
+                        String id1 = Integer.toString(view.getId());
+                        SharedPreferences.Editor editor = shared.edit();
+                        editor.putString(Product, id1);
+                        editor.commit();
+                        Intent i = new Intent(Store.this, SplashActivity.class);
+                        startActivity(i);
+
+
+                    }
+
+                });
+
+                //itmcontr.addView(AddToCart);
+                layout.addView(AddToCart,  layoutParams);
             } else {
                 msg = "No Additional Products to Display";
             }
@@ -553,6 +668,65 @@ else {
             toastView.setBackgroundResource(R.drawable.toast_background);
             ToastMessage.show();
             noresult.setVisibility(View.VISIBLE);
+        }
+    }
+
+
+    public void SetBanner(final String uri, final ImageView imgstore, final String alturi) {
+
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+
+        try {
+
+            Log.e("Setting Banner", uri);
+
+            Picasso.with(this).load(uri)
+                    .placeholder(R.drawable.progress_animation)
+                    .error(R.drawable.offline)
+                    .into(imgstore, new Callback() {
+
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+
+                            Log.e("Setting alt Banner", alturi);
+                            // once the image is fails, load the next image
+
+                            Picasso.with(getBaseContext()).load(alturi)
+                                    .placeholder(R.drawable.progress_animation)
+                                    .error(R.drawable.offline)
+                                    .into(imgstore, new Callback() {
+
+                                        @Override
+                                        public void onSuccess() {
+
+                                        }
+
+                                        @Override
+                                        public void onError() {
+
+                                            Log.e("Setting Banner", uri);
+                                            // once the image is fails, load the next image
+                                            //SetBanner(sharedpreferences.getString("imgurl", ""));
+
+                                            Picasso.with(getBaseContext()).load(uri)
+                                                    .placeholder(R.drawable.progress_animation)
+                                                    .error(R.drawable.offline)
+                                                    .into(imgstore);
+
+                                        }
+                                    });
+
+                        }
+                    });
+
+
+        } catch (Exception ex) {
+            Log.e("Error getting Banner", ex.toString());
         }
     }
 
@@ -664,7 +838,7 @@ else {
         SharedPreferences.Editor editor = shared.edit();
         editor.putString("CartID", String.valueOf(cartno.get_CartID()));
         editor.commit();
-        Toast.makeText(this,"New Shopping Session Created"+String.valueOf(cartno.get_CartID()),Toast.LENGTH_LONG).show();
+        Toast.makeText(this,"New shopping Session Created"+String.valueOf(cartno.get_CartID()),Toast.LENGTH_LONG).show();
         currcart=cartno.get_CartID();
 
             /*
@@ -680,6 +854,8 @@ else {
                 .placeholder(R.drawable.progress_animation)
                 .error(R.drawable.offline)
                 .into(banner);
+
+        Log.e("Setting banner", "Finished saving an item" + imgurl02);
 
     }
 
@@ -778,6 +954,7 @@ else {
             //pDialog.dismiss();
             if (posts != null) {
                 setuielements();
+
                 SetBanner();
                 }
                 else

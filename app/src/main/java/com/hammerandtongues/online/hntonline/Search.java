@@ -70,7 +70,7 @@ public class Search extends AppCompatActivity {
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
 
-    private static final String GETSEARCH_PRODUCTS_URL = "https://devshop.hammerandtongues.com/webservice/getsearchproducts.php";
+    private static final String GETSEARCH_PRODUCTS_URL = "https://shopping.hammerandtongues.com/webservice/getsearchproducts.php";
 
     //JSON element ids from repsonse of php script:
     private static final String TAG_SUCCESS = "success";
@@ -656,7 +656,7 @@ else {
         SharedPreferences.Editor editor = shared.edit();
         editor.putString("CartID", String.valueOf(cartno.get_CartID()));
         editor.commit();
-        Toast.makeText(this,"New Shopping Session Created"+String.valueOf(cartno.get_CartID()),Toast.LENGTH_LONG).show();
+        Toast.makeText(this,"New shopping Session Created"+String.valueOf(cartno.get_CartID()),Toast.LENGTH_LONG).show();
         currcart=cartno.get_CartID();
 
             /*
@@ -863,7 +863,7 @@ else {
             // TODO: Connect
             if  (isNetworkAvailable() ==true) {
                 try {
-                    HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
+                    HttpURLConnection urlc = (HttpURLConnection) (new URL("https://www.google.com").openConnection());
                     urlc.setRequestProperty("User-Agent", "Test");
                     urlc.setRequestProperty("Connection", "close");
                     urlc.setConnectTimeout(1500);

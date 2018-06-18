@@ -48,7 +48,7 @@ public class Faqs extends AppCompatActivity {
                 "<br><br>" +
                 "<b>What payment options are available?</b>" +
                 "<br>" +
-                "The following payment platforms are used on the Hammer & Tongues Shopping Mall site: - Vpayments - Paypal - Ecocash - Visa - Mastercard Your account also has an e-wallet provision where you can transfer funds to and make your payments from." +
+                "The following payment platforms are used on the Hammer & Tongues shopping Mall site: - Vpayments - Paypal - Ecocash - Visa - Mastercard Your account also has an e-wallet provision where you can transfer funds to and make your payments from." +
                 "<br><br>" +
                 "<b>How soon will my order be delivered?</b>" +
                 "<br>" +
@@ -64,7 +64,7 @@ public class Faqs extends AppCompatActivity {
                 "<br><br>" +
                 "<b>Can I find neat stuff Online?</b>" +
                 "<br>" +
-                "You betcha!!! The Shopping Mall is laden with brand new quality stuff that you find when you physically do your shopping, with the only difference that you will find them cheaper online. Enjoy the same warranties from the original manufacturers as you would do buying inside any shop (applies for products issued with warranties from the manufacturer. ";
+                "You betcha!!! The shopping Mall is laden with brand new quality stuff that you find when you physically do your shopping, with the only difference that you will find them cheaper online. Enjoy the same warranties from the original manufacturers as you would do buying inside any shop (applies for products issued with warranties from the manufacturer. ";
         aboutus.setText(Html.fromHtml(abtus));
         DatabaseHelper db = new DatabaseHelper(this);
         CartManagement crtItms = db.getCartItemsCount(currcart);

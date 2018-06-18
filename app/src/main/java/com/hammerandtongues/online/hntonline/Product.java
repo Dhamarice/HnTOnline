@@ -33,24 +33,31 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by NgonidzaIshe on 3/6/2016.
@@ -69,15 +76,17 @@ public class Product extends AppCompatActivity {
     JSONParser jsonParser = new JSONParser();
     String GET_TYPE = "";
 
-    private static final String GETPRODUCT_URL = "https://devshop.hammerandtongues.com/webservice/getsingleproduct.php";
-    private static final String GETPRODUCT_VARIATION = "https://devshop.hammerandtongues.com/webservice/getproductvariation.php";
+    //private static final String GETPRODUCT_URL = "https://shopping.hammerandtongues.com/webservice/getsingleproduct.php";
+    private static final String GETPRODUCT_URL = "https://shopping.hammerandtongues.com/wp-content/themes/Walleto/getsingleproduct.php";
+
+    private static final String GETPRODUCT_VARIATION = "https://shopping.hammerandtongues.com/webservice/getproductvariation.php";
 
     //JSON element ids from repsonse of php script:
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MESSAGE = "message";
     private static final String TAG_PRODUCTDETAILS = "posts";
 
-    String productID, name, price, post_id, qnty, desc, seller, shop_open_day,shop_open_hrs, shop_close_hrs,theseller, shopname,shopthename, imgurl = "";
+    String productID, name, price, post_id, qnty, desc, seller, shop_open_day,shop_open_hrs, shop_close_hrs,theseller, shopname,shopthename,alturl, imgurl = "";
     Product product = null;
     ImageView banner;
     TextView inStock;
@@ -88,10 +97,11 @@ public class Product extends AppCompatActivity {
     private int cnt_cart;
     private TextView txtcartitems;
     SharedPreferences sharedpreferences;
+    SharedPreferences shared;
     Calendar calendar = Calendar.getInstance();
     int daynumber =calendar.get(Calendar.DAY_OF_WEEK);
     int hourofday = calendar.get(Calendar.HOUR_OF_DAY);
-    private String openhrs, day, closehrs, dayofweek, hourofhour;
+    private String openhrs, day, closehrs, dayofweek, hourofhour, shop_open, msg;
     Context context;
 
     /**
@@ -109,12 +119,14 @@ public class Product extends AppCompatActivity {
 
                 super.onCreate(savedInstanceState);
                 setContentView(R.layout.product);
-                SharedPreferences shared = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+        shared = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
                 noresult = (TextView) findViewById(R.id.noresult);
                 productID = (shared.getString("idKey", ""));
                 produtc = (LinearLayout) findViewById(R.id.product);
                 GET_TYPE = "description";
-                new GetConnectionStatus().execute();
+                //new GetConnectionStatus().execute();
+
+                GetProductDetails(productID,GET_TYPE,GETPRODUCT_URL);
 
                 //if (haveNetworkConnection() == true && isNetworkAvailable() == true) {
                 getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -124,11 +136,61 @@ public class Product extends AppCompatActivity {
                 banner = (ImageView) findViewById(R.id.product_banner);
                 inStock = (TextView) findViewById(R.id.instock);
 
+
+                Log.e("Shopname ", shared.getString("shopname", ""));
+
+                day = shared.getString("opendays", "");
+                openhrs =  shared.getString("openhrs", "");
+                closehrs = shared.getString("closehrs", "");
+                shop_open = shared.getString("shop_open", "");
+                shopthename = shared.getString("shopname", "");
+                theseller = shared.getString("seller", "");
+
+
+                if (daynumber == 1) { dayofweek = "Sunday";}
+                else if (daynumber == 2) { dayofweek = "Monday";}
+                else if (daynumber == 3) { dayofweek = "Tuesday";}
+                else if (daynumber == 4) { dayofweek = "Wednesday";}
+                else if (daynumber == 5) { dayofweek = "Thursday";}
+                else if (daynumber == 6) { dayofweek = "Friday";}
+                else if (daynumber == 7) { dayofweek = "Saturday";}
+
+
+                if (hourofday == 0) { hourofhour = "00:00 AM";}
+                else if (hourofday == 1) { hourofhour = "01:00 AM";}
+                else if (hourofday == 2) { hourofhour = "02:00 AM";}
+                else if (hourofday == 3) { hourofhour = "03:00 AM";}
+                else if (hourofday == 4) { hourofhour = "04:00 AM";}
+                else if (hourofday == 5) { hourofhour = "05:00 AM";}
+                else if (hourofday == 6) { hourofhour = "06:00 AM";}
+                else if (hourofday == 7) { hourofhour = "07:00 AM";}
+                else if (hourofday == 8) { hourofhour = "08:00 AM";}
+                else if (hourofday == 9) { hourofhour = "09:00 AM";}
+                else if (hourofday == 10) { hourofhour = "10:00 AM";}
+                else if (hourofday == 11) { hourofhour = "11:00 AM";}
+                else if (hourofday == 12) { hourofhour = "12:00 PM";}
+                else if (hourofday == 13) { hourofhour = "01:00 PM";}
+                else if (hourofday == 14) { hourofhour = "02:00 PM";}
+                else if (hourofday == 15) { hourofhour = "03:00 PM";}
+                else if (hourofday == 16) { hourofhour = "04:00 PM";}
+                else if (hourofday == 17) { hourofhour = "05:00 PM";}
+                else if (hourofday == 18) { hourofhour = "06:00 PM";}
+                else if (hourofday == 19) { hourofhour = "07:00 PM";}
+                else if (hourofday == 20) { hourofhour = "08:00 PM";}
+                else if (hourofday == 21) { hourofhour = "09:00 PM";}
+                else if (hourofday == 22) { hourofhour = "10:00 PM";}
+                else if (hourofday == 23) { hourofhour = "11:00 PM";}
+
+
+
+
                 if (shared.getString("CartID", "") != null && shared.getString("CartID", "") != "") {
                     currcart = Integer.parseInt(shared.getString("CartID", ""));
                 } else {
                     currcart = 0;
                 }
+
+                context = this;
                 //
                 Map<String, ?> allEntries = shared.getAll();
                 for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
@@ -178,7 +240,7 @@ public class Product extends AppCompatActivity {
                             Log.e("Error  Quantity", e.toString());
                         }
 
-                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        SharedPreferences.Editor editor = shared.edit();
                         editor.putString("storedquantity", Integer.toString(CurrQnty));
                         editor.apply();
 
@@ -191,8 +253,8 @@ public class Product extends AppCompatActivity {
                 addtocart.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View arg0) {
-                        try {
-                            if (!qnty.isEmpty() && qnty != "0") {
+                      try {
+                          if (!qnty.isEmpty() && qnty != "0") {
                                 addProduct(arg0);
                             } else if (qnty == "0") {
 
@@ -203,12 +265,14 @@ public class Product extends AppCompatActivity {
                                 toastView.setBackgroundResource(R.drawable.toast_background);
                                 ToastMessage.show();
 
-                            } else {
+                            }
+
+                            else {
                                 addProduct(arg0);
                             }
-                        } catch (Exception ex) {
-                            Log.e("Add To Cart Error", ex.toString());
-                        }
+                   } catch (Exception ex) {
+                     Log.e("Add To Cart Error", ex.toString());
+                       }
 
                     }
                 });
@@ -219,19 +283,19 @@ public class Product extends AppCompatActivity {
                     public void onClick(View arg0) {
 
 
-                        if (sharedpreferences.getString("Categorystart", "") != null && sharedpreferences.getString("Categorystart", "") != "" ) {
+                        if (shared.getString("Categorystart", "") != null && shared.getString("Categorystart", "") != "" ) {
 
 
-                            Log.e("Intent", "Starting store class " + sharedpreferences.getString("Categorystart", ""));
-                            sharedpreferences.edit().remove("Categorystart").apply();
+                            Log.e("Intent", "Starting store class " + shared.getString("Categorystart", ""));
+                            shared.edit().remove("Categorystart").apply();
 
                             Intent intent = new Intent(Product.this, Store.class);
                             startActivity(intent);
 
                         } else {
-                            Log.e("Intent", "Starting product class " + sharedpreferences.getString("Categorystart", ""));
+                            Log.e("Intent", "Starting product class " + shared.getString("Categorystart", ""));
 
-                            sharedpreferences.edit().remove("Categorystart").apply();
+                            shared.edit().remove("Categorystart").apply();
 
                             Intent intent = new Intent(Product.this, Products_List.class);
                             startActivity(intent);
@@ -332,10 +396,12 @@ public class Product extends AppCompatActivity {
 
     public void settotal(){
 
-if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.getString("storedprice", "") != null ) {
+        final   SharedPreferences shared = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
 
-    String fprice = sharedpreferences.getString("storedprice", "");
-    String fquantity = sharedpreferences.getString("storedquantity", "");
+if (shared.getString("storedprice", "") != "" && shared.getString("storedprice", "") != null ) {
+
+    String fprice = shared.getString("storedprice", "");
+    String fquantity = shared.getString("storedquantity", "");
 
 
     Locale locale = new Locale("en", "US");
@@ -384,22 +450,64 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
     public void getVariation() {
         try {
             GET_TYPE = "variation";
-            new GetProductDetails().execute();
+            GetProductDetails(productID,GET_TYPE,GETPRODUCT_VARIATION);
         } catch (Exception ex) {
             Log.e("Product Variation Error", ex.toString());
         }
     }
 
-    public void SetBanner(String uri) {
+    public void SetBanner(final String uri, final String alturi) {
 
         try {
+
+            Log.e("Setting Banner", uri);
 
             Picasso.with(this).load(uri)
                     .placeholder(R.drawable.progress_animation)
                     .error(R.drawable.offline)
-                    .into(banner);
+                    .into(banner, new Callback() {
 
-            Log.e("Setting Banner", uri);
+                                @Override
+                                public void onSuccess() {
+
+                                }
+
+                                @Override
+                                public void onError() {
+
+                                    Log.e("Setting alt Banner", alturi);
+                                    // once the image is fails, load the next image
+                                    //SetBanner(sharedpreferences.getString("alturl", ""));
+
+                                    Picasso.with(context).load(alturi)
+                                            .placeholder(R.drawable.progress_animation)
+                                            .error(R.drawable.offline)
+                                            .into(banner, new Callback() {
+
+                                        @Override
+                                        public void onSuccess() {
+
+                                        }
+
+                                        @Override
+                                        public void onError() {
+
+                                            Log.e("Setting Banner", uri);
+                                            // once the image is fails, load the next image
+                                            //SetBanner(sharedpreferences.getString("imgurl", ""));
+
+                                            Picasso.with(context).load(uri)
+                                                    .placeholder(R.drawable.progress_animation)
+                                                    .error(R.drawable.offline)
+                                                    .into(banner);
+
+                                        }
+                                    });
+
+                                }
+                            });
+
+
         } catch (Exception ex) {
             Log.e("Error getting Banner", ex.toString());
         }
@@ -426,7 +534,7 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
         editor.putString("CartID", String.valueOf(cartno.get_CartID()));
         editor.commit();
         editor.apply();
-        //Toast.makeText(this,"New Shopping Session Created"+String.valueOf(cartno.get_CartID()),Toast.LENGTH_LONG).show();
+        //Toast.makeText(this,"New shopping Session Created"+String.valueOf(cartno.get_CartID()),Toast.LENGTH_LONG).show();
 
         currcart = cartno.get_CartID();
 
@@ -451,13 +559,113 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
         //int newqty; = qty + dbqty;
         //if (sharedpreferences.getString("seller", "") != null && sharedpreferences.getString("seller", "") != "") {
 
+        Log.e("addProduct", "Beofre ifs");
+
+        if (!shop_open.contentEquals("always") && !shop_open.contentEquals("") && shop_open != null ) {
+
+            Log.e("addProduct", "Shop open " + shop_open);
+
+            SharedPreferences.Editor editor = shared.edit();
+
+            editor.remove("shop_open");
+            editor.apply();
+            editor.commit();
+
+            if (!day.contentEquals(dayofweek) && day != null && !day.contentEquals("1") && !day.contentEquals("null") && !day.contentEquals("")) {
+
+                msg = "This store is curently closed and opens every " + day;
+
+                // noresult.setText(msg);
+                //Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 
 
-       if (db.getcartproduct(id) != null) {
+                new AlertDialog.Builder(Product.this)
+                        .setTitle("Alert")
+                        .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                Intent i = new Intent(Product.this, StoresFragment.class);
+                                startActivity(i);
+
+
+                            }
+                        })
+                        .setNegativeButton("", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+
+                            }
+                        })
+                        .setMessage(Html.fromHtml(msg))
+                        .show();
+
+
+                Toast ToastMessage = Toast.makeText(context, msg, Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
+
+                //  noresult.setVisibility(View.VISIBLE);
+
+
+            }
+
+
+
+
+
+            else if (!openhrs.contentEquals(hourofhour) && openhrs != null && !openhrs.contentEquals("null") && !openhrs.contentEquals("")) {
+
+                msg = "This store is curently closed and opens at " + openhrs;
+
+                // noresult.setText(msg);
+                //Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+
+                new AlertDialog.Builder(Product.this)
+                        .setTitle("Alert")
+                        .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                Intent i = new Intent(Product.this, StoresFragment.class);
+                                startActivity(i);
+
+
+                            }
+                        })
+                        .setNegativeButton("", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+
+                            }
+                        })
+                        .setMessage(Html.fromHtml(msg))
+                        .show();
+
+                Toast ToastMessage = Toast.makeText(context, msg, Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
+
+                // noresult.setVisibility(View.VISIBLE);
+
+
+            }
+        }
+
+        else {
+
+  if (db.getcartproduct(id) != null) {
+
+      Log.e("addProduct", "else normal");
 
            Cursor cursor = db.getcartproduct(id);
 
            Log.e("Cursor Returns", "Current Cart=" + currcart + " , Cursor = " + DatabaseUtils.dumpCursorToString(cursor) );
+
 
            if (cursor != null &&  cursor.moveToFirst()) {
 
@@ -574,7 +782,7 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
 
 
         }
-    //}
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -660,118 +868,66 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
         }
     }
 
-    class GetProductDetails extends AsyncTask<String, String, String> {
 
-        /**
-         * Before starting background thread Show Progress Dialog
-         */
-        boolean failure = false;
+    private void GetProductDetails(final String pid, final String type, String URL) {
+        com.android.volley.RequestQueue requestQueue = Volley.newRequestQueue(Product.this);
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(Product.this);
-            pDialog.setMessage("Getting Product Details...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
-        }
+        //Log.e("NUMBER", (sharedpreferences.getString("telno", "")));
 
-        @Override
-        protected String doInBackground(String... args) {
-            // TODO Auto-generated method stub
-            // Check for success tag
-            int success;
-            String pid = productID;
+        pDialog = new ProgressDialog(Product.this);
+        pDialog.setMessage("Getting Product Details...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(true);
+        pDialog.show();
 
-            try {
-                // Building Parameters
-                List<NameValuePair> params = new ArrayList<NameValuePair>();
-                params.add(new BasicNameValuePair("productid", pid));
-                JSONObject json1;
-                if (GET_TYPE == "description") {
-                    // getting product details by making HTTP request
-                    json1 = jsonParser.makeHttpRequest(
-                            GETPRODUCT_URL, "POST", params);
-                    Log.e("PID + URL", productID + GETPRODUCT_VARIATION);
-                } else// if ((GET_TYPE ="variance"))
-                {
-                    json1 = jsonParser.makeHttpRequest(
-                            GETPRODUCT_VARIATION, "POST", params);
-                    Log.e("PID + URL", productID + GETPRODUCT_VARIATION);
+        //if (type == "description"){URL = GETPRODUCT_URL;} else{URL = GETPRODUCT_VARIATION;}
 
-                }
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
 
-                // json success tag
-                if (json1 != null) {
-                    success = json1.getInt(TAG_SUCCESS);
+
+                pDialog.dismiss();
+
+                Log.e("Success", "" + s);
+                //{"success":1,"message":"Username Successfully Added!"}
+
+                try {
+                    JSONObject jsonObject = new JSONObject(s);
+                    int success = jsonObject.getInt("success");
+                    String message = jsonObject.getString("message");
+
+                    //Log.e("PassedName", useroremail);
 
                     if (success == 1) {
-                        return json1.getString(TAG_PRODUCTDETAILS);
-                    } else {
-                        return json1.getString(TAG_MESSAGE);
-                    }
-                } else {
 
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
 
-                            getOneProduct();
-                        }
-                    });
+                        JSONArray array = jsonObject.getJSONArray("posts");
 
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+                        JSONObject object = array.getJSONObject(0);
 
-            return null;
 
-        }
+                         name = object.optString("name");
+                         imgurl = object.optString("imgurl");
+                         price = object.optString("price");
+                      qnty = object.optString("quantity");
+                         post_id = object.optString("post_id");
+                         seller = object.optString("seller");
+                         alturl = object.optString("alturl");
 
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
-        protected void onPostExecute(String posts) {
-            // dismiss the dialog once product deleted
-            pDialog.dismiss();
-            if (posts != null) {
-                Log.e("JSONing", posts);
-                if (GET_TYPE == "description") {
-                    JSONArray jsonarray02 = null;
-                    try {
-                        jsonarray02 = new JSONArray(posts);
-                    } catch (JSONException e) {
-                    }
-                    if (jsonarray02 != null) {
-                        try {
-                            Log.e("JSONing", jsonarray02.toString());
-                            JSONObject jsonobject = jsonarray02.getJSONObject(0);
-                            name = Html.fromHtml(jsonobject.optString("name")).toString();
-                            //desc = Html.fromHtml(jsonobject.optString("content")).toString().trim();
-                            imgurl = jsonobject.optString("imgurl");
-                            price = jsonobject.optString("price");
-                            qnty = jsonobject.optString("quantity");
-                            post_id = jsonobject.optString("postid");
-                            seller = jsonobject.optString("seller");
+
+                        sharedpreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString("seller", seller);
+                        editor.putString("shopname", "");
+                        editor.putString("alturl", alturl);
+                        editor.putString("imgurl", imgurl);
+
+
+                        editor.commit();
 
 
 
-                            sharedpreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedpreferences.edit();
-                            editor.putString("seller", seller);
-                            editor.putString("shopname", "");
-
-
-                            editor.commit();
-
-
-
-                        } catch (JSONException e) {
-                            Log.e("JSON Error: ", e.toString());
-                            e.printStackTrace();
-                        }
                         productDesc.setText(desc);
                         prodName.setText(name);
                         prodName.setGravity(Gravity.CENTER);
@@ -798,62 +954,125 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
 
 
 
-                        SetBanner(imgurl);
+
                         getVariation();
 
                         sharedpreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
 
-                        SharedPreferences.Editor editor = sharedpreferences.edit();
-                        editor.putString("seller", seller);
-                        editor.commit();
-                        editor.apply();
+                        SharedPreferences.Editor editorrr = sharedpreferences.edit();
+                        editorrr.putString("seller", seller);
+                        editorrr.commit();
+                        editorrr.apply();
 
 
-                    } else {
-                        //Toast.makeText(Product.this, posts, Toast.LENGTH_LONG).show();
 
-                        Toast ToastMessage = Toast.makeText(Product.this,posts,Toast.LENGTH_LONG);
-                        View toastView = ToastMessage.getView();
-                        toastView.setBackgroundResource(R.drawable.toast_background);
-                        ToastMessage.show();
+
+                        SetBanner(imgurl, alturl);
+
+
 
                     }
-                } else if (GET_TYPE == "variation") {
-                    // you can use this array to find the school ID based on name
-                    ArrayList<ProductVariation> schools = new ArrayList<ProductVariation>();
-                    // you can use this array to populate your spinner
-                    ArrayList<String> Variations = new ArrayList<String>();
 
-                    try {
-                        JSONArray jsonArray = new JSONArray(posts);
-                        Log.i(MainActivity.class.getName(),
-                                "Number of entries " + jsonArray.length());
 
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    else if (success == 2){
+                        // you can use this array to find the school ID based on name
+                        ArrayList<ProductVariation> schools = new ArrayList<ProductVariation>();
+                        // you can use this array to populate your spinner
+                        ArrayList<String> Variations = new ArrayList<String>();
 
-                            ProductVariation prdvar = new ProductVariation();
-                            prdvar.setKey(jsonObject.optString("key"));
-                            prdvar.setValue(jsonObject.optString("value"));
-                            prdvar.setPrice(Double.parseDouble(jsonObject.optString("price")));
-                            schools.add(prdvar);
-                            Variations.add("SIZE: " + jsonObject.optString("value") + " ($" + jsonObject.optString("price") + ")");
+                       try {
+                            JSONArray jsonArray = jsonObject.getJSONArray("posts");
+                            Log.i(MainActivity.class.getName(),
+                                    "Number of entries " + jsonArray.length());
 
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.e("Product", "Error!!!" + e.toString());
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject jsonobject = jsonArray.getJSONObject(i);
+
+
+
+
+                                ProductVariation prdvar = new ProductVariation();
+                                if (!(jsonobject.optString("key")).contentEquals("Non")) {
+                                    prdvar.setKey(jsonobject.optString("key"));
+                                    prdvar.setValue(jsonobject.optString("value"));
+                                    prdvar.setPrice(Double.parseDouble(jsonobject.optString("price")));
+                                    schools.add(prdvar);
+                                    Variations.add("SIZE: " + jsonobject.optString("value") + " ($" + jsonobject.optString("price") + ")");
+
+                                }
+
+                            }
+                       } catch (Exception e) {
+                           e.printStackTrace();
+                            Log.e("Product", "Error!!!" + e.toString());
+                       }
+                        Spinner mySpinner = (Spinner) findViewById(R.id.spn_variation);
+                        mySpinner.setAdapter(new ArrayAdapter<String>(Product.this, android.R.layout.simple_spinner_dropdown_item, Variations));
                     }
-                    Spinner mySpinner = (Spinner) findViewById(R.id.spn_variation);
-                    mySpinner.setAdapter(new ArrayAdapter<String>(Product.this, android.R.layout.simple_spinner_dropdown_item, Variations));
+
+
+
+                    else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                getOneProduct();
+                            }
+                        });
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+
+                    //Toast.makeText(getContext(), "An error occurred", Toast.LENGTH_SHORT).show();
+
+                    Toast ToastMessage = Toast.makeText(Product.this, "An error occurred", Toast.LENGTH_LONG);
+                    View toastView = ToastMessage.getView();
+                    toastView.setBackgroundResource(R.drawable.toast_background);
+                    ToastMessage.show();
+
+                    getOneProduct();
+
                 }
 
             }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                pDialog.dismiss();
 
-        }
+                Log.e("RUEERROR", "" + volleyError);
+
+                //Toast.makeText(getContext(), "No Intenet connection!", Toast.LENGTH_SHORT).show();
+
+                Toast ToastMessage = Toast.makeText(Product.this, "No Intenet connection!", Toast.LENGTH_LONG);
+                View toastView = ToastMessage.getView();
+                toastView.setBackgroundResource(R.drawable.toast_background);
+                ToastMessage.show();
+                getOneProduct();
+
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> values = new HashMap();
+                values.put("productid", pid);
+
+                return values;
+            }
+        };
+
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        requestQueue.add(stringRequest);
 
 
     }
+
+
 
 
 
@@ -873,7 +1092,7 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
             // TODO: Connect
             if  (isNetworkAvailable() ==true) {
                 try {
-                    HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
+                    HttpsURLConnection urlc = (HttpsURLConnection) (new URL("https://www.google.com").openConnection());
                     urlc.setRequestProperty("User-Agent", "Test");
                     urlc.setRequestProperty("Connection", "close");
                     urlc.setConnectTimeout(1500);
@@ -895,7 +1114,7 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
 
             if (result==true)
             {
-                new GetProductDetails().execute();
+                GetProductDetails(productID,GET_TYPE,GETPRODUCT_URL);
             }
             else{
 
@@ -958,12 +1177,13 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
                 name = cursor.getString(3);
                 post_id = cursor.getString(1);
                 imgurl = cursor.getString(9);
+                alturl = cursor.getString(10);
                 price = cursor.getString(6);
-                shopname = cursor.getString(12);
-                shop_open_day = cursor.getString(14);
-                shop_open_hrs = cursor.getString(15);
-                shop_close_hrs = cursor.getString(16);
-                seller = cursor.getString(13);
+                shopname = cursor.getString(13);
+                shop_open_day = cursor.getString(15);
+                shop_open_hrs = cursor.getString(16);
+                shop_close_hrs = cursor.getString(17);
+                seller = cursor.getString(14);
 
 
                 editor.putString("opendays", shop_open_day);
@@ -1000,7 +1220,7 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
                 // LinearLayout.LayoutParams layout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
 
-                SetBanner(imgurl);
+                SetBanner(imgurl, alturl);
                 prodName.setText(name);
                 prodPrice.setText("US $" + price);
                 prodPrice.setTextColor(getResources().getColor(R.color.colorAmber));
@@ -1048,13 +1268,20 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
                 Log.d("map values 123", entry.getKey() + ": " + entry.getValue().toString());
             }
 
-            //txtquantity = (EditText) findViewById(R.id.txtQnty);
+
 
 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    txtquantity.setGravity(Gravity.CENTER);
+
+
+                    txtquantity = (EditText) findViewById(R.id.txtQnty);
+
+                    if (txtquantity != null) {
+                        txtquantity.setGravity(Gravity.CENTER);
+
+                    }
 
                     //
                     final TextView Qnty = (TextView) findViewById(R.id.txtQnty);
@@ -1110,8 +1337,8 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
             addtocart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
-                    try {
-                        if (!qnty.isEmpty() && qnty != "0") {
+                  try {
+                      if (!qnty.isEmpty() && qnty != "0") {
                             addProduct(arg0);
                         } else if (qnty == "0") {
                             //Toast.makeText(Product.this, "Sorry, This Product is Out of Stock", Toast.LENGTH_LONG).show();
@@ -1123,12 +1350,15 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
                             ToastMessage.show();
 
 
-                        } else {
+                        }
+
+
+                        else {
                             addProduct(arg0);
                         }
-                    } catch (Exception ex) {
-                        Log.e("Add To Cart Error", ex.toString());
-                    }
+               } catch (Exception ex) {
+                  Log.e("Add To Cart Error", ex.toString());
+                }
 
                 }
             });
@@ -1180,6 +1410,7 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
        day = sharedpreferences.getString("opendays", "");
       openhrs =  sharedpreferences.getString("openhrs", "");
        closehrs = sharedpreferences.getString("closehrs", "");
+        shop_open = sharedpreferences.getString("shop_open", "");
         shopthename = sharedpreferences.getString("shopname", "");
         theseller = sharedpreferences.getString("seller", "");
 
@@ -1189,6 +1420,7 @@ if (sharedpreferences.getString("storedprice", "") != "" && sharedpreferences.ge
 
 
         int CurrQnty = 1;
+        txtview.setText(Integer.toString(CurrQnty));
 
         if (daynumber == 1) { dayofweek = "Sunday";}
         else if (daynumber == 2) { dayofweek = "Monday";}

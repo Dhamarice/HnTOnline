@@ -66,7 +66,7 @@ public class Favourites extends AppCompatActivity {
     DatabaseHelper dbHandler;
     int   limit, offset;
 
-    private static final String GETPRODUCT_URL = "https://devshop.hammerandtongues.com/webservice/getsingleproduct.php";
+    private static final String GETPRODUCT_URL = "https://shopping.hammerandtongues.com/webservice/getsingleproduct.php";
 
     //JSON element ids from repsonse of php script:
     private static final String TAG_SUCCESS = "success";
@@ -633,7 +633,7 @@ public class Favourites extends AppCompatActivity {
         editor.putString("CartID", String.valueOf(cartno.get_CartID()));
         editor.commit();
         editor.apply();
-        Toast.makeText(this, "New Shopping Session Created" + String.valueOf(cartno.get_CartID()), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "New shopping Session Created" + String.valueOf(cartno.get_CartID()), Toast.LENGTH_LONG).show();
         currcart = cartno.get_CartID();
 
             /*
@@ -674,49 +674,49 @@ public class Favourites extends AppCompatActivity {
 
             if (categoryID.matches("[0-9]+")) {
                 if (Integer.parseInt(categoryID) == 3157) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/appliances.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/appliances.jpg";
                 } else if (Integer.parseInt(categoryID) == 3158) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/e_gadgets.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/e_gadgets.jpg";
                 } else if (Integer.parseInt(categoryID) == 3159) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/e_gadgets.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/e_gadgets.jpg";
                 } else if (Integer.parseInt(categoryID) == 3160) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/grocery.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/grocery.jpg";
                 } else if (Integer.parseInt(categoryID) == 3161) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/electronics.png";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/electronics.png";
                 } else if (Integer.parseInt(categoryID) == 3162) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/hardware.jpeg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/hardware.jpeg";
                 } else if (Integer.parseInt(categoryID) == 3163) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/health_beauty";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/health_beauty";
                 } else if (Integer.parseInt(categoryID) == 3164) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/fruit_vegie.png";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/fruit_vegie.png";
                 } else if (Integer.parseInt(categoryID) == 3165) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/sport.png";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/sport.png";
                 } else if (Integer.parseInt(categoryID) == 3166) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/school.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/school.jpg";
                 } else if (Integer.parseInt(categoryID) == 3167) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/appliances.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/appliances.jpg";
                 } else if (Integer.parseInt(categoryID) == 3168) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/homebanner05.png";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/homebanner05.png";
                 } else if (Integer.parseInt(categoryID) == 3169) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/appliance.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/appliance.jpg";
                 } else if (Integer.parseInt(categoryID) == 9999) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/homebanner02.png";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/homebanner02.png";
                 } else if (Integer.parseInt(categoryID) == 0000) {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/liquor1.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/liquor1.jpg";
                 }
             } else {
                 if (categoryID == "NewArrivals" || categoryID == "99990") {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/newarrivals.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/newarrivals.jpg";
                     categoryID = "99990";
                 } else if (categoryID == "OnSpecial" || categoryID == "99991") {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/onspecial.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/onspecial.jpg";
                     categoryID = "99991";
                 } else if (categoryID == "Popular" || categoryID == "99992") {
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/productbanner.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/productbanner.jpg";
                     categoryID = "99992";
                 } else {
                     Log.e("Category ID", categoryID);
-                    imgbanner = "https://hammerandtongues.com/demo/webservice/appimgs/productbanner.jpg";
+                    imgbanner = "https://hammerandtongues.com/shopping/webservice/appimgs/productbanner.jpg";
                 }
             }
 
@@ -767,7 +767,7 @@ public class Favourites extends AppCompatActivity {
                 // TODO: If you have web page content that matches this app activity's content,
                 // make sure this auto-generated web page URL is correct.
                 // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
+                Uri.parse("https://host/path"),
                 // TODO: Make sure this auto-generated app deep link URI is correct.
                 Uri.parse("android-app://com.hammerandtongues.online.hntonline/http/host/path")
         );
@@ -789,7 +789,7 @@ public class Favourites extends AppCompatActivity {
                 // TODO: If you have web page content that matches this app activity's content,
                 // make sure this auto-generated web page URL is correct.
                 // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
+                Uri.parse("https://host/path"),
                 // TODO: Make sure this auto-generated app deep link URI is correct.
                 Uri.parse("android-app://com.hammerandtongues.online.hntonline/http/host/path")
         );

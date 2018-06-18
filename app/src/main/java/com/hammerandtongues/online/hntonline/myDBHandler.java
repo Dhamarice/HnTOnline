@@ -27,9 +27,9 @@ public class myDBHandler extends SQLiteOpenHelper {
 
     JSONParser jsonParser = new JSONParser();
 
-    private static final String GETCATEGORIES_URL = "https://devshop.hammerandtongues.com/webservice/getcategories.php";
-    private static final String GETPRODUCTS_URL = "https://devshop.hammerandtongues.com/webservice/getallproducts.php";
-    private static final String GETSTORES_URL = "https://devshop.hammerandtongues.com/webservice/getstores.php";
+    private static final String GETCATEGORIES_URL = "https://shopping.hammerandtongues.com/webservice/getcategories.php";
+    private static final String GETPRODUCTS_URL = "https://shopping.hammerandtongues.com/webservice/getallproducts.php";
+    private static final String GETSTORES_URL = "https://shopping.hammerandtongues.com/webservice/getstores.php";
 
     //JSON element ids from repsonse of php script:
     private static final String TAG_SUCCESS = "success";

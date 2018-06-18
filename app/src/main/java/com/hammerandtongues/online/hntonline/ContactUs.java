@@ -123,7 +123,7 @@ public class ContactUs  extends AppCompatActivity {
 
     public void loadWebView(){
 
-        Uri uri = Uri.parse(url); // missing 'http://' will cause crashed
+        Uri uri = Uri.parse(url); // missing 'https://' will cause crashed
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
 

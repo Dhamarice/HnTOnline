@@ -45,10 +45,10 @@ import preferences.MyPref;
 public class Finances extends AppCompatActivity {
 
 
-    private static final String FINANCES_URL = "https://devshop.hammerandtongues.com/wp-content/themes/Walleto/FinancesMobile.php";
-    private static final String ECOCASH_URL = "https://devshop.hammerandtongues.com/wp-content/themes/Walleto/deposit_eco_mobile.php";
-    private static final String TELECASH_URL = "https://devshop.hammerandtongues.com/wp-content/themes/Walleto/deposit_tele_mobile.php";
-    private static final String UPDATEBAL_URL = "https://devshop.hammerandtongues.com/webservice/updatebalances.php";
+    private static final String FINANCES_URL = "https://shopping.hammerandtongues.com/wp-content/themes/Walleto/FinancesMobile.php";
+    private static final String ECOCASH_URL = "https://shopping.hammerandtongues.com/wp-content/themes/Walleto/deposit_eco_mobile.php";
+    private static final String TELECASH_URL = "https://shopping.hammerandtongues.com/wp-content/themes/Walleto/deposit_tele_mobile.php";
+    private static final String UPDATEBAL_URL = "https://shopping.hammerandtongues.com/webservice/updatebalances.php";
 
 
 private EditText econum, bankinfo,amount;
@@ -136,14 +136,14 @@ mybalance.setText("Wallet Balance: $" + Balance);
 
         if(request_type.contentEquals(typedeposit)) {
 
-            //webView.loadUrl("https://devshop.hammerandtongues.com/my-account/my-finances/?pg=deposit");
+            //webView.loadUrl("https://shopping.hammerandtongues.com/my-account/my-finances/?pg=deposit");
             layoutdeposit.setVisibility(View.VISIBLE);
 
         }
 
         else if(request_type.contentEquals(typetransfer_credits)) {
 
-            //webView.loadUrl("https://devshop.hammerandtongues.com/my-account/my-finances/?pg=transfer");
+            //webView.loadUrl("https://shopping.hammerandtongues.com/my-account/my-finances/?pg=transfer");
 
             layouttransfer.setVisibility(View.VISIBLE);
 
@@ -151,14 +151,14 @@ mybalance.setText("Wallet Balance: $" + Balance);
 
         else if(request_type.contentEquals(typewithdraw)) {
 
-            //webView.loadUrl("https://devshop.hammerandtongues.com/my-account/my-finances/?pg=withdraw");
+            //webView.loadUrl("https://shopping.hammerandtongues.com/my-account/my-finances/?pg=withdraw");
             layoutwithdraw.setVisibility(View.VISIBLE);
 
         }
 
         else if(request_type.contentEquals(typeredeem_points)) {
 
-            //webView.loadUrl("https://devshop.hammerandtongues.com/my-account/my-finances/?pg=redeem");
+            //webView.loadUrl("https://shopping.hammerandtongues.com/my-account/my-finances/?pg=redeem");
             layoutredeem.setVisibility(View.VISIBLE);
 
         }
@@ -704,7 +704,7 @@ else {
 
 
 
-                                        Intent intent = new Intent(Finances.this, UserActivity.class);
+                                        Intent intent = new Intent(Finances.this, Finances.class);
                                         startActivity(intent);
 
                                     }
@@ -761,7 +761,7 @@ else {
             }
         };
 
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 5000, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         requestQueue.add(stringRequest);
 
@@ -798,7 +798,7 @@ else {
                                     public void onClick(DialogInterface dialog, int which) {
 
 
-                                        Intent intent = new Intent(Finances.this, UserActivity.class);
+                                        Intent intent = new Intent(Finances.this, Finances.class);
                                         startActivity(intent);
 
 
@@ -857,7 +857,7 @@ else {
             }
         };
 
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 30000, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         requestQueue.add(stringRequest);
 
@@ -891,7 +891,7 @@ else {
                                     public void onClick(DialogInterface dialog, int which) {
 
 
-                                        Intent intent = new Intent(Finances.this, UserActivity.class);
+                                        Intent intent = new Intent(Finances.this, Finances.class);
                                         startActivity(intent);
 
 

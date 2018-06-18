@@ -73,22 +73,22 @@ public class UserActivity extends AppCompatActivity {
 
     //private static final String LOGIN_URL = "https://hammerandtongues.com/webservice/login.php";
     //private static final String EWALL_URL = "https://hammerandtongues.com/webservice/getewalletbal.php";
-    private static final String LOGIN_URL = "https://devshop.hammerandtongues.com/webservice/login.php";
-    //private static final String LOGIN_URL = "http://10.0.2.2:8012/webservice/login.php";
-    private static final String LOGINN_URL = "https://devshop.hammerandtongues.com/webservice/register.php";
-    private static final String EWALL_URL = "https://devshop.hammerandtongues.com/webservice/getewalletbal.php";
-    private static final String UPDATE_URL = "https://devshop.hammerandtongues.com/webservice/updatedetails.php";
-    private static final String RESET_URL = "https://devshop.hammerandtongues.com/webservice/ResetPass.php";
+    private static final String LOGIN_URL = "https://shopping.hammerandtongues.com/webservice/login.php";
+    //private static final String LOGIN_URL = "https://10.0.2.2:8012/webservice/login.php";
+    private static final String LOGINN_URL = "https://shopping.hammerandtongues.com/webservice/register.php";
+    private static final String EWALL_URL = "https://shopping.hammerandtongues.com/webservice/getewalletbal.php";
+    private static final String UPDATE_URL = "https://shopping.hammerandtongues.com/webservice/updatedetails.php";
+    private static final String RESET_URL = "https://shopping.hammerandtongues.com/webservice/ResetPass.php";
 
-    private static final String FIELDS_URL = "https://devshop.hammerandtongues.com/webservice/getsurburbs.php";
+    private static final String FIELDS_URL = "https://shopping.hammerandtongues.com/webservice/getsurburbs.php";
 
-    private static final String GETPUSER_URL = "https://devshop.hammerandtongues.com/webservice/getuserdetail.php";
-    private static final String GETCITIES_URL = "https://devshop.hammerandtongues.com/webservice/getcities.php";
-    private static final String GETSURBURBS_URL = "https://devshop.hammerandtongues.com/webservice/getsurburbs.php";
-    private static final String GETPICKUPLOCATIONS_URL = "https://devshop.hammerandtongues.com/webservice/getpickuplocations.php";
+    private static final String GETPUSER_URL = "https://shopping.hammerandtongues.com/webservice/getuserdetail.php";
+    private static final String GETCITIES_URL = "https://shopping.hammerandtongues.com/webservice/getcities.php";
+    private static final String GETSURBURBS_URL = "https://shopping.hammerandtongues.com/webservice/getsurburbs.php";
+    private static final String GETPICKUPLOCATIONS_URL = "https://shopping.hammerandtongues.com/webservice/getpickuplocations.php";
 
 
-    //private static final String RESET_URL = "http://10.0.2.2:8012/webservice/ResetPass.php";
+    //private static final String RESET_URL = "https://10.0.2.2:8012/webservice/ResetPass.php";
 
 
     //JSON element ids from repsonse of php script:
@@ -108,7 +108,7 @@ public class UserActivity extends AppCompatActivity {
     LinearLayout add_details, forgotform, input_container, inside, BasicForm, notifyform, my_finances;
     Button update, logout, basic, shopping, addadd, back, bac, updat, reset, btnnotify, deposit_money, withdraw, my_transactions, transfer_credits, redeem_points, back_to_profile, finances, registeration;
     EditText txtadd1, txtadd2, txtidno, uEName, fName, sName, email, pword_login, pword_confrim, oldpass;
-    String idno, add1, add2, suburb, city, region, country;
+    String idno, add1, add2, suburb, city, region, country, default_country, default_city, default_region,default_suburb ;
     AutoCompleteTextView txtsurbub, txtcity, txtregion;
     Spinner txtcountry;
 
@@ -550,9 +550,15 @@ public class UserActivity extends AppCompatActivity {
             ArrayList<String> countries = new ArrayList<String>();
             for (Locale locale : locales) {
                 String country = locale.getDisplayCountry();
+
                 if (country.trim().length() > 0 && !countries.contains(country)) {
                     countries.add(country);
                 }
+            }
+
+            default_country = MyPrefAddress.getCountry(UserActivity.this);
+            if (default_country != null) {
+                countries.add(default_country);
             }
             Collections.sort(countries);
             for (String country : countries) {
@@ -560,13 +566,23 @@ public class UserActivity extends AppCompatActivity {
             }
 
             ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(UserActivity.this,
-                    android.R.layout.simple_spinner_item, countries);
+                    android.R.layout.simple_spinner_item, countries){
+
+                @Override
+                public int getCount() {
+                    return super.getCount()-1;            // you don't display last item. It is used as hint.
+                }
+
+            };
             // set the view for the Drop down list
             dataAdapter
                     .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             // set the ArrayAdapter to the spinner
+
+
+
             txtcountry.setAdapter(dataAdapter);
-            txtcountry.setSelection(245);
+            txtcountry.setSelection(countries.indexOf(default_country));
 
             System.out.println("# countries found: " + countries.size());
 
@@ -691,7 +707,7 @@ public class UserActivity extends AppCompatActivity {
                 input_container.setVisibility(View.GONE);
 
 
-                new GetConnectionStatus().execute();
+               // new GetConnectionStatus().execute();
 
                 //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 //  welcum.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -704,7 +720,7 @@ public class UserActivity extends AppCompatActivity {
                 mobilenum.setText(Html.fromHtml("<b>" + number + "</b>"));
 
 
-                if (Address != null && Address != "" && Address != "null null null" && !Address.contentEquals("null null null") && !Address.contentEquals("null")) {
+                if (Address != null && Address != "" && Address != "null null null null null" && !Address.contentEquals("null null null") && !Address.contentEquals("null null null null null") && !Address.contentEquals("null")) {
 
                     plsaddlbl.setText("Edit address details!");
 
@@ -719,6 +735,7 @@ public class UserActivity extends AppCompatActivity {
                     txtcity.setText(MyPrefAddress.getCity(UserActivity.this));
                     txtregion.setText(MyPrefAddress.getRegion(UserActivity.this));
 
+                    default_country = MyPrefAddress.getCountry(UserActivity.this);
 
                     inside.setVisibility(View.VISIBLE);
 
@@ -801,7 +818,7 @@ public class UserActivity extends AppCompatActivity {
 
                 welcum.setText(Html.fromHtml("<b>You are Logged in, \n \n Hello!</b> "));
 
-                addwarning.setText(Html.fromHtml("<b>Happy Shopping!!!</b> "));
+                addwarning.setText(Html.fromHtml("<b>Happy shopping!!!</b> "));
                 //inside.setVisibility(View.VISIBLE);
 
                 //Toast.makeText(getContext(), "PLEASE ADD YOUR ADDRESS DETAILS!", Toast.LENGTH_LONG).show();
@@ -1012,6 +1029,7 @@ public class UserActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonobject = new JSONObject(s);
                     int success = jsonobject.getInt("success");
+                    String message = jsonobject.getString("message");
                     if (success == 1) {
 
                         //Toast.makeText(getContext(), ("Update Successfull!"), Toast.LENGTH_SHORT).show();
@@ -1022,23 +1040,33 @@ public class UserActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
 
+                                        Intent intent = new Intent(UserActivity.this, UserActivity.class);
+                                        startActivity(intent);
+
 
                                     }
                                 })
                                 .setNegativeButton("", null)
-                                .setMessage(Html.fromHtml("Adress details successfull updated!"))
+                                .setMessage(Html.fromHtml(message))
                                 .show();
 
                         SharedPreferences.Editor editor = shared.edit();
-                        editor.putString("address", address1 + " " + address2 + " " + surbub);
+                        editor.putString("address", address1 + " " + address2 + " " + surbub + " " + regionstate + " " + country);
                         editor.putString("idno", idno);
+                        //editor.putString("telno", shared.getString("lastnumber", ""));
                         editor.commit();
 
                         MyPrefAddress.saveAllAddress(UserActivity.this, address1, address2, city, regionstate, surbub, country);
 
 
+
                         //Intent intent = new Intent(getContext(), UserActivity.class);
                         //startActivity(intent);
+
+                        Log.e("City: ", "" + city);
+                        Log.e("Surbub: ", "" + surbub);
+                        Log.e("Region: ", "" + regionstate);
+                        Log.e("Country: ", "" + country);
 
 
                     } else {
@@ -1115,7 +1143,7 @@ public class UserActivity extends AppCompatActivity {
             // TODO: Connect
             if (isNetworkAvailable() == true) {
                 try {
-                    HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
+                    HttpURLConnection urlc = (HttpURLConnection) (new URL("https://www.google.com").openConnection());
                     urlc.setRequestProperty("User-Agent", "Test");
                     urlc.setRequestProperty("Connection", "close");
                     urlc.setConnectTimeout(1500);

@@ -2,6 +2,7 @@ package com.hammerandtongues.online.hntonline;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -16,6 +17,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -445,13 +447,48 @@ public class StoresFragment  extends AppCompatActivity
 
                                 @Override
                                 public void onClick(View view) {
-                                    // do stuff
+
+
+
+
                                     String id1 = Integer.toString(view.getId());
+                                    Log.e("Starting store ", "The name " + id1 );
                                     SharedPreferences.Editor editor = sharedpreferences.edit();
                                     editor.putString(StoreId, id1);
                                     editor.commit();
-                                    Intent i = new Intent(StoresFragment.this, Store.class);
-                                    startActivity(i);
+
+                                    if (id1.contentEquals("1134") || id1.contentEquals("63936") ){
+                                        Log.e("Starting store ", "THE IF PART " + id1 );
+                                        new AlertDialog.Builder(StoresFragment.this)
+                                                .setTitle("Alert")
+                                                .setNeutralButton("Yes", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                        Intent i = new Intent(StoresFragment.this, Store.class);
+                                                        startActivity(i);
+
+                                                    }
+                                                })
+                                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+
+                                                    }
+                                                })
+                                                .setMessage(Html.fromHtml("You can only view and buy from this store if you are 18years and above. Are you 18years or above?"))
+                                                .show();
+
+
+                                    }
+
+                                    else {
+                                        // do stuff
+                                        Log.e("Starting store ", "THE ELSE PART " + id1 );
+                                        Intent i = new Intent(StoresFragment.this, Store.class);
+                                        startActivity(i);
+                                    }
                                 }
 
                             });
@@ -587,14 +624,52 @@ public class StoresFragment  extends AppCompatActivity
 
                                     @Override
                                     public void onClick(View view) {
-                                        // do stuff
+
+
+
+
                                         String id1 = Integer.toString(view.getId());
+
+                                        Log.e("Starting store ", "The name " + id1 );
                                         SharedPreferences.Editor editor = sharedpreferences.edit();
                                         editor.putString(StoreId, id1);
                                         editor.commit();
-                                        Intent i = new Intent(StoresFragment.this, Store.class);
-                                        startActivity(i);
+
+                                        if(id1.contentEquals("1134") || id1.contentEquals("63936")){
+                                            Log.e("Starting store ", "THE IF PART " + id1 );
+                                            new AlertDialog.Builder(StoresFragment.this)
+                                                    .setTitle("Alert")
+                                                    .setNeutralButton("Yes", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+
+                                                            Intent i = new Intent(StoresFragment.this, Store.class);
+                                                            startActivity(i);
+
+                                                        }
+                                                    })
+                                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+
+
+                                                        }
+                                                    })
+                                                    .setMessage(Html.fromHtml("You can only view and buy from this store if you are 18years and above. Are you 18years or above?"))
+                                                    .show();
+
+
+                                        }
+
+                                        else {
+                                            // do stuff
+                                            Log.e("Starting store ", "THE ELSE PART " + id1 );
+
+                                            Intent i = new Intent(StoresFragment.this, Store.class);
+                                            startActivity(i);
+                                        }
                                     }
+
 
                                 });
 
@@ -659,7 +734,7 @@ public class StoresFragment  extends AppCompatActivity
                 // TODO: If you have web page content that matches this app activity's content,
                 // make sure this auto-generated web page URL is correct.
                 // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
+                Uri.parse("https://host/path"),
                 // TODO: Make sure this auto-generated app deep link URI is correct.
                 Uri.parse("android-app://com.hammerandtongues.online.hntonline/http/host/path")
         );
@@ -681,7 +756,7 @@ public class StoresFragment  extends AppCompatActivity
                 // TODO: If you have web page content that matches this app activity's content,
                 // make sure this auto-generated web page URL is correct.
                 // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
+                Uri.parse("https://host/path"),
                 // TODO: Make sure this auto-generated app deep link URI is correct.
                 Uri.parse("android-app://com.hammerandtongues.online.hntonline/http/host/path")
         );
@@ -735,7 +810,7 @@ public class StoresFragment  extends AppCompatActivity
             Categories = null;
             //if (posts != null) {
             loaduielements();
-            // Toast.makeText(getActivity(), "Happy Shopping", Toast.LENGTH_LONG).show();
+            // Toast.makeText(getActivity(), "Happy shopping", Toast.LENGTH_LONG).show();
             //}
 
 
@@ -795,9 +870,10 @@ public class StoresFragment  extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.cart) {
             Intent intent = new Intent(StoresFragment.this, Cart.class);
+            startActivity(intent);
 
         } else if (id == R.id.chat) {
-            Intent intent = new Intent(StoresFragment.this, Cart.class);
+            Intent intent = new Intent(StoresFragment.this, Chat_Webview.class);
             startActivity(intent);
 
             startActivity(intent);
@@ -806,12 +882,12 @@ public class StoresFragment  extends AppCompatActivity
 
             startActivity(intent);
 
-        } /* else if (id == R.id.favourites) {
-            Intent intent = new Intent(MainActivity.this, UserActivity.class);
+        } else if (id == R.id.myfavourites) {
+            Intent intent = new Intent(StoresFragment.this, Favourites.class);
             startActivity(intent);
 
 
-        } else if (id == R.id.messages) {
+        } /*else if (id == R.id.messages) {
             Intent intent = new Intent(MainActivity.this, UserActivity.class);
             startActivity(intent);
 

@@ -2,6 +2,7 @@ package com.hammerandtongues.online.hntonline;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.widget.ProgressBar;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -19,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,15 +37,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     JSONParser jsonParser = new JSONParser();
     JSONObject json=null;
 
-    private static final String GETCATEGORIES_URL = "https://devshop.hammerandtongues.com/webservice/getcategories.php";
-    private static final String GETPRODUCTS_URL = "https://devshop.hammerandtongues.com/webservice/getallproducts.php";
-    private static final String GETSTORES_URL = "https://devshop.hammerandtongues.com/webservice/getstores.php";
-    private static final String LOGIN_URL = "https://devshop.hammerandtongues.com/webservice/login.php";
+    private static final String GETCATEGORIES_URL = "https://shopping.hammerandtongues.com/webservice/getcategories.php";
+    //private static final String GETPRODUCTS_URL = "https://shopping.hammerandtongues.com/webservice/getallproducts.php";
+    private static final String GETPRODUCTS_URL = "https://shopping.hammerandtongues.com/wp-content/themes/Walleto/getallproducts.php";
+    private static final String GETSTORES_URL = "https://shopping.hammerandtongues.com/webservice/getstores.php";
+    private static final String LOGIN_URL = "https://shopping.hammerandtongues.com/webservice/login.php";
     //JSON element ids from repsonse of php script:
     private static final String TAG_SUCCESS = "success";
     private static final String TAG_MESSAGE = "message";
     private static final String TAG_CATEGORIES = "posts";
+    public static final String MyPREFERENCES = "MyPrefs";
+    SharedPreferences sharedpreferences;
     private Context context;
+    String dayofyeartext = String.valueOf(Calendar.getInstance().get(Calendar.DAY_OF_YEAR));
 
     //Global Variables
     public String GET_TYPE;
@@ -130,6 +137,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PRTP = "total_price";
     public static final String COLUMN_PRVAT = "vat";
     public static final String COLUMN_PRIMG = "img_url";
+    public static final String COLUMN_PRALT= "alt_url";
     public static final String COLUMN_PRSTORE = "storeid";
 
 
@@ -246,6 +254,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "\t`total_price`\tDOUBLE ( 5 , 2 ),\n" +
                 "\t`vat`\tDOUBLE ( 5 , 5 ),\n" +
                 "\t`img_url`\tVARCHAR ( 500 , 0 ),\n" +
+                "\t`alt_url`\tVARCHAR ( 500 , 0 ),\n" +
                 "\t`storeid`\tINTEGER,\n" +
                 "\tPRIMARY KEY(`id`)\n" +
                 ");";
@@ -264,6 +273,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "\t`openning_days`\tVARCHAR ( 500 , 0 ), \n" +
                 "\t`store_open`\tVARCHAR ( 500 , 0 ), \n" +
                 "\t`store_close`\tVARCHAR ( 500 , 0 ), \n" +
+                "\t`shop_open_here`\tVARCHAR ( 500 , 0 ), \n" +
                 "\tPRIMARY KEY(`id`)\n" +
                 ");";
         db.execSQL(CREATE_TABLE_STORES);
@@ -585,16 +595,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (CategoryID != 99990 && CategoryID != 99999 && CategoryID != 99998 && CategoryID != 99997 && CategoryID != 9999 && CategoryID != 0000) {
             mod_query = "select distinct * from " + TABLE_PRODUCT_LIST + " where product_name NOT LIKE '%beer%' and product_name NOT LIKE '%whiskey%' and product_name NOT LIKE '%brandy%' and product_name NOT LIKE '%cider%' and product_name NOT LIKE '%wine%' and product_name NOT LIKE '%vodka%' and product_name NOT LIKE '%bear%' and product_name NOT LIKE '%infusions%' and product_name NOT LIKE '%rum%' and product_name NOT LIKE '%nederburg%' and product_name NOT LIKE '%vrede en lust%' and product_name NOT LIKE '%hercules paragon%' and product_name NOT LIKE '%whisky%' and product_name NOT LIKE '%castle lager%' and product_name NOT LIKE '%black label%' and category_id=" + CategoryID + " and id > " + lastid + " and img_url like '%.png%'  or img_url like '%.bmp%' ORDER BY id asc LIMIT " + limit + " Offset " + offset;
         } else if (CategoryID == 9999) {
-            mod_query = "select distinct * from " + TABLE_PRODUCT_LIST + " where  unit_price like '%AUCTION%'  and id > " + lastid + " and (img_url like '%.png%'  or img_url like '%.bmp%')  ORDER BY id asc LIMIT  " + limit + " Offset " + offset;
+            mod_query = "select distinct * from " + TABLE_PRODUCT_LIST + " where id > " + lastid + " and (img_url like '%.png%'  or img_url like '%.bmp%')  ORDER BY id asc LIMIT  " + limit + " Offset " + offset;
             ;
         } else if (CategoryID == 0000) {
             mod_query = "select distinct * from " + TABLE_PRODUCT_LIST + " where ( product_name like '%beer%' or product_name like '%whiskey%' or product_name like '%brandy%' or product_name like '%cider%' or product_name like '%wine%' or product_name like '%vodka%' or product_name like '%bear%' or product_name like '%infusions%' or product_name like '%rum%' or product_name like '%nederburg%' or product_name like '%vrede en lust%' or product_name like '%hercules paragon%' or product_name like '%whisky%' or product_name like '%castle lager%' or product_name like '%black label%')  and id > " + lastid + " and (img_url like '%.png%'  or img_url like '%.bmp%')  ORDER BY id asc LIMIT " + limit + " Offset " + offset;
         } else if (CategoryID == 99999) {
-            mod_query = "select distinct * from " + TABLE_PRODUCT_LIST + " where (img_url like '%.png%'  or img_url like '%.bmp%')  and id > " + lastid + " ORDER BY id asc LIMIT  " + limit + " Offset " + offset;
+            mod_query = "select distinct * from " + TABLE_PRODUCT_LIST + " where (img_url like '%.png%'  or img_url like '%.bmp%')  and id > " + lastid + " ORDER BY id desc LIMIT  " + limit + " Offset " + offset;
         } else if (CategoryID == 99998) {
-            mod_query = "select distinct * from " + TABLE_PRODUCT_LIST + " where (img_url like '%.png%'  or img_url like '%.bmp%')  and id > " + lastid + " ORDER BY id asc LIMIT  " + limit + " Offset " + offset;
+            mod_query = "select distinct * from " + TABLE_PRODUCT_LIST + " where (img_url like '%.png%'  or img_url like '%.bmp%')  and id > " + lastid + " ORDER BY RANDOM() LIMIT  " + limit + " Offset " + offset;
         } else {
-            mod_query = "select distinct * from " + TABLE_PRODUCT_LIST + " where img_url like '%.png%'  and (img_url like '%.bmp%')  and id > " + lastid + " ORDER BY id asc LIMIT  " + limit + " Offset " + offset;
+            mod_query = "select distinct * from " + TABLE_PRODUCT_LIST + " where img_url like '%.png%'  and (img_url like '%.bmp%')  and id > " + lastid + " ORDER BY id desc LIMIT  " + limit + " Offset " + offset;
         }
         Log.e("MY DB-HANDLER", mod_query);
         SQLiteDatabase db = this.getWritableDatabase();
@@ -833,6 +843,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void fill_products(Context context){
         com.android.volley.RequestQueue requestQueue= Volley.newRequestQueue(context);
        final SQLiteDatabase db = this.getWritableDatabase();
+        sharedpreferences = context.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
             //this.context= context;
         //pDialog.show();
         StringRequest stringRequest=new StringRequest(Request.Method.POST, GETPRODUCTS_URL, new Response.Listener<String>() {
@@ -864,6 +875,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                 String unit_price = object.optString("price");
                                 String total_price = object.optString("price");
                                 String img_url = object.optString("imgurl");
+                                String alt_url = object.optString("alturl");
                                 String in_stock = object.optString("");
                                 String vat = object.optString("0");
                                 String storeid = object.optString("store_id");
@@ -879,8 +891,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                 values.put("total_price",total_price);
                                 values.put("vat", vat);
                                 values.put("img_url",img_url);
+                                values.put("alt_url",alt_url);
                                 values.put("storeid",storeid);
                                 db.insert(TABLE_PRODUCT_LIST, null, values);
+
+
+                                SharedPreferences.Editor editor = sharedpreferences.edit();
+                                editor.putString("storedday", dayofyeartext);
+                                editor.apply();
 
 
 
@@ -923,7 +941,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
                 };
 
-                //stringRequest.setRetryPolicy(new DefaultRetryPolicy(100000,0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                stringRequest.setRetryPolicy(new DefaultRetryPolicy(100000,0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                 requestQueue.add(stringRequest);
                 //requestQueue.add(stringRequest);
             }
@@ -965,16 +983,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                 String openingdays = object.optString("shop_day");
                                 String openhrs = object.optString("shop_open");
                                 String closehrs = object.optString("shop_close");
+                                String shop_open = object.optString("shop_open_here");
                                 String IsPromo = "0";
 
-                                if ( openingdays != null && !openingdays.contentEquals("1") && !openingdays.contentEquals("null") && !openingdays.contentEquals("")) {
+                                if ( !shop_open.contentEquals("always") && openingdays != null && !openingdays.contentEquals("1") && !openingdays.contentEquals("null") && !openingdays.contentEquals("")) {
 
                                     IsPromo = "1";
 
 
                                 }
 
-                                if ( openhrs != null && !openhrs.contentEquals("null") && !openhrs.contentEquals("")) {
+                                if ( !shop_open.contentEquals("always") && openhrs != null && !openhrs.contentEquals("null") && !openhrs.contentEquals("")) {
 
                                     IsPromo = "1";
 
@@ -990,6 +1009,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                                 values.put("openning_days", openingdays);
                                 values.put("store_open", openhrs);
                                 values.put("store_close", closehrs);
+                                values.put("shop_open_here", shop_open);
                                 db.insert(TABLE_STORES, null, values);
 
 

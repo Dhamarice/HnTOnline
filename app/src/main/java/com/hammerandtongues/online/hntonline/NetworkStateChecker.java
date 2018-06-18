@@ -35,8 +35,8 @@ public class NetworkStateChecker extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
 
-        this.context = context;
-        new GetConnectionStatus().execute();
+        //this.context = context;
+        //new GetConnectionStatus().execute();
 
 
     }
@@ -75,7 +75,7 @@ public class NetworkStateChecker extends BroadcastReceiver {
 
 
                 try {
-                    HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
+                    HttpURLConnection urlc = (HttpURLConnection) (new URL("https://www.google.com").openConnection());
                     urlc.setRequestProperty("User-Agent", "Test");
                     urlc.setRequestProperty("Connection", "close");
                     urlc.setConnectTimeout(1500);

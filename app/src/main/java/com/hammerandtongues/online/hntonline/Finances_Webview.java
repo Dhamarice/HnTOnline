@@ -58,31 +58,31 @@ request_type = (shared.getString("request_type", ""));
 
         if(request_type.contentEquals(deposit)) {
 
-            webView.loadUrl("https://devshop.hammerandtongues.com/my-account/my-finances/?pg=deposit");
+            webView.loadUrl("https://shopping.hammerandtongues.com/my-account/my-finances/?pg=deposit");
 
         }
 
        else if(request_type.contentEquals(transfer_credits)) {
 
-            webView.loadUrl("https://devshop.hammerandtongues.com/my-account/my-finances/?pg=transfer");
+            webView.loadUrl("https://shopping.hammerandtongues.com/my-account/my-finances/?pg=transfer");
 
         }
 
         else if(request_type.contentEquals(withdraw)) {
 
-            webView.loadUrl("https://devshop.hammerandtongues.com/my-account/my-finances/?pg=withdraw");
+            webView.loadUrl("https://shopping.hammerandtongues.com/my-account/my-finances/?pg=withdraw");
 
         }
 
         else if(request_type.contentEquals(redeem_points)) {
 
-            webView.loadUrl("https://devshop.hammerandtongues.com/my-account/my-finances/?pg=redeem");
+            webView.loadUrl("https://shopping.hammerandtongues.com/my-account/my-finances/?pg=redeem");
 
         }
 
         else if(request_type.contentEquals(transactions)) {
 
-            webView.loadUrl("https://devshop.hammerandtongues.com/my-account/my-finances/?pg=transactions");
+            webView.loadUrl("https://shopping.hammerandtongues.com/my-account/my-finances/?pg=transactions");
 
         }
 

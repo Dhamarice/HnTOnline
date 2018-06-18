@@ -1,41 +1,14 @@
 package com.hammerandtongues.online.hntonline;
 
-import android.annotation.TargetApi;
-import android.app.ActionBar;
-import android.app.Activity;
-import android.app.TabActivity;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Build;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.Html;
+import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.TabHost;
-import android.widget.TableLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -45,22 +18,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import static android.R.attr.fragment;
 
 /**
  * Created by Ruvimbo on 25/10/2017.
@@ -75,8 +37,8 @@ public class Login2 extends Fragment {
 
     //private static final String LOGIN_URL = "https://hammerandtongues.com/webservice/login.php";
     //private static final String EWALL_URL = "https://hammerandtongues.com/webservice/getewalletbal.php";
-    private static final String LOGIN_URL = "http://http://10.0.2.2:8012:8012/webservice/registerlogin.php";
-    private static final String EWALL_URL = "http://http://10.0.2.2:8012:8012/webservice/getewalletbal.php";
+    private static final String LOGIN_URL = "https://https://10.0.2.2:8012:8012/webservice/registerlogin.php";
+    private static final String EWALL_URL = "https://https://10.0.2.2:8012:8012/webservice/getewalletbal.php";
 
 
     private static final String TAG_SUCCESS = "success";

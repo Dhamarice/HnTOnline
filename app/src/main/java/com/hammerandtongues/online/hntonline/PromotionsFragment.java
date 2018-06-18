@@ -43,7 +43,7 @@ public class PromotionsFragment  extends AppCompatActivity {
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
 
-    private static final String GETSTORES_URL = "https://devshop.hammerandtongues.com/webservice/getpromostores.php";
+    private static final String GETSTORES_URL = "https://shopping.hammerandtongues.com/webservice/getpromostores.php";
 
     //JSON element ids from repsonse of php script:
     private static final String TAG_SUCCESS = "success";
@@ -53,7 +53,7 @@ public class PromotionsFragment  extends AppCompatActivity {
     //Global Variables
     public String Categories;
     public String Products;
-    public String name, desc, openhrs, closehrs, day;
+    public String name, desc, openhrs, closehrs, day, shop_open;
     public String imgurl;
     public String post_id = "";
     public String CategoryID = "";
@@ -252,6 +252,14 @@ public class PromotionsFragment  extends AppCompatActivity {
                     day = cursor.getString(7);
                     openhrs = cursor.getString(8);
                     closehrs = cursor.getString(9);
+                    shop_open = cursor.getString(10);
+
+                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                    editor.putString("shop_open", shop_open);
+                    editor.putString("openhrs", openhrs);
+                    editor.putString("closehrs", closehrs);
+                    editor.commit();
+                    editor.apply();
 
 
                     LinearLayout promos = new LinearLayout(this);
@@ -385,7 +393,7 @@ Log.e("Day of week", "from java" + dayofweek);
             Categories = null;
             if (posts != null) {
                 loaduielements();
-                // Toast.makeText(getActivity(), "Happy Shopping", Toast.LENGTH_LONG).show();
+                // Toast.makeText(getActivity(), "Happy shopping", Toast.LENGTH_LONG).show();
             }
 
         }

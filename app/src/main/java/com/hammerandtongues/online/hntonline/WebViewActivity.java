@@ -90,15 +90,20 @@ public final class WebViewActivity extends Activity {
 
         if (type.contentEquals("deposit")){
 
-            webView.loadUrl("https://devshop.hammerandtongues.com/wp-content/themes/Walleto/deposit_paynow_mobile.php?pn_action=createtransaction&am=" + amount + "&user_id=" + uid);
+            webView.loadUrl("https://shopping.hammerandtongues.com/wp-content/themes/Walleto/deposit_paynow_mobile.php?pn_action=createtransaction&am=" + amount + "&user_id=" + uid);
+
+            shared.edit().remove("type").apply();
 
 
+            SharedPreferences.Editor editor = shared.edit();
+            editor.putString("ptype", "DepositPaynow");
+            editor.apply();
 
         }
 
         else {
             Log.e("In Webview", "webview orderid" + OrderID + "&delivery_charge=" + DlvryChrg);
-            webView.loadUrl("https://devshop.hammerandtongues.com/webservice/paynowapi.php?action=createtransaction&order_id=" + OrderID + "&delivery_charge=" + DlvryChrg);
+            webView.loadUrl("https://shopping.hammerandtongues.com/wp-content/themes/Walleto/paynowapi_mobile.php?action=createtransaction&order_id=" + OrderID + "&delivery_charge=" + DlvryChrg);
         }
 
         webView.setWebViewClient(new WebViewClient(){

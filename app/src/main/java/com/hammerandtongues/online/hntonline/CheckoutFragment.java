@@ -29,8 +29,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,11 +44,12 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
- * Created by NgonidzaIshe on 2/6/2016.
+ *  Created by Ruvimbo on 2/11/2017.
  */
 public class CheckoutFragment  extends Fragment {
 
@@ -52,8 +58,8 @@ public class CheckoutFragment  extends Fragment {
     // Progress Dialog
     private ProgressDialog pDialog;
 
-    private static final String GETQUANTITIES_URL = "https://devshop.hammerandtongues.com/webservice/getproductquantity.php";
-    //private static final String GETQUANTITIES_URL = "http://10.0.2.2:8012/webservice/getproductquantity.php";
+    private static final String GETQUANTITIES_URL = "https://shopping.hammerandtongues.com/webservice/getproductquantity.php";
+    //private static final String GETQUANTITIES_URL = "https://10.0.2.2:8012/webservice/getproductquantity.php";
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
     JSONObject json=null;
@@ -73,8 +79,10 @@ public class CheckoutFragment  extends Fragment {
     private String Ewall, Balance, uid, sometotal, Discount,DiscountAmount,ecash_number, Otp, accno, wallbalance, amount;
     private String DlvryType, DlvryChrg, DlvryAdd, totalPrc, PPrice, Qty, PName, imgurl, productID, post_id, StoreName, quantity, PrName;
     private TextView balance;
-    private int currcart,isSumarry,success,Count, oid, flag=0, totalAll, DlvryPrc, DscntPrc, OrdrPrc, ProdId ;
+    private int currcart,isSumarry,success, oid, flag=0, totalAll, DlvryPrc, DscntPrc, OrdrPrc, ProdId ;
     private Double total=0.0;
+    private int Count=0;
+  int i = 0;
     DatabaseHelper dbHandler;
 
 
@@ -209,7 +217,7 @@ public class CheckoutFragment  extends Fragment {
             // TODO: Connect
             if (isNetworkAvailable() == true) {
                 try {
-                    HttpURLConnection urlc = (HttpURLConnection) (new URL("http://www.google.com").openConnection());
+                    HttpURLConnection urlc = (HttpURLConnection) (new URL("https://www.google.com").openConnection());
                     urlc.setRequestProperty("User-Agent", "Test");
                     urlc.setRequestProperty("Connection", "close");
                     urlc.setConnectTimeout(1500);
@@ -235,8 +243,11 @@ public class CheckoutFragment  extends Fragment {
 
                 {
 
-                    new ProcessProducts().execute();
+                     ProcessProducts();
 
+                    //SharedPreferences.Editor editor = shared.edit();
+                    //editor.remove("options");
+                    //editor.apply();
                     if (shared.getString("options", "") != null && shared.getString("options", "") != "") {
 
                         Log.e("Reloading activity","Tag" + totalprice );
@@ -293,259 +304,185 @@ public class CheckoutFragment  extends Fragment {
     }
 
 
+    private void ProcessProducts() {
+
+
+        //Log.e("NUMBER", (shared.getString("telno", "")));
+
+        pDialog = new ProgressDialog(getContext());
+        pDialog.setMessage("Processing products......");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(true);
+        pDialog.show();
+
+
+
+        dbHandler = new DatabaseHelper(getContext());
+
+
+        try {
+            if (dbHandler.cartItems(currcart) != null) {
+                Cursor cursor = dbHandler.cartItems(currcart);
+                if (cursor != null &&  cursor.moveToFirst()) {
+                    // Toast.makeText(this,"Items:" + cursor.getCount(), Toast.LENGTH_SHORT).show();
+
+                    Log.e("Cursor", "Values" + DatabaseUtils.dumpCursorToString(cursor));
+                    int cartitms[] = new int[cursor.getCount()];
+
+                    do  {
+
+                        //Log.e("Cart Returns", "Current Cart=" + currcart + " , Product IDs = " + productID);
+
+                        //String varaible1 = cursor.getString(cursor.getColumnIndex("column_name1"));
+
+                        PName = cursor.getString(7);
+                        Qty = cursor.getString(3);
+                      final String prdctID = cursor.getString(8);
+                        StoreName = cursor.getString(10);
+
+
+                        com.android.volley.RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+
+
+
+                        StringRequest stringRequest = new StringRequest(Request.Method.POST, GETQUANTITIES_URL, new com.android.volley.Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String s) {
+
+                        Log.e("Cursor", "Values looping thru with product" + prdctID);
+
+                        SharedPreferences.Editor edit = shared.edit();
+                        edit.putString("productID", productID);
+                        edit.commit();
+                        edit.apply();
+//                        int pID =  Integer.parseInt(productID.toString());
 
 
 
 
+                                //pDialog.dismiss();
 
-    class ProcessProducts extends AsyncTask<String, String, String> {
+                                Log.e("Success", "" + s);
+                                //{"success":1,"message":"Username Successfully Added!"}
 
-        /**
-         * Before starting background thread Show Progress Dialog
-         * */
-        boolean failure = false;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(getContext());
-            pDialog.setMessage("Processing products...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-//            pDialog.show();
-
-
-        }
-
-
-        @Override
-        protected String doInBackground(String... args) {
-            // TODO Auto-generated method stub
-            // Check for success tag
-
-            SharedPreferences.Editor editor = shared.edit();
-            editor.remove("total");
-            editor.apply();
-
-
-            dbHandler = new DatabaseHelper(getContext());
-            JSONArray JsonArr = new JSONArray();
-
-
-
-            int Count=0;
-            Double total=0.0;
-            dbHandler = new DatabaseHelper(getContext());
-
-            try {
-                if (dbHandler.cartItems(currcart) != null) {
-                    Cursor cursor = dbHandler.cartItems(currcart);
-                    if (cursor != null &&  cursor.moveToFirst()) {
-                        // Toast.makeText(this,"Items:" + cursor.getCount(), Toast.LENGTH_SHORT).show();
-
-                        Log.e("Cursor", "Values" + DatabaseUtils.dumpCursorToString(cursor));
-                        int cartitms[] = new int[cursor.getCount()];
-                        int i = 0;
-                        do  {
-
-                            Log.e("Cart Returns", "Current Cart=" + currcart + " , Product IDs = " + productID);
-
-                            //String varaible1 = cursor.getString(cursor.getColumnIndex("column_name1"));
-
-                            PName = cursor.getString(7);
-                            Qty = cursor.getString(3);
-                            productID = cursor.getString(8);
-                            StoreName = cursor.getString(10);
-
-
-                            Log.e("Cursor", "Values" + DatabaseUtils.dumpCursorToString(cursor));
-
-                            SharedPreferences.Editor edit = shared.edit();
-                            edit.putString("productID", productID);
-                            edit.commit();
-                            edit.apply();
-                            final int pID =  Integer.parseInt(productID.toString());
-
-
-
-
-
-                            JSONObject json = new JSONObject();
-                            List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-
-
-
-
-
-                            try {
-
-                                Log.e("GetQuantities", "starting getting quantities!");
-                                params.add(new BasicNameValuePair("productid", productID));
-                                json = jsonParser.makeHttpRequest(
-                                        GETQUANTITIES_URL, "POST", params);
-
-                                // json success tag
                                 try {
-                                    if (TAG_SUCCESS != null) {
-                                        success = json.getInt(TAG_SUCCESS);
-                                        Log.d("JSon Results", "Success-" + json.getInt(TAG_SUCCESS) + "  |Message-" + json.getString(TAG_PRODUCTDETAILS));
-
-
-                                        Log.e("Get Result Success", "Success obtained is" + success);
-                                    }
-                                } catch (Exception e) {
-                                    Log.e("doInBackground error: ", e.getMessage());
-                                }
-                                if (success == 1) {
-
-
-                                    JSONArray array = json.getJSONArray("posts");
-
-                                    Log.e("Get Result Success", "Inside after success" + array);
-
-
-                                    for (int k = 0; k < array.length(); k++) {
-                                        try {
-
-                                            JSONObject object = array.getJSONObject(k);
-
-                                            String PostId = object.optString("post_id");
-
-                                             ProdId = Integer.parseInt(PostId);
-                                             quantity = object.optString("quantity");
-                                            PPrice = object.optString("price");
-                                             PName = object.optString("name");
+                                    JSONObject jsonObject = new JSONObject(s);
+                                    int success = jsonObject.getInt("success");
+                                    String message = jsonObject.getString("message");
 
 
 
-                                            Double SubTotal = Double.parseDouble(PPrice) * Double.parseDouble(Qty);
-                                            total = total + SubTotal;
-                                            total = Math.round(total*100.0)/100.0;
-                                            Count++;
-
-
-
-                                            if (!quantity.contentEquals("")) {
-                                                int quntonline = Integer.parseInt(quantity);
-                                                int quntlocal = Integer.parseInt(Qty);
-
-                                                   if (quntlocal>quntonline){
-
-                                                       Qty = quantity;
-
-                                                    dbHandler.updatecart(quntonline, ProdId);
-
-
-                                                    SharedPreferences.Editor editorr = shared.edit();
-                                                    editorr.putString("Name", PName);
-                                                    editorr.commit();
-
-
-
-                                                }
-
-                                            }
-
-                                            if (quantity.contentEquals("0")|| quantity.contentEquals("") ){
-
-                                                if (Looper.myLooper() == null){
-                                                    Looper.prepare();}
-
-                                                dbHandler.removeCartItem(ProdId);
-
-
-                                                //SharedPreferences.Editor editorr = shared.edit();
-                                                //editorr.putString("Name", PName);
-                                                //editorr.commit();
+                                    if (success == 1) {
 
 
 
 
+                                        JSONArray array = jsonObject.getJSONArray("posts");
 
+                                        JSONObject object = array.getJSONObject(0);
+
+
+                                        String PostId = object.optString("post_id");
+                                        ProdId = Integer.parseInt(PostId);
+                                        quantity = object.optString("quantity");
+                                        PPrice = object.optString("price");
+                                        PName = object.optString("name");
+
+
+                                        Double SubTotal = Double.parseDouble(PPrice) * Double.parseDouble(Qty);
+                                        total = total + SubTotal;
+                                        total = Math.round(total*100.0)/100.0;
+                                        Count++;
+
+
+
+
+                                        if (!quantity.contentEquals("")) {
+                                            int quntonline = Integer.parseInt(quantity);
+                                            int quntlocal = Integer.parseInt(Qty);
+
+                                            if (quntlocal > quntonline) {
+
+                                                Qty = quantity;
+
+                                                dbHandler.updatecart(quntonline, ProdId);
+
+
+                                                SharedPreferences.Editor editorr = shared.edit();
+                                                editorr.putString("Name", PName);
+                                                editorr.commit();
 
 
                                             }
 
+                                        }
 
-                                    else{
-                                                if (Looper.myLooper() == null){
-                                                    Looper.prepare();}
+                                        if (quantity.contentEquals("0") || quantity.contentEquals("")) {
 
-                                                Log.e("notify", "Tikuti zvese bhoo ruru. Quantities:" + quantity);
-
-                                                //Toast.makeText(getActivity(),"Text!",Toast.LENGTH_SHORT).show();
-
+                                            if (Looper.myLooper() == null) {
+                                                Looper.prepare();
                                             }
 
-
-                                            ContentValues values = new ContentValues();
-                                            values.put("post_id", ProdId);
-                                            values.put("category_name",quantity);
+                                            dbHandler.removeCartItem(ProdId);
 
 
+                                            //SharedPreferences.Editor editorr = shared.edit();
+                                            //editorr.putString("Name", PName);
+                                            //editorr.commit();
 
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
+
+                                        } else {
+                                            if (Looper.myLooper() == null) {
+                                                Looper.prepare();
+                                            }
+
+                                            Log.e("notify", "Tikuti zvese bhoo ruru. Quantities:" + quantity);
+
+                                            //Toast.makeText(getActivity(),"Text!",Toast.LENGTH_SHORT).show();
+
                                         }
 
 
+                                        ContentValues values = new ContentValues();
+                                        values.put("post_id", ProdId);
+                                        values.put("category_name", quantity);
+
+
+
 
                                     }
 
-
-
-
-
-
-                                } else {
-
-                                    //editor.putString("total", total.toString());
-                                    //editor.commit();
-                                    //editor.apply();
-
-                                    //SharedPreferences.Editor editor = shared.edit();
-                                    editor.remove("options");
-                                    editor.apply();
+                                    else {
+                                        SharedPreferences.Editor editor = shared.edit();
+                                        editor.remove("options");
+                                        editor.apply();
 
 
                                         //Toast.makeText(getActivity(), "Unknown error! Please try again later", Toast.LENGTH_LONG).show();
 
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
 
-                                            Toast ToastMessage = Toast.makeText(getActivity(),"Unknown error! Please try again later",Toast.LENGTH_LONG);
-                                            View toastView = ToastMessage.getView();
-                                            toastView.setBackgroundResource(R.drawable.toast_background);
-                                            ToastMessage.show();
-                                        }
-                                    });
-
-
+                                                Toast ToastMessage = Toast.makeText(getActivity(), "", Toast.LENGTH_LONG);
+                                                View toastView = ToastMessage.getView();
+                                                toastView.setBackgroundResource(R.drawable.toast_background);
+                                                ToastMessage.show();
+                                            }
+                                        });
 
 
-
-                                    Intent intent = new Intent(getActivity(), Cart.class);
-                                    getActivity().finish();
-                                    startActivity(intent);
-
-
+                                        Intent intent = new Intent(getActivity(), Cart.class);
+                                        getActivity().finish();
+                                        startActivity(intent);
+                                    }
 
 
                                 }
 
-
-                                //else{
-                                // Log.e("No Internet Failure!", json.getString(TAG_MESSAGE));
-
-                                //Toast.makeText(getContext(), "Failed To process payment, Please Try again later: NETWORK ERROR", Toast.LENGTH_LONG).show();
-                                //return json.getString(TAG_MESSAGE);
-
-                                //  }
-                            } catch (JSONException e) {
-
-                            }
+                                catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
 
 
 
@@ -553,157 +490,111 @@ public class CheckoutFragment  extends Fragment {
 
 
 
+                                if (PPrice == "" || PPrice == null) {
+                                    PPrice = "0.0";
+                                    //cartitms[i] = Integer.parseInt(cursor.getString(11));
+                                    //Log.e("Get Cart Items", Integer.toString(cartitms[i]));
+                                    i++;
+
+                                }
+
+                                SharedPreferences.Editor editor = shared.edit();
+                                editor.putString("total", total.toString());
+                                editor.commit();
+                                editor.apply();
+
+                                //SharedPreferences.Editor editor = shared.edit();
+                                editor.remove("options");
+                                editor.apply();
+
+                                Log.e("New totall!", "Total after product sync is: " + (shared.getString("total", "")));
+
+                                totalpriceupdated = total.toString();
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-                            if (PPrice == "" || PPrice == null) {
-                                PPrice = "0.0";
-                                cartitms[i] = Integer.parseInt(cursor.getString(11));
-                                Log.e("Get Cart Items", Integer.toString(cartitms[i]));
-                                i++;
 
                             }
 
-                            //SharedPreferences.Editor edit = shared.edit();
-                            editor.putString("total", total.toString());
-                            editor.commit();
-                            editor.apply();
 
-                            //SharedPreferences.Editor editor = shared.edit();
-                            editor.remove("options");
-                            editor.apply();
+                        }, new com.android.volley.Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError volleyError) {
+                                //pDialog.dismiss();
 
-                            Log.e("New totall!", "Total after product sync is: " + (shared.getString("total", "")));
+                                Log.e("RUEERROR", "" + volleyError);
 
-                            totalpriceupdated = total.toString();
+                                //Toast.makeText(getContext(), "No Intenet connection!", Toast.LENGTH_SHORT).show();
 
-                        } while (cursor.moveToNext());
-                        cursor.close();
-
-                        String TotalAmount = "";
-                        TotalAmount = String.valueOf(new DecimalFormat("#.##").format(total));
+                                SharedPreferences.Editor editor = shared.edit();
+                                editor.remove("options");
+                                editor.apply();
 
 
 
+                            }
+                        }) {
+                            @Override
+                            protected Map<String, String> getParams() throws AuthFailureError {
+                                Map<String, String> values = new HashMap();
+                                values.put("productid", prdctID);
+
+                                return values;
+                            }
+                        };
+
+                        stringRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+                        requestQueue.add(stringRequest);
 
 
                     }
+                    while (cursor.moveToNext());
+                    cursor.close();
 
+                    String TotalAmount = "";
+                    TotalAmount = String.valueOf(new DecimalFormat("#.##").format(total));
 
-
-
-                }
-
-                else{
-
-                    Log.e("Empty cart","Db handler null!" + currcart);
-
-                    if (Looper.myLooper() == null){
-                        Looper.prepare();}
-
-                    //SharedPreferences.Editor editor = shared.edit();
-                    editor.putString("total", "0.0");
-                    editor.remove("options");
-                    editor.commit();
-                    editor.apply();
+                    pDialog.dismiss();
 
                 }
+
 
             }
 
 
+            else{
 
+                Log.e("Empty cart","Db handler null!" + currcart);
 
+                if (Looper.myLooper() == null){
+                    Looper.prepare();}
 
-
-
-
-            catch (Exception e) {
-                e.printStackTrace();
-                Log.e("Cart Async Task Error ", e.toString());
+                SharedPreferences.Editor editor = shared.edit();
+                editor.putString("total", "0.0");
+                editor.remove("options");
+                editor.commit();
+                editor.apply();
 
             }
-
-            return null;
 
         }
-        /**
-         * After completing background task Dismiss the progress dialog
-         * **/
-        protected void onPostExecute(String posts) {
-            // dismiss the dialog once product deleted
 
 
+        catch (Exception e) {
+            e.printStackTrace();
+            Log.e("Cart Async Task Error ", e.toString());
 
-
-
-
-
-
-            //pDialog.dismiss();
-            if (posts != null){
-                //Toast.makeText(getContext(), posts, Toast.LENGTH_LONG).show();
-
-                Toast ToastMessage = Toast.makeText(getActivity(),posts,Toast.LENGTH_LONG);
-                View toastView = ToastMessage.getView();
-                toastView.setBackgroundResource(R.drawable.toast_background);
-                ToastMessage.show();
-
-
-                if (shared.getString("Name", "")!= null && shared.getString("Name", "")!= "") {
-
-                    PrName = shared.getString("Name", "");
-
-
-                    //Toast.makeText(getActivity(), PrName + "is now out of stock!!", Toast.LENGTH_LONG).show();
-
-                    Toast ToastMessage1 = Toast.makeText(getActivity(),"is now out of stock!!",Toast.LENGTH_LONG);
-                    View toastView1 = ToastMessage1.getView();
-                    toastView1.setBackgroundResource(R.drawable.toast_background);
-                    ToastMessage1.show();
-
-
-
-                }
-            }
+            SharedPreferences.Editor editor = shared.edit();
+            editor.remove("options");
+            editor.apply();
 
         }
 
     }
 
+                }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}
